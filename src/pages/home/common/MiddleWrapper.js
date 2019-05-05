@@ -10,18 +10,19 @@ import {
     MiddleListWrapper,
     MiddleList,
     CustomerInfo,
-    SearchWrapper
+    SearchWrapper,
+    AddCustomerWrapper
 } from '../style'
 
 class MiddleWrapper extends PureComponent{
     render () {
-        const { customerList,handleMiddleList } = this.props;
+        const { customerList,handleMiddleList, handleAddCustomer, addCustomer } = this.props;
         return (
             <Customer>
                 <MiddleHeader>
                     <span>客户管理</span>
                     <OperateWrapper>
-                        <Tooltip title="新建客户">
+                        <Tooltip title="新建客户" onClick={handleAddCustomer}>
                             <span className="iconfont">&#xe64c;</span>
                         </Tooltip>
                         <Tooltip title="搜索">
@@ -33,11 +34,15 @@ class MiddleWrapper extends PureComponent{
                     </OperateWrapper>
                 </MiddleHeader>
 
-                <SearchWrapper>
+                
+                {/* <SearchWrapper>
 
-                </SearchWrapper>
+                </SearchWrapper> */}    
 
                 <MiddleListWrapper className="editSrollBar">
+                    <AddCustomerWrapper className="AddCustomerWrapper-show" onClick={addCustomer}>
+                        新建客户
+                    </AddCustomerWrapper>
                     {
                         customerList && customerList.map((item, index) => (
                             <MiddleList onClick={() => {handleMiddleList(index, item.id, item.active)}} key={item.id} className={customerList[index].active?'selected':''} >
@@ -60,8 +65,13 @@ class MiddleWrapper extends PureComponent{
         )
     }
 
+
+    componentDidMount() {
+        this.props.resetHeight()
+    }
   
 }
+
 
 const mapDispatch = (dispatch) => ({
     // 点击管理客户列表
@@ -70,16 +80,32 @@ const mapDispatch = (dispatch) => ({
         dispatch(action)
     },
 
-    // 循环列表
-    mapMiddleList(customerList) {
-       
+    // 重新计算高度
+    resetHeight() {
+        let screen_height = document.body.clientHeight;
+        let el = document.getElementsByClassName('editSrollBar')[0]
+        el.style.height = (screen_height - 60) + 'px';
+    },
+
+    // 点击新建客户
+    handleAddCustomer() {
+        let el = document.getElementsByClassName('AddCustomerWrapper-show')[0]
+        el.style.height = 80 + 'px';
+        
+    },
+
+    // 添加客户
+    addCustomer() {
+        const action = actionCreators.clickAddCustomer(true)
+        dispatch(action)
     }
 
    
 })
 
 const mapState = (state) => ({
-    customerList:state.getIn(['left', 'userInfo']).toJS().customerList
+    customerList:state.getIn(['left', 'userInfo']).toJS().customerList,
+    isAdd:state.getIn(['left', 'isAdd'])
 })
 
 export default connect(mapState, mapDispatch)(MiddleWrapper)

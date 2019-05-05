@@ -17,8 +17,8 @@ import {
 
 class MiddleWrapper extends PureComponent{
     render () {
-        const { fileList, customerDetail, spin } = this.props;
-        // console.log(spin)
+        const { fileList, customerDetail, spin, isAdd } = this.props;
+        console.log(isAdd)
         return (
             <DetailWrapper>
                 <RightHeaderWrapper>
@@ -33,78 +33,78 @@ class MiddleWrapper extends PureComponent{
                 <RightWrapper>
                     <div className={spin || !customerDetail?"isHide":"isShow" }>
                         <RightContentWrapper>
-                        <tbody>
-                            <tr>
-                                <td>客户姓名</td>
-                                <td>{customerDetail && customerDetail.name}</td>
-                            </tr>
-                            <tr>
-                                <td>身份证号码</td>
-                                <td>{customerDetail && customerDetail.cardId}</td>
-                            </tr>
-                            <tr>
-                                <td>手机号码</td>
-                                <td>{customerDetail && customerDetail.tel}</td>
-                            </tr>
-                            <tr>
-                                <td>常住地址</td>
-                                <td>{customerDetail && customerDetail.address}</td>
-                            </tr>
-                            <tr>
-                                <td>行业分类</td>
-                                <td>{customerDetail && customerDetail.kind}</td>
-                            </tr>
-                            <tr>
-                                <td>公司名称</td>
-                                <td>{customerDetail && customerDetail.companyName}</td>
-                            </tr>
-                            <tr>
-                                <td>经营内容</td>
-                                <td>{customerDetail && customerDetail.con}</td>
-                            </tr>
-                            <tr>
-                                <td>是否有经营合伙人</td>
-                                <td>{customerDetail && customerDetail.isPart}</td>
-                            </tr>
-                        </tbody>
-                    </RightContentWrapper>
-                    
-                    <RightCarousel className="swiper-container">
-                            <span className="iconfont swiper-button-prev">&#xe663;</span>
-                            <span className="iconfont swiper-button-next">&#xe6a8;</span>
-                            <div className="swiper-wrapper">
-                                <div className="swiper-slide">Slide 1</div>
-                                <div className="swiper-slide">Slide 2</div>
-                                <div className="swiper-slide">Slide 3</div>
-                            </div>
-                            <div className='swiper-pagination'></div>
-                    </RightCarousel>
-                    
-
-                    <FileWrapper>
-                        {
-                            fileList.map((item, index) => (
-                                <FileItem key={item.id}>
-                                    <span className="iconfont">&#xe600;</span>
-                                    {item.name}
-                                </FileItem>
-                            ))
-                        }
+                            <tbody>
+                                <tr>
+                                    <td>客户姓名</td>
+                                    <td>{customerDetail && customerDetail.name}</td>
+                                </tr>
+                                <tr>
+                                    <td>身份证号码</td>
+                                    <td>{customerDetail && customerDetail.cardId}</td>
+                                </tr>
+                                <tr>
+                                    <td>手机号码</td>
+                                    <td>{customerDetail && customerDetail.tel}</td>
+                                </tr>
+                                <tr>
+                                    <td>常住地址</td>
+                                    <td>{customerDetail && customerDetail.address}</td>
+                                </tr>
+                                <tr>
+                                    <td>行业分类</td>
+                                    <td>{customerDetail && customerDetail.kind}</td>
+                                </tr>
+                                <tr>
+                                    <td>公司名称</td>
+                                    <td>{customerDetail && customerDetail.companyName}</td>
+                                </tr>
+                                <tr>
+                                    <td>经营内容</td>
+                                    <td>{customerDetail && customerDetail.con}</td>
+                                </tr>
+                                <tr>
+                                    <td>是否有经营合伙人</td>
+                                    <td>{customerDetail && customerDetail.isPart}</td>
+                                </tr>
+                            </tbody>
+                        </RightContentWrapper>
                         
-                    </FileWrapper>
-                </div> 
-                {
-                    spin?
-                    <div className="example">
-                        <Spin className="example" delay={100} size={'large'} />
-                    </div>
-                    :''
-                }
+                        <RightCarousel className="swiper-container">
+                                <span className="iconfont swiper-button-prev">&#xe663;</span>
+                                <span className="iconfont swiper-button-next">&#xe6a8;</span>
+                                <div className="swiper-wrapper">
+                                    <div className="swiper-slide">Slide 1</div>
+                                    <div className="swiper-slide">Slide 2</div>
+                                    <div className="swiper-slide">Slide 3</div>
+                                </div>
+                                <div className='swiper-pagination'></div>
+                        </RightCarousel>
+                        
+
+                        <FileWrapper>
+                            {
+                                fileList.map((item, index) => (
+                                    <FileItem key={item.id}>
+                                        <span className="iconfont">&#xe600;</span>
+                                        {item.name}
+                                    </FileItem>
+                                ))
+                            }
+                            
+                        </FileWrapper>
+                    </div> 
+                    {
+                        spin?
+                        <div className="example">
+                            <Spin className="example" delay={100} size={'large'} />
+                        </div>
+                        :''
+                    }
+                    
+                    <Empty className={customerDetail || spin?"isHide":"isShow" } description={'暂无数据'} />
                 
-                <Empty className={customerDetail || spin?"isHide":"isShow" } description={'暂无数据'} />
                 
-                
-            </RightWrapper>
+                </RightWrapper>
             </DetailWrapper>
         )
     }
@@ -141,7 +141,8 @@ const mapDispatch = (dispatch) => ({
 const mapState = (state) => ({
     fileList:state.getIn(['left','userInfo']).toJS().fileList,
     customerDetail:state.getIn(['left','userInfo']).toJS().customerDetail,
-    spin:state.getIn(['left','spin'])
+    spin:state.getIn(['left','spin']),
+    isAdd:state.getIn(['left', 'isAdd'])
 })
 
 export default connect(mapState, mapDispatch)(MiddleWrapper)

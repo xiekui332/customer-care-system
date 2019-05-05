@@ -27,7 +27,10 @@ const defaultState = fromJS({
 
     
     // loading
-    spin:false
+    spin:false,
+
+    // add
+    isAdd:false
     
 
 })
@@ -58,6 +61,10 @@ export default ((state = defaultState, action) => {
         case constants.IS_LOADING:
         return state.merge({
             spin:fromJS(action.active)
+        });
+        case constants.IS_ADD:
+        return state.merge({
+            isAdd:fromJS(action.bool)
         });
         default:
         return state;

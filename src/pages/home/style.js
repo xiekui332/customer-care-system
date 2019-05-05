@@ -11,6 +11,8 @@ export const LeftWrapper = styled.div`
     height:100%;
     float:left;
     position:relative;
+    border-right:1px solid #f7f7f7;
+    box-sizing: content-box;
 `;
 
 // left
@@ -197,7 +199,6 @@ export const OperateWrapper = styled.div`
 export const MiddleListWrapper = styled.div`
     overflow-y:auto;
     background:#f7f7f7;
-    height:100%;
     &::-webkit-scrollbar-track-piece { 
         background-color:#f7f7f7;
     }
@@ -210,6 +211,19 @@ export const MiddleListWrapper = styled.div`
         border-radius: 4px;
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     }
+`;
+
+// 新建客户部分
+export const AddCustomerWrapper = styled.div`
+    height:0px;
+    overflow:hidden;
+    background:#fff;
+    color:#999;
+    font-size:14px;
+    text-align:center;
+    line-height:80px;
+    cursor:default;
+    transition:all ease-in .2s;
 `;
 
 export const MiddleList = styled.div`

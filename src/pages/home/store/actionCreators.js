@@ -58,4 +58,16 @@ export const clickMiddleList = (index, id, active) => {
         
         
     }
+};
+
+
+// 点击新建客户
+export const clickAddCustomer = (bool) => {
+    return (dispatch) => {
+        let action = {
+            type:constants.IS_ADD,
+            bool
+        }
+        dispatch(action)
+    }
 }
