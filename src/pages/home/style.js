@@ -49,6 +49,7 @@ export const LeftCustomer = styled.div`
         font-size:60px;
         color:#DDD;
         margin:30px auto 10px;
+        line-height: 60px;
     }
     p{
         font-size:14px;
@@ -170,6 +171,12 @@ export const MiddleHeader = styled.div`
     }
 `;
 
+// 搜索部分
+export const SearchWrapper = styled.div`
+    background:#f7f7f7;
+    height:270px;
+`;
+
 export const OperateWrapper = styled.div`
     display:flex;
     justify-content: flex-end;
@@ -209,6 +216,7 @@ export const MiddleList = styled.div`
     height:80px;
     border-left:4px solid #f7f7f7;
     cursor:default;
+    box-sizing: content-box;
     img{
         display:block;
         width:40px;
@@ -265,6 +273,19 @@ export const RightHeaderWrapper = styled.div`
 export const RightWrapper = styled.div`
     width:90%;
     margin:30px auto;
+    .isShow{
+        display:block;
+    }
+    .isHide{
+        display:none;
+    }
+    .example {
+        width:80px;
+        margin:30px auto;
+        font-size:30px;
+        text-align: center;
+        border-radius: 4px;
+    }
 `;
 
 export const RightContentWrapper = styled.table`

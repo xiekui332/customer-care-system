@@ -1,5 +1,5 @@
 import * as constants from './constants'
-import { getHomeData } from "../../../api"
+import { getHomeData, getCustomerDetail } from "../../../api"
 
 // 获取MiddleList数据
 export const getMiddleList = () => {
@@ -22,13 +22,40 @@ export const getMiddleList = () => {
 }
 
 // 点击MiddleList数据
-export const clickMiddleList = (index) => {
+export const clickMiddleList = (index, id, active) => {
     return (dispatch) => {
+        
+        if(active === true){
+            return
+        }
+
         let action = {
-            type:constants.CLICK_MIDDLE_LIST,
-            status:true,
-            index
+            type:constants.IS_LOADING,
+            active:true
         }
         dispatch(action)
+
+        getCustomerDetail(id).then((res) => {
+            let result = res.data;
+            // console.log(result)
+            if(result.success === true){
+                let action = {
+                    type:constants.CLICK_MIDDLE_LIST,
+                    status:true,
+                    index,
+                    data:result
+                }
+                dispatch(action)
+
+                let action_two = {
+                    type:constants.IS_LOADING,
+                    active:false
+                }
+                dispatch(action_two)
+            }
+        })
+
+        
+        
     }
 }

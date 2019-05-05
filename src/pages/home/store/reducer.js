@@ -16,8 +16,18 @@ const defaultState = fromJS({
         // 文件列表
         fileList:[
             
-        ]
+        ],
+
+        // 客户详情
+        customerDetail:{
+           
+        },
+
     },
+
+    
+    // loading
+    spin:false
     
 
 })
@@ -25,6 +35,8 @@ const defaultState = fromJS({
 //  点击MiddleList数据
 const changeMiddleListAcrtive = (state, action) => {
     let userInfo = state.get('userInfo').toJS()
+    // console.log(action.data.customerDetail)
+    userInfo.customerDetail = action.data.customerDetail
     let data = userInfo.customerList
     for(let i = 0; i < data.length; i ++){
         data[i].active = false
@@ -43,6 +55,10 @@ export default ((state = defaultState, action) => {
         });
         case constants.CLICK_MIDDLE_LIST:
         return changeMiddleListAcrtive(state, action)
+        case constants.IS_LOADING:
+        return state.merge({
+            spin:fromJS(action.active)
+        });
         default:
         return state;
     }

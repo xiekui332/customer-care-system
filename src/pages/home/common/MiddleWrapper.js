@@ -9,7 +9,8 @@ import {
     OperateWrapper,
     MiddleListWrapper,
     MiddleList,
-    CustomerInfo
+    CustomerInfo,
+    SearchWrapper
 } from '../style'
 
 class MiddleWrapper extends PureComponent{
@@ -32,10 +33,14 @@ class MiddleWrapper extends PureComponent{
                     </OperateWrapper>
                 </MiddleHeader>
 
+                <SearchWrapper>
+
+                </SearchWrapper>
+
                 <MiddleListWrapper className="editSrollBar">
                     {
                         customerList && customerList.map((item, index) => (
-                            <MiddleList onClick={() => {handleMiddleList(index)}} key={index} className={customerList[index].active?'selected':''} >
+                            <MiddleList onClick={() => {handleMiddleList(index, item.id, item.active)}} key={item.id} className={customerList[index].active?'selected':''} >
                                 <img src={item.src} alt="" />
                                 <CustomerInfo >
                                     <p>
@@ -60,8 +65,8 @@ class MiddleWrapper extends PureComponent{
 
 const mapDispatch = (dispatch) => ({
     // 点击管理客户列表
-    handleMiddleList(index) {
-        const action = actionCreators.clickMiddleList(index)
+    handleMiddleList(index, id, active) {
+        const action = actionCreators.clickMiddleList(index, id, active)
         dispatch(action)
     },
 

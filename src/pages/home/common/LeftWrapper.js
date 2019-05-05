@@ -26,9 +26,10 @@ class LeftCon extends PureComponent {
                 </LeftTop>
                 <LeftCustomer>
                     {
-                        // userInfo.logo?<img src={userInfo.logo} alt="" />:<span className="iconfont">&#xe61a;</span>
+                        userInfo.logo === ""?
+                        <span className="iconfont">&#xe61a;</span>:
+                        <img src={userInfo.logo} alt="" />
                     }
-                    
                     <p>{userInfo.name}/{userInfo.part}</p>
                 </LeftCustomer>
 

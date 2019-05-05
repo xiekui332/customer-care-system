@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { Tooltip  } from 'antd';
+import { Tooltip, Empty, Spin } from 'antd';
 import "antd/dist/antd.css";
 import Swiper from 'swiper/dist/js/swiper.js'
 import 'swiper/dist/css/swiper.min.css'
@@ -17,7 +17,8 @@ import {
 
 class MiddleWrapper extends PureComponent{
     render () {
-        const { fileList } = this.props;
+        const { fileList, customerDetail, spin } = this.props;
+        // console.log(spin)
         return (
             <DetailWrapper>
                 <RightHeaderWrapper>
@@ -30,39 +31,40 @@ class MiddleWrapper extends PureComponent{
                 </RightHeaderWrapper>
 
                 <RightWrapper>
-                    <RightContentWrapper>
+                    <div className={spin || !customerDetail?"isHide":"isShow" }>
+                        <RightContentWrapper>
                         <tbody>
                             <tr>
                                 <td>客户姓名</td>
-                                <td>王大伟</td>
+                                <td>{customerDetail && customerDetail.name}</td>
                             </tr>
                             <tr>
                                 <td>身份证号码</td>
-                                <td>1423654653213232</td>
+                                <td>{customerDetail && customerDetail.cardId}</td>
                             </tr>
                             <tr>
                                 <td>手机号码</td>
-                                <td>18649999993</td>
+                                <td>{customerDetail && customerDetail.tel}</td>
                             </tr>
                             <tr>
                                 <td>常住地址</td>
-                                <td>四川省绵阳市涪城区国家高新技术产业开发区</td>
+                                <td>{customerDetail && customerDetail.address}</td>
                             </tr>
                             <tr>
                                 <td>行业分类</td>
-                                <td>农业</td>
+                                <td>{customerDetail && customerDetail.kind}</td>
                             </tr>
                             <tr>
                                 <td>公司名称</td>
-                                <td>新希望六和股份有限公司</td>
+                                <td>{customerDetail && customerDetail.companyName}</td>
                             </tr>
                             <tr>
                                 <td>经营内容</td>
-                                <td>饲料、原料添加剂、饲料加工机械、农副产品、食品的生产、加工、销售， 饲料、原料添加剂、饲料加工机械、农副产品</td>
+                                <td>{customerDetail && customerDetail.con}</td>
                             </tr>
                             <tr>
                                 <td>是否有经营合伙人</td>
-                                <td>有</td>
+                                <td>{customerDetail && customerDetail.isPart}</td>
                             </tr>
                         </tbody>
                     </RightContentWrapper>
@@ -90,8 +92,19 @@ class MiddleWrapper extends PureComponent{
                         }
                         
                     </FileWrapper>
-                    
-                </RightWrapper>
+                </div> 
+                {
+                    spin?
+                    <div className="example">
+                        <Spin className="example" delay={100} size={'large'} />
+                    </div>
+                    :''
+                }
+                
+                <Empty className={customerDetail || spin?"isHide":"isShow" } description={'暂无数据'} />
+                
+                
+            </RightWrapper>
             </DetailWrapper>
         )
     }
@@ -116,6 +129,7 @@ class MiddleWrapper extends PureComponent{
         let tableWidth = document.getElementsByTagName('table')[0].offsetWidth;
         document.getElementsByClassName('swiper-wrapper')[0].style.width = tableWidth
     }
+
 }
 
 const mapDispatch = (dispatch) => ({
@@ -125,7 +139,9 @@ const mapDispatch = (dispatch) => ({
 })
 
 const mapState = (state) => ({
-    fileList:state.getIn(['left','userInfo']).toJS().fileList
+    fileList:state.getIn(['left','userInfo']).toJS().fileList,
+    customerDetail:state.getIn(['left','userInfo']).toJS().customerDetail,
+    spin:state.getIn(['left','spin'])
 })
 
 export default connect(mapState, mapDispatch)(MiddleWrapper)

@@ -27,3 +27,17 @@ export const userLogin = (count, passWord) => {
         })
     })
 };
+
+
+// 客户详情
+export const getCustomerDetail = (id) => {
+    return new Promise((resolve, reject) => {
+        service.get('/api/customerDetail.json')
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
