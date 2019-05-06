@@ -53,4 +53,10 @@ export const Globalstyle = createGlobalStyle`
     border-collapse: collapse;
     border-spacing: 0;
   }
+  .isShow{
+      display:block;
+  }
+  .isHide{
+      display:none;
+  }
 `;

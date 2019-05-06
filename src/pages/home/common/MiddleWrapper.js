@@ -15,8 +15,9 @@ import {
 } from '../style'
 
 class MiddleWrapper extends PureComponent{
+
     render () {
-        const { customerList,handleMiddleList, handleAddCustomer, addCustomer } = this.props;
+        const { customerList,handleMiddleList, handleAddCustomer, addCustomer, isAdd } = this.props;
         return (
             <Customer>
                 <MiddleHeader>
@@ -40,12 +41,12 @@ class MiddleWrapper extends PureComponent{
                 </SearchWrapper> */}    
 
                 <MiddleListWrapper className="editSrollBar">
-                    <AddCustomerWrapper className="AddCustomerWrapper-show" onClick={addCustomer}>
+                    <AddCustomerWrapper className="AddCustomerWrapper-show" onClick={() => {addCustomer(isAdd)}}>
                         新建客户
                     </AddCustomerWrapper>
                     {
                         customerList && customerList.map((item, index) => (
-                            <MiddleList onClick={() => {handleMiddleList(index, item.id, item.active)}} key={item.id} className={customerList[index].active?'selected':''} >
+                            <MiddleList onClick={() => {handleMiddleList(index, item.id, item.active, isAdd)}} key={item.id} className={customerList[index].active?'selected':''} >
                                 <img src={item.src} alt="" />
                                 <CustomerInfo >
                                     <p>
@@ -75,9 +76,16 @@ class MiddleWrapper extends PureComponent{
 
 const mapDispatch = (dispatch) => ({
     // 点击管理客户列表
-    handleMiddleList(index, id, active) {
+    handleMiddleList(index, id, active, isAdd) {
         const action = actionCreators.clickMiddleList(index, id, active)
         dispatch(action)
+        if(isAdd){
+            let action = actionCreators.clickAddCustomer(false)
+            dispatch(action)
+            let el = document.getElementsByClassName('AddCustomerWrapper-show')[0]
+            el.style.height = 0 + 'px';
+        }
+        
     },
 
     // 重新计算高度
@@ -95,9 +103,12 @@ const mapDispatch = (dispatch) => ({
     },
 
     // 添加客户
-    addCustomer() {
-        const action = actionCreators.clickAddCustomer(true)
-        dispatch(action)
+    addCustomer(isAdd) {
+        if(!isAdd){
+            const action = actionCreators.clickAddCustomer(true)
+            dispatch(action)
+        }
+        
     }
 
    

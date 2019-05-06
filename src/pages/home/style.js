@@ -170,6 +170,8 @@ export const MiddleHeader = styled.div`
         float:left;
         line-height:60px;
         padding-left:30px;
+        font-size:16px;
+        color:#333;
     }
 `;
 
@@ -282,17 +284,18 @@ export const RightHeaderWrapper = styled.div`
     border-bottom:1px solid #f7f7f7;
     display:flex;
     justify-content:flex-end;
+
+    &.isOpacity{
+        opacity:0;
+        display:block;
+        width:0;
+    }
 `;
 
 export const RightWrapper = styled.div`
     width:90%;
     margin:30px auto;
-    .isShow{
-        display:block;
-    }
-    .isHide{
-        display:none;
-    }
+    
     .example {
         width:80px;
         margin:30px auto;

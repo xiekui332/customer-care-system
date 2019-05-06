@@ -22,15 +22,23 @@ const defaultState = fromJS({
         customerDetail:{
            
         },
-
     },
-
     
     // loading
     spin:false,
 
     // add
-    isAdd:false
+    isAdd:true,
+
+    previewVisible: false,
+    previewImage: '',
+    fileList: [{
+      uid: '-1',
+      name: 'xxx.png',
+      status: 'done',
+      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    }]
+    
     
 
 })
