@@ -7,29 +7,17 @@ const defaultState = fromJS({
         // 客户管理列表
         name:"",
         logo:"",
-        list:[
-            
-        ],
-        customerList:[
-            
-        ],
+        list:[],
+        customerList:[],
         // 文件列表
-        fileList:[
-            
-        ],
-
+        fileList:[],
         // 客户详情
-        customerDetail:{
-           
-        },
+        customerDetail:{},
     },
-    
     // loading
     spin:false,
-
     // add
-    isAdd:true,
-
+    isAdd:false,
     previewVisible: false,
     previewImage: '',
     fileList: [{
@@ -37,8 +25,8 @@ const defaultState = fromJS({
       name: 'xxx.png',
       status: 'done',
       url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    }]
-    
+    }],
+    isEdit:false
     
 
 })
@@ -49,10 +37,15 @@ const changeMiddleListAcrtive = (state, action) => {
     // console.log(action.data.customerDetail)
     userInfo.customerDetail = action.data.customerDetail
     let data = userInfo.customerList
-    for(let i = 0; i < data.length; i ++){
-        data[i].active = false
+    if(action.isEdit){
+        data[action.index].active = action.status
+    }else{
+        for(let i = 0; i < data.length; i ++){
+            data[i].active = false
+        }
+        data[action.index].active = action.status
     }
-    data[action.index].active = action.status
+    
     return state.merge({
         userInfo:fromJS(userInfo)
     })
@@ -74,6 +67,10 @@ export default ((state = defaultState, action) => {
         return state.merge({
             isAdd:fromJS(action.bool)
         });
+        case constants.IS_EDIT:
+        return state.merge({
+                    isEdit:fromJS(action.bool)
+                });
         default:
         return state;
     }

@@ -22,7 +22,7 @@ export const getMiddleList = () => {
 }
 
 // 点击MiddleList数据
-export const clickMiddleList = (index, id, active) => {
+export const clickMiddleList = (index, id, active, isEdit) => {
     return (dispatch) => {
         
         if(active === true){
@@ -43,7 +43,8 @@ export const clickMiddleList = (index, id, active) => {
                     type:constants.CLICK_MIDDLE_LIST,
                     status:true,
                     index,
-                    data:result
+                    data:result,
+                    isEdit
                 }
                 dispatch(action)
 
@@ -66,6 +67,17 @@ export const clickAddCustomer = (bool) => {
     return (dispatch) => {
         let action = {
             type:constants.IS_ADD,
+            bool
+        }
+        dispatch(action)
+    }
+};
+
+// 点击编辑
+export const clickEdit = (bool) => {
+    return (dispatch) => {
+        let action = {
+            type:constants.IS_EDIT,
             bool
         }
         dispatch(action)

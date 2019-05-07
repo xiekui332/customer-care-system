@@ -132,7 +132,8 @@ export const RightCon = styled.div`
 `;
 
 export const Customer = styled.div`
-    flex:1;
+    width:400px;
+    position:relative;
 `;
 
 export const DetailWrapper = styled.div`
@@ -177,8 +178,115 @@ export const MiddleHeader = styled.div`
 
 // 搜索部分
 export const SearchWrapper = styled.div`
+    height:0;
+    overflow:hidden;
     background:#f7f7f7;
-    height:270px;
+    input{
+        outline:none;
+        border:1px solid #dcdcdc;
+        border-radius:5px;
+        padding:0 10px;
+    }
+    input:focus{
+        border:1px solid #55a12f;
+    }
+    input::placeholder{
+        font-size:12px;
+        color:#999;
+    }
+    margin-bottom:20px;
+    transition:all ease-in .2s;
+`;
+
+export const SearchInput = styled.input`
+    display:block;
+    width:200px;
+    height:30px;
+    float:left;
+    margin-top:20px;
+`;
+
+export const SearchCondition = styled.div`
+    display:block;
+    width:340px;
+    margin:0px auto;
+    overflow:hidden;
+    span{
+        display:block;
+        float:left;
+        font-size:13px;
+        color:#666;
+        line-height:30px;
+        margin-top:20px;
+        margin-right:10px;
+    }
+`;
+
+export const AddButtonWrapper = styled.div`
+    display:flex;
+    justify-content:flex-end;
+`;
+
+export const AddCusButton = styled.div`
+    width:70px;
+    height:30px;
+    border-radius:2px;
+    font-size:14px;
+    text-align:center;
+    line-height:30px;
+    margin:15px 0;
+    cursor:pointer;
+    &.add-save{
+        background:#55a12f;
+        color:#FFF;
+        margin-right:30px;
+    }
+    &.add-cancel{
+        color:#666;
+    }
+`;
+
+export const SearchItem = styled.div`
+    width:160px;
+    float:left;
+    margin:0 0 10px 0;
+    p{
+        font-size:14px;
+        color:#333;
+    }
+    &:nth-child(odd){
+        float:left;
+        margin-right:20px;
+    }
+`;
+
+export const SearchSelectItem = styled.input`
+    &{
+        outline:none;
+        border:1px solid #dcdcdc;
+        border-radius:5px;
+        padding:0 10px;
+        height:30px;
+        background:#fff;
+    }
+    &:focus{
+        border:1px solid #55a12f;
+    }
+    &::placeholder{
+        font-size:12px;
+        color:#999;
+    }
+`;
+
+export const SearchSelect = styled.div`
+    height:30px;
+    background:#fff;
+    position:relative;
+    & .iconfont{
+        position:absolute;
+        right:0px;
+        top:2px;
+    }
 `;
 
 export const OperateWrapper = styled.div`
@@ -212,6 +320,9 @@ export const MiddleListWrapper = styled.div`
         background-color:#dbdbdb;
         border-radius: 4px;
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    }
+    &.MiddleListWrapper-active{
+        padding-bottom:75px;
     }
 `;
 
@@ -250,6 +361,40 @@ export const MiddleList = styled.div`
     }
 `;
 
+export const MiddleChceckBox = styled.div`
+    width:0;
+    opacity:0;
+    border-radius:50%;
+    border:1px solid #dcdcdc;
+    background:#fff;
+    float:left;
+    margin:30px -5px 0 15px;
+    position:relative;
+    span{
+        color:#55a12f;
+        position:absolute;
+        top: -5px;
+        left: -1px;
+        font-size: 19px;
+        display:none;
+    }
+    &.middle-check-box-show{
+        width:20px;
+        height:20px;
+        opacity:1;
+        span{
+            display:block;
+        }
+    }
+    &.middleChceckBox-show{
+        display:block;
+        width:20px;
+        height:20px;
+        opacity:1;
+    }
+    transition:all ease-in .2s;
+`;
+
 
 export const CustomerInfo = styled.div`
     float:left;
@@ -275,6 +420,38 @@ export const CustomerInfo = styled.div`
     }
 `;
 
+
+export const EditWrapper = styled.div`
+    display:flex;
+    width:100%;
+    height:75px;
+    position:absolute;
+    left:0;
+    bottom:-75px;
+    background:#fff;
+    border:1px solid #f7f7f7;
+    box-sizing:content-box;
+    transition:all ease-in .2s;
+    &.editWrapper-active{
+        bottom:0px;
+    }
+`;
+
+export const EditItem = styled.div`
+    flex:1;
+    height:100%;
+    text-align:center;
+    font-size:14px;
+    color:#999;
+    padding-top:10px;
+    cursor:pointer;
+    .iconfont{
+        font-size:20px;
+    }
+    &:hover{
+        color:#666;
+    }
+`;
 
 // RightWrapper details
 
