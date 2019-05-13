@@ -22,11 +22,15 @@ import {
 class Login extends PureComponent{
     constructor(props){
         super(props)
-        this.state = ({
+        this.state = {
             msg:'',
             status:false,           // 错误提示
-            loginCondition:true     // 登录和找回密码切换
-        })
+            loginCondition:false,     // 登录和找回密码切换
+            captchaCode:true,         // 验证码
+            captchaText:'获取验证码'
+        }
+
+        this.getCaptchaCode = this.getCaptchaCode.bind(this)
     }
 
     render() {
@@ -65,7 +69,7 @@ class Login extends PureComponent{
                             <LoginInputWrapper>
                                 <p>短信验证码</p>
                                 <MessageInput placeholder="请输入短信验证码" ref={(input) => this.mesNumber = input} ></MessageInput>
-                                <MessageButton>获取验证码</MessageButton>
+                                <MessageButton onClick={this.getCaptchaCode}>{this.state.captchaText}</MessageButton>
                             </LoginInputWrapper>
                             <LoginInputWrapper>
                                 <p>新密码</p>
@@ -118,6 +122,38 @@ class Login extends PureComponent{
         this.setState({
             loginCondition:true
         })
+    };
+
+    // 获取验证码
+    getCaptchaCode() {
+        let count = 10;
+        let timer = () => {
+            setInterval(() => {
+                if(count > 0) {
+                    count = count - 1;
+                    this.setState({
+                        captchaCode:false,
+                        captchaText:count
+                    })
+                    console.log(count)
+                    console.log(this.state.captchaCode)
+                }else{
+                    this.setState({
+                        captchaCode:true,
+                        captchaText:"获取验证码"
+                    }, clearInterval(timer))
+                    
+                }
+                
+            }, 1000)
+        }
+        if(this.state.captchaCode) {
+            
+            this.setState({
+                captchaCode:false,
+                captchaText:count
+            }, timer(count))
+        }
     }
 
 
