@@ -50,7 +50,9 @@ class MiddleWrapper extends PureComponent{
                    
 
                 <MiddleListWrapper className="editSrollBar" ref={(MiddleListWrapper) => {this.MiddleListWrapper = MiddleListWrapper}}>
-                    <AddCustomerWrapper className="AddCustomerWrapper-show" onClick={() => {addCustomer(isAdd)}}>
+                    <AddCustomerWrapper 
+                        className="AddCustomerWrapper-show" 
+                        onClick={() => {addCustomer(isAdd)}}>
                         新建客户
                     </AddCustomerWrapper>
 
@@ -192,8 +194,19 @@ const mapDispatch = (dispatch) => ({
         MiddleListWrapper.classList.add("MiddleListWrapper-active")
 
         let el = document.getElementsByClassName('middleChceckBox')
+        let el_AddCustomer = document.getElementsByClassName('AddCustomerWrapper-show')[0]
+        el_AddCustomer.style.height = 0 + 'px';
+        let el_Search = document.getElementsByClassName('SearchWrapper')[0]
+        el_Search.style.height = 0 + 'px';
+
         for(let i = 0; i < el.length; i ++){
             el[i].classList.add('middleChceckBox-show')
+        }
+
+        if(isAdd){
+            let action = actionCreators.clickAddCustomer(false)
+            dispatch(action)
+            
         }
 
         let action = actionCreators.clickEdit(true)

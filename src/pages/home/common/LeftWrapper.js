@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import customer from '../../../statics/images/nav_icon_guanli.png'
 import message from '../../../statics/images/nav_icon_duanxi.png'
 import mine from '../../../statics/images/nav_icon_wo.png'
@@ -35,19 +36,25 @@ class LeftCon extends PureComponent {
 
                 <LeftItemUl>
                     <LeftItemLi>
-                        <img src={customer} alt="" />
-                        <span>客户管理</span>
+                        <Link to={"/"} replace>
+                            <img src={customer} alt="" />
+                            <span>客户管理</span>
+                        </Link>
                     </LeftItemLi>
                     <LeftItemLi>
-                        <img src={message} alt="" />
-                        <span>短信管理</span>
+                        <Link to={"/message"} replace>
+                                <img src={message} alt="" />
+                                <span>短信管理</span>
+                        </Link>
                     </LeftItemLi>
                     <LeftItemLi>
-                        <img src={mine} alt="" />  
-                        <span>
-                            我的
-                            <i></i>
-                        </span> 
+                        <Link to={"/mine"} replace>
+                            <img src={mine} alt="" />  
+                            <span>
+                                我的
+                                <i></i>
+                            </span> 
+                        </Link>
                     </LeftItemLi>
                 </LeftItemUl>
 

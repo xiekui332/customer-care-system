@@ -515,6 +515,7 @@ export const RightCarousel = styled.div`
     margin:30px auto;
     &.swiper-container{
         width:100%;
+        position:relative;
         margin:30px auto;
         .iconfont{
             position:absolute;
@@ -535,10 +536,18 @@ export const RightCarousel = styled.div`
         }
     }
     .swiper-slide{
-        
+        flex:1;
+        text-align:center;
+        background:pink;
     }
     & .swiper-wrapper{
-        width:0;
+        position: absolute;
+        left: 0;
+        width: 100%;
+        display:flex;
+    }
+    .swiper-button-disabled{
+        display:none;
     }
 `;
 

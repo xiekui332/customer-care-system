@@ -81,6 +81,8 @@ class MiddleWrapper extends PureComponent{
                                         <div className="swiper-slide">Slide 1</div>
                                         <div className="swiper-slide">Slide 2</div>
                                         <div className="swiper-slide">Slide 3</div>
+                                        <div className="swiper-slide">Slide 4</div>
+                                        <div className="swiper-slide">Slide 5</div>
                                     </div>
                                     <div className='swiper-pagination'></div>
                             </RightCarousel>
@@ -118,10 +120,12 @@ class MiddleWrapper extends PureComponent{
     componentDidMount() {
         new Swiper('.swiper-container', {
             autoplay: false,
-            loop: true,
+            loop: false,
             slidesPerView: 4,
+            spaceBetween: 20,
             pagination : {
                 el: '.swiper-pagination',
+                clickable: true,
             },
             // 如果需要前进后退按钮
             navigation: {
@@ -130,17 +134,18 @@ class MiddleWrapper extends PureComponent{
             },
           })
         
-
-        // 动态赋值table
-        let tableWidth = document.getElementsByTagName('table')[0].offsetWidth;
-        document.getElementsByClassName('swiper-wrapper')[0].style.width = tableWidth
+          this.props.onChange()
+        
     }
 
 }
 
 const mapDispatch = (dispatch) => ({
     onChange() {
-        console.log(2)
+        // 动态赋值table
+        // let tableWidth = document.getElementsByTagName('table')[0].offsetWidth;
+        // console.log(tableWidth)
+        // document.getElementsByClassName('swiper-wrapper')[0].style.width = tableWidth
     }
 })
 
