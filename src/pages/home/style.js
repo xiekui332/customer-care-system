@@ -98,6 +98,10 @@ export const LeftItemLi = styled.li`
     &:hover{
         background:#fafafa;
     }
+    a{
+        display:block;
+        height:100%;
+    }
 `;
 
 export const LeftButton = styled.div`
@@ -317,7 +321,7 @@ export const MiddleListWrapper = styled.div`
     }
     &.editSrollBar::-webkit-scrollbar-thumb
     {
-        background-color:#dbdbdb;
+        background-color:#f6f6f6;
         border-radius: 4px;
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     }

@@ -1,10 +1,11 @@
 import service from './request'
 // import QS from 'qs' // 引入qs模块，用来序列化post类型的数据
+const baseUrl = "http://148.70.204.30";
 
 //login
 export const login = (params) => {
     return new Promise((resolve, reject) => {
-        service.post('/user/login', params)
+        service.post(baseUrl + '/user/login', params)
         .then((res) => {
             resolve(res)
         })

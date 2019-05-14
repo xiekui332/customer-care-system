@@ -37,6 +37,7 @@ export const Globalstyle = createGlobalStyle`
     width:100%;
     height:100%;
     overflow: hidden;
+    font-family:Microsoft YaHei;
   }
   #root,.App{
     height:100%;
