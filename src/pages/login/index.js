@@ -1,6 +1,9 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux'
 import { actionCreators } from './store'
+import { Redirect } from 'react-router-dom'
+import { sendCode } from '../../api'
+import { Modal } from 'antd';
 
 import { 
     LoginWrapper ,
@@ -16,7 +19,8 @@ import {
     LoginCondition,
     FindWrapper,
     MessageInput,
-    MessageButton
+    MessageButton,
+    FindTips
 } from './style'
 
 class Login extends PureComponent{
@@ -27,13 +31,64 @@ class Login extends PureComponent{
             status:false,           // 错误提示
             loginCondition:true,     // 登录和找回密码切换
             captchaCode:true,         // 验证码
-            captchaText:'获取验证码'
+            captchaText:'获取验证码',
+            findmsg:''
         }
 
         this.getCaptchaCode = this.getCaptchaCode.bind(this)
+        
+        
     }
 
     render() {
+        const { login, pwd } = this.props;
+
+        if(!login) {
+            return (
+                this.pageData()
+            )
+        }
+        else if(login && pwd){
+            return <Redirect to="/"></Redirect>
+        }
+        else if(login && !pwd){
+            return (
+                this.pageData()
+                
+            )
+            
+        }
+        
+    }
+
+    componentDidUpdate() {
+        const { login, pwd } = this.props;
+        if(login && !pwd) {
+            const confirm = Modal.confirm;
+            confirm({
+                title:"修改密码",
+                content:"请先前往修改密码",
+                cancelText:"取消",
+                okText:"确定",
+                onOk() {
+                    return <Redirect to="/mine"></Redirect>
+                }
+            })
+        }
+        
+    }
+
+    componentDidMount() {
+        if(!sessionStorage.getItem('token')) {
+                this.props.handleLogin()
+        }
+        
+    }
+
+    
+  
+    pageData = () => {
+        
         return (
             <LoginWrapper>
                 <BackLogo></BackLogo>
@@ -50,7 +105,9 @@ class Login extends PureComponent{
                         </LoginInputWrapper>
                         <LoginTips className={this.state.status?"isOpacity":""}>请输入{this.state.msg}</LoginTips>
                         <LoginButtonWapper>
-                            <LoginYes onClick={() => {this.checkLogin(this.userName, this.passWord)}}>登录</LoginYes>
+                            <LoginYes 
+                                onClick={() => {this.checkLogin(this.userName, this.passWord)}}
+                            >登录</LoginYes>
                             <LoginFind onClick={() => {this.findPassword()}}>找回密码</LoginFind>
                         </LoginButtonWapper>
                     </LoginCondition>
@@ -60,7 +117,7 @@ class Login extends PureComponent{
                             <p>找回密码</p>
                             <LoginInputWrapper>
                                 <p>手机号</p>
-                                <UserInput placeholder="请输入手机号" ref={(input) => this.photoNumber = input} ></UserInput>
+                                <UserInput placeholder="请输入手机号" ref={(input) => this.phoneNumber = input} ></UserInput>
                             </LoginInputWrapper>
                             <LoginInputWrapper>
                                 <p>身份证号</p>
@@ -68,15 +125,16 @@ class Login extends PureComponent{
                             </LoginInputWrapper>
                             <LoginInputWrapper>
                                 <p>短信验证码</p>
-                                <MessageInput placeholder="请输入短信验证码" ref={(input) => this.mesNumber = input} ></MessageInput>
-                                <MessageButton onClick={this.getCaptchaCode}>{this.state.captchaText}</MessageButton>
+                                <MessageInput maxLength="6" placeholder="请输入短信验证码" ref={(input) => this.mesNumber = input} ></MessageInput>
+                                <MessageButton onClick={() => {this.getCaptchaCode(this.phoneNumber, this.idCard)}}>{this.state.captchaText}</MessageButton>
                             </LoginInputWrapper>
                             <LoginInputWrapper>
                                 <p>新密码</p>
                                 <UserInput placeholder="请输入新密码" ref={(input) => this.newPassword = input} type="password" ></UserInput>
                             </LoginInputWrapper>
+                            <FindTips>{this.state.findmsg}</FindTips>
                             <LoginButtonWapper>
-                                <LoginYes onClick={() => {}}>确定</LoginYes>
+                                <LoginYes onClick={() => {this.findPwoSure(this.phoneNumber, this.idCard, this.mesNumber, this.newPassword)}}>确定</LoginYes>
                                 <LoginFind onClick={() => {this.backLogin(true)}}>返回登录</LoginFind>
                             </LoginButtonWapper>
                         </FindWrapper>
@@ -84,9 +142,7 @@ class Login extends PureComponent{
                 </RightWrapper>
             </LoginWrapper>
         )
-        
     }
-
     
     // 登陆校验
     checkLogin(userName, passWord) {
@@ -95,12 +151,14 @@ class Login extends PureComponent{
                 msg:"用户名",
                 status:true
             })
-        }else if(!passWord.value){
-            this.setState({
-                msg:"密码",
-                status:true
-            })
-        }else{
+        }
+        // else if(!passWord.value){
+        //     this.setState({
+        //         msg:"密码",
+        //         status:true
+        //     })
+        // }
+        else{
             this.setState({
                 status:false
             })
@@ -117,6 +175,37 @@ class Login extends PureComponent{
         })
     };
 
+    // 找回密码确定按钮
+    findPwoSure(telel, idel, msgel, newPwoel) {
+        let params = {}
+        if(!telel.value || !idel.value || !msgel.value || !newPwoel.value){
+            this.setState({
+                findmsg:"请完善信息"
+            })
+        }else if(!/^1[34578]\d{9}$/.test(telel.value)) {
+            this.setState({
+                findmsg:"请填写正确手机号"
+            })
+        }else if(!/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(idel.value)){
+            this.setState({
+                findmsg:"请填写正确身份证号"
+            })
+        }
+        
+        else{
+            this.setState({
+                findmsg:""
+            })
+             params = {
+                mobilePhone:telel.value,
+                userId:idel.value,
+                code:msgel.value,
+                password:newPwoel.value
+            }
+        }
+        console.log(params)
+    };
+
     // 返回登陆
     backLogin() {
         this.setState({
@@ -125,33 +214,73 @@ class Login extends PureComponent{
     };
 
     // 获取验证码
-    getCaptchaCode() {
+    getCaptchaCode(telel, idel) {
         let count = 60;
-        let timer = () => {
-        let timerInter = setInterval(() => {
-                
-                if(count > 0) {
-                    count = count - 1;
-                    this.setState({
-                        captchaText:count
-                    })
-                }else{
-                    clearInterval(timerInter)
-                    this.setState({
-                        captchaCode:true,
-                        captchaText:"获取验证码"
-                    })
+        
+        // 发送验证码校验电话号和身份证号码
+        if(telel.value && idel.value && /^1[34578]\d{9}$/.test(telel.value) && /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(idel.value)){
+            let params = {
+                mobilePhone:telel.value,
+                idcard:idel.value
+            }
+            if(this.state.captchaCode) {
+                sendCode(params)
+                .then((res) => {
+                    console.log(res)
+                    let timer = () => {
+                    let timerInter = setInterval(() => {
+                            
+                            if(count > 0) {
+                                count = count - 1;
+                                this.setState({
+                                    captchaText:count
+                                })
+                            }else{
+                                clearInterval(timerInter)
+                                this.setState({
+                                    captchaCode:true,
+                                    captchaText:"获取验证码"
+                                })
+                                
+                            }
+                            
+                        }, 1000)
+                        
+                    }
+                    if(this.state.captchaCode) {
+                        this.setState({
+                            captchaCode:false,
+                            captchaText:count
+                        }, timer())
+                    }
                     
-                }
-                
-            }, 1000)
-            
-        }
-        if(this.state.captchaCode) {
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+            }
+
             this.setState({
-                captchaCode:false,
-                captchaText:count
-            }, timer())
+                findmsg:""
+            })
+
+            
+        }else if(!telel.value) {
+            this.setState({
+                findmsg:"请输入电话号码"
+            })
+        }else if(!/^1[34578]\d{9}$/.test(telel.value)) {
+            this.setState({
+                findmsg:"请输入正确电话号码"
+            })
+        }else if(!idel.value) {
+            this.setState({
+                findmsg:"请输入身份证号码"
+            })
+        }else if(!/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(idel.value)) {
+            this.setState({
+                findmsg:"请输入正确身份证号码"
+            })
         }
     }
 
@@ -161,15 +290,32 @@ class Login extends PureComponent{
 const mapDispatch = (dispatch) => ({
     handleLogin(userName, passWord) {
         let params = {
-            userName:userName.value,
-            password:passWord.value
+            userName:'',
+            password:''
         }
-
-        const action = actionCreators.loginStatus(params)
-        dispatch(action)
+        if(!userName && !passWord) {
+            let action = actionCreators.loginStatus(params, 'notoken')
+            dispatch(action)
+        }else{
+            params.userName = userName.value
+            params.password = passWord.value
+            let action = actionCreators.loginStatus(params)
+            dispatch(action)
+        }
+        
     },
 
-    
-})
+    handleFindPwo() {
 
-export default connect(null, mapDispatch)(Login)
+    }
+
+    
+});
+
+
+const mapState = (state) => ({
+    login:state.getIn(['login', 'isLogin']),
+    pwd:state.getIn(['login', 'pwd'])
+});
+
+export default connect(mapState, mapDispatch)(Login)

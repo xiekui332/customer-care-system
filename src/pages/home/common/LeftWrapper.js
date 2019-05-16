@@ -16,9 +16,20 @@ import {
 
 
 class LeftCon extends PureComponent {
-    
     render () {
-        const { userInfo } = this.props;
+        
+        const user = JSON.parse(sessionStorage.getItem("user"))
+        let part = '';
+        if(user.userType === 1) {
+            part = "用户管理员"
+        }else if(user.userType === 2) {
+            part = "客户经理"
+        }else if(user.userType === 3) {
+            part = "审核员"
+        }else if(user.userType === 4) {
+            part = "业务管理员"
+        }
+        // console.log(user)
         return (
             <LeftWrapper>
                 <LeftTop>
@@ -27,11 +38,11 @@ class LeftCon extends PureComponent {
                 </LeftTop>
                 <LeftCustomer>
                     {
-                        userInfo.logo === ""?
+                        !user.logo?
                         <span className="iconfont">&#xe61a;</span>:
-                        <img src={userInfo.logo} alt="" />
+                        <img src={user.logo} alt="" />
                     }
-                    <p>{userInfo.name}/{userInfo.part}</p>
+                    <p>{user.userName } /{ part}</p>
                 </LeftCustomer>
 
                 <LeftItemUl>
@@ -59,9 +70,11 @@ class LeftCon extends PureComponent {
                 </LeftItemUl>
 
                 <LeftButton>
-                    <div>
-                        <span className="iconfont">&#xe673;</span>
-                        <span>退出</span>
+                    <div onClick={() => {this.handleLogout()}}>
+                        <Link to="/login">
+                            <span className="iconfont">&#xe673;</span>
+                            <span>退出</span>
+                        </Link>
                     </div>
                     <div>
                         <span className="iconfont">&#xe60a;</span>
@@ -70,16 +83,23 @@ class LeftCon extends PureComponent {
                 </LeftButton>
             </LeftWrapper>
         )
+        
     }
 
 
     componentDidMount() {
         this.props.getHomeData()
     }
+
+    handleLogout() {
+        sessionStorage.clear()
+    }
+    
 }
 
 const mapState = (state) => ({
-    userInfo:state.getIn(['left', 'userInfo']).toJS()
+    // userInfo:state.getIn(['left', 'userInfo']).toJS()
+    login:state.getIn(['login', 'isLogin'])
 })
 
 const mapDispatch = (dispatch) => ({

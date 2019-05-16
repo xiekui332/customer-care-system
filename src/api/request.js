@@ -6,14 +6,20 @@ const service = axios.create({
     withCredentials: true // 选项表明了是否是跨域请求
 })
 
-service.interceptors.request.use(config => {
-    return config;
-}, err => {
-    console.log('请求失败')
-    return Promise.reject(err)
-})
 
-//拦截响应
+service.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+
+// request
+service.interceptors.request.use(
+    config => {
+        return config;
+    }, err => {
+        console.log('请求失败')
+        return Promise.reject(err)
+    }
+)
+
+// response
 service.interceptors.response.use(config => {
     return config;
 }, err => {
@@ -21,17 +27,5 @@ service.interceptors.response.use(config => {
     return Promise.reject(err)
 })
 
-// respone拦截器
-service.interceptors.response.use(
-    response => {
-      /**
-      * code为非000000是抛错 可结合自己业务进行修改
-      */
-      return response
-    },
-    error => {
-      return Promise.reject(error)
-    }
-)
 
 export default service

@@ -1,6 +1,9 @@
 import * as constants from './constants'
 import { getHomeData, getCustomerDetail } from "../../../api"
 
+
+
+
 // 获取MiddleList数据
 export const getMiddleList = () => {
     return (dispatch) => {

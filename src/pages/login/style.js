@@ -137,3 +137,10 @@ export const MessageButton = styled.div`
     cursor:pointer;
     float:right;
 `;
+
+export const FindTips = styled.div`
+    height:15px;
+    font-size:12px;
+    color:red;
+    margin:-10px auto 10px;
+`;

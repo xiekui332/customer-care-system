@@ -125,6 +125,13 @@ export const LeftButton = styled.div`
     div:nth-child(2) span:nth-child(1){
         margin:0 5px 0 0px;
     }
+    a{
+        display:block;
+        color:#666;
+    }
+    a:hover{
+        color:#666;
+    }
 `;
 
 // 客户管理和详情整个部分
@@ -542,7 +549,6 @@ export const RightCarousel = styled.div`
     .swiper-slide{
         flex:1;
         text-align:center;
-        background:pink;
     }
     & .swiper-wrapper{
         position: absolute;
