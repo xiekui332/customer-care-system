@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { actionCreators } from './store'
 import { Redirect } from 'react-router-dom'
 import { sendCode } from '../../api'
-import { Modal } from 'antd';
+import { Modal, message } from 'antd';
 
 import { 
     LoginWrapper ,
@@ -38,6 +38,7 @@ class Login extends PureComponent{
         this.getCaptchaCode = this.getCaptchaCode.bind(this)
         
         
+        
     }
 
     render() {
@@ -62,7 +63,7 @@ class Login extends PureComponent{
     }
 
     componentDidUpdate() {
-        const { login, pwd } = this.props;
+        const { login, pwd, history } = this.props;
         if(login && !pwd) {
             const confirm = Modal.confirm;
             confirm({
@@ -71,7 +72,7 @@ class Login extends PureComponent{
                 cancelText:"取消",
                 okText:"确定",
                 onOk() {
-                    return <Redirect to="/mine"></Redirect>
+                    history.push({pathname :"/mine"})
                 }
             })
         }
@@ -226,33 +227,40 @@ class Login extends PureComponent{
             if(this.state.captchaCode) {
                 sendCode(params)
                 .then((res) => {
-                    console.log(res)
-                    let timer = () => {
-                    let timerInter = setInterval(() => {
-                            
-                            if(count > 0) {
-                                count = count - 1;
-                                this.setState({
-                                    captchaText:count
-                                })
-                            }else{
-                                clearInterval(timerInter)
-                                this.setState({
-                                    captchaCode:true,
-                                    captchaText:"获取验证码"
-                                })
+                    let data = res.data;
+                    console.log(data)
+                    if(data.code === 1 && data.msg === 'success') {
+                        let timer = () => {
+                        let timerInter = setInterval(() => {
                                 
-                            }
+                                if(count > 0) {
+                                    count = count - 1;
+                                    this.setState({
+                                        captchaText:count
+                                    })
+                                }else{
+                                    clearInterval(timerInter)
+                                    this.setState({
+                                        captchaCode:true,
+                                        captchaText:"获取验证码"
+                                    })
+                                    
+                                }
+                                
+                            }, 1000)
                             
-                        }, 1000)
-                        
+                        }
+                        if(this.state.captchaCode) {
+                            this.setState({
+                                captchaCode:false,
+                                captchaText:count
+                            }, timer())
+                        }
+                    }else {
+                        message.error(data.msg);
                     }
-                    if(this.state.captchaCode) {
-                        this.setState({
-                            captchaCode:false,
-                            captchaText:count
-                        }, timer())
-                    }
+                    
+                    
                     
                 })
                 .catch((err) => {

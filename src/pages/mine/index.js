@@ -25,14 +25,16 @@ class Mine extends PureComponent {
     constructor(props){
         super(props)
         this.state = ({
-            list:[1,2,3,4,5,6,7,8,9]
+            list:[1,2,3,4,5,6,7,8,9],
+            panelType:1
         })
     }
 
     render() {
         const TabPane = Tabs.TabPane;
-        const operations = <Button>保存</Button>;
-        const { login }  = this.props;
+        const { login, handleSave }  = this.props;
+        const { panelType } = this.state;
+        const operations = <Button onClick={() => {handleSave(panelType)}}>保存</Button>;
         if(login){
             return(
                 <MineWrapepr>
@@ -68,7 +70,7 @@ class Mine extends PureComponent {
                         </MineMiddle>
 
                         <MineRight>
-                            <Tabs tabBarExtraContent={operations}>
+                            <Tabs tabBarExtraContent={operations} onTabClick={(key) => {this.setState({panelType:key })}}>
                                 <TabPane tab="修改密码" key="1">
                                     <ChangePanel>
                                         <ChangePwoTitle>
@@ -76,11 +78,11 @@ class Mine extends PureComponent {
                                         </ChangePwoTitle>
                                         <Input className="change-pwo-input" placeholder="请输入旧密码" />
                                         <ChangePwoTitle>
-                                        新密码
+                                            新密码
                                         </ChangePwoTitle>
                                         <Input className="change-pwo-input" placeholder="请输入新密码" />
                                         <ChangePwoTitle>
-                                        确认新密码
+                                            确认新密码
                                         </ChangePwoTitle>
                                         <Input className="change-pwo-input" placeholder="请再次输入新密码" />
                                     </ChangePanel>
@@ -113,7 +115,17 @@ const mapState = (state) => ({
 })
 
 const mapDispatch = (dispatch) => ({
-    
+    handleSave(panelType) {
+        // let params = {}
+        if(panelType === 1) {
+            // params = {
+                
+            // }
+        }else{
+
+        }
+    }
+
 })
 
 export default connect(mapState, mapDispatch)(Mine)
