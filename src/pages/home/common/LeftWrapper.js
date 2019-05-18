@@ -16,9 +16,17 @@ import {
 
 
 class LeftCon extends PureComponent {
+    constructor(props) {
+        super(props)
+        this.state = {
+            
+        }
+    }
+
     render () {
-        
+        const { changepwd } = this.props;
         const user = JSON.parse(sessionStorage.getItem("user"))
+
         let part = '';
         if(user.userType === 1) {
             part = "用户管理员"
@@ -45,27 +53,79 @@ class LeftCon extends PureComponent {
                     <p>{user.userName } /{ part}</p>
                 </LeftCustomer>
 
-                <LeftItemUl>
-                    <LeftItemLi>
-                        <Link to={"/"} replace>
-                            <img src={customer} alt="" />
-                            <span>客户管理</span>
-                        </Link>
+                <LeftItemUl
+                    ref={(ul) => {this.ul = ul}}>
+                    <LeftItemLi className={user.userType === 1?"isShow":"isHide"}
+                        ref={(li) => {this.liUser = li}}
+                        onClick={() => {this.handleActive(this.ul, this.liUser)}}>
+                        {
+                            changepwd?
+                            <div>
+                                <img src={customer} alt="" />
+                                <span>用户管理</span>
+                            </div>
+                            :
+                            <Link to={"/user"} replace>
+                                <img src={customer} alt="" />
+                                <span>用户管理</span>
+                            </Link>
+                        }
+                        
                     </LeftItemLi>
-                    <LeftItemLi>
-                        <Link to={"/message"} replace>
+                    <LeftItemLi
+                        ref={(li) => {this.liCust = li}}
+                        onClick={() => {this.handleActive(this.ul, this.liCust)}}>
+                        {
+                            changepwd?
+                            <div>
+                                <img src={customer} alt="" />
+                                <span>客户管理</span>
+                            </div>
+                            :
+                            <Link to={"/"} replace>
+                                <img src={customer} alt="" />
+                                <span>客户管理</span>
+                            </Link>
+                        }
+                        
+                    </LeftItemLi>
+                    <LeftItemLi className="nowork"
+                        ref={(li) => {this.liMess = li}}
+                        onClick={() => {this.handleActive(this.ul, this.liMess)}}>
+                        {
+                            changepwd?
+                            <div>
                                 <img src={message} alt="" />
                                 <span>短信管理</span>
-                        </Link>
+                            </div>
+                            :
+                            <Link to={"/message"} replace>
+                                    <img src={message} alt="" />
+                                    <span>短信管理</span>
+                            </Link>
+                        }
                     </LeftItemLi>
-                    <LeftItemLi>
-                        <Link to={"/mine"} replace>
-                            <img src={mine} alt="" />  
-                            <span>
-                                我的
-                                <i></i>
-                            </span> 
-                        </Link>
+                    <LeftItemLi
+                        ref={(li) => {this.liMine = li}}
+                        onClick={() => {this.handleActive(this.ul, this.liMine)}}>
+                        {
+                            changepwd?
+                            <div>
+                                <img src={mine} alt="" />  
+                                <span>
+                                    我的
+                                    <i></i>
+                                </span> 
+                            </div>
+                            :
+                            <Link to={"/mine"} replace>
+                                <img src={mine} alt="" />  
+                                <span>
+                                    我的
+                                    <i></i>
+                                </span> 
+                            </Link>
+                        }
                     </LeftItemLi>
                 </LeftItemUl>
 
@@ -94,12 +154,22 @@ class LeftCon extends PureComponent {
     handleLogout() {
         sessionStorage.clear()
     }
+
+    //  点击左侧菜单
+    handleActive(ulEl, liEl) {
+        let elList = ulEl.childNodes
+        for(let i = 0; i < elList.length; i ++) {
+            elList[i].classList.remove('handleActice')
+        }
+        liEl.classList.add('handleActice')
+
+    }
     
 }
 
 const mapState = (state) => ({
-    // userInfo:state.getIn(['left', 'userInfo']).toJS()
-    login:state.getIn(['login', 'isLogin'])
+    login:state.getIn(['login', 'isLogin']),
+    changepwd:state.getIn(['mine', 'changepwd'])
 })
 
 const mapDispatch = (dispatch) => ({

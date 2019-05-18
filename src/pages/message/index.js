@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import LeftCon from '../home/common/LeftWrapper'
 import { Input } from 'antd';
+import { sessionGetItem } from '../../api'
 
 import {
     MessagePage,
@@ -31,7 +32,8 @@ class Message extends PureComponent {
             timeShow:false,
             timeText:"请选择",
             isEdit:false,
-            msgTextarea:""
+            msgTextarea:"",
+            login:sessionGetItem('token')
         })
 
         this.handleTimeSelect = this.handleTimeSelect.bind(this)
@@ -40,8 +42,7 @@ class Message extends PureComponent {
     }
 
     render() {
-        const { login } = this.props;
-        const { timeShow, timeText, isEdit, msgTextarea } = this.state;
+        const { login, timeShow, timeText, isEdit, msgTextarea } = this.state;
         const { TextArea } = Input;
         if(login){
             return(
@@ -169,7 +170,7 @@ class Message extends PureComponent {
 
 
 const mapState = (state) => ({
-    login:state.getIn(['login', 'isLogin'])
+    
 });
 
 const mapDispatch = (dispatch) => ({

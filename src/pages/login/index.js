@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux'
-import { actionCreators } from './store'
 import { Redirect } from 'react-router-dom'
 import { sendCode } from '../../api'
 import { Modal, message } from 'antd';
+import { login, sessionGetItem, sessionSetItem } from "../../api"
 
 import { 
     LoginWrapper ,
@@ -27,6 +27,7 @@ class Login extends PureComponent{
     constructor(props){
         super(props)
         this.state = {
+            login:false,
             msg:'',
             status:false,           // 错误提示
             loginCondition:true,     // 登录和找回密码切换
@@ -36,14 +37,13 @@ class Login extends PureComponent{
         }
 
         this.getCaptchaCode = this.getCaptchaCode.bind(this)
-        
+        this.pageStatus = this.pageStatus.bind(this)
         
         
     }
 
     render() {
         const { login, pwd } = this.props;
-
         if(!login) {
             return (
                 this.pageData()
@@ -55,7 +55,6 @@ class Login extends PureComponent{
         else if(login && !pwd){
             return (
                 this.pageData()
-                
             )
             
         }
@@ -63,8 +62,16 @@ class Login extends PureComponent{
     }
 
     componentDidUpdate() {
-        const { login, pwd, history } = this.props;
-        if(login && !pwd) {
+        this.pageStatus()
+        
+    }
+
+    // 页面登录密码为空则去修改密码界面
+    pageStatus() {
+        const { history } = this.props;
+        const login = sessionGetItem('token')
+        const pwd = sessionGetItem('changepwd')
+        if(login && pwd) {
             const confirm = Modal.confirm;
             confirm({
                 title:"修改密码",
@@ -76,14 +83,10 @@ class Login extends PureComponent{
                 }
             })
         }
-        
     }
 
     componentDidMount() {
-        if(!sessionStorage.getItem('token')) {
-                this.props.handleLogin()
-        }
-        
+        this.pageStatus()
     }
 
     
@@ -164,7 +167,33 @@ class Login extends PureComponent{
                 status:false
             })
 
-            this.props.handleLogin(userName, passWord)
+            let params = {
+                userName:'',
+                password:''
+            }
+            params.userName = userName.value
+            params.password = passWord.value
+            login(params).then((res) => {
+                let data = res.data;
+                let token = null;
+                if(data.code === 1 && data.msg === "success") {
+                    token = data.data.token;
+                    sessionSetItem('token', token);
+                    sessionStorage.setItem(
+                        "time", new Date().getTime()
+                    );
+                    sessionStorage.setItem(
+                        "user", JSON.stringify(data.data.user)
+                    );
+                    sessionSetItem('changepwd', true);
+                    this.setState({
+                        login:true
+                    })
+                    
+                }else{
+                    message.error(data.msg);
+                }
+            })
         }
 
     };
@@ -228,7 +257,7 @@ class Login extends PureComponent{
                 sendCode(params)
                 .then((res) => {
                     let data = res.data;
-                    console.log(data)
+                    // console.log(data)
                     if(data.code === 1 && data.msg === 'success') {
                         let timer = () => {
                         let timerInter = setInterval(() => {
@@ -296,34 +325,19 @@ class Login extends PureComponent{
 }
 
 const mapDispatch = (dispatch) => ({
+    // 点击登录时派发action
     handleLogin(userName, passWord) {
-        let params = {
-            userName:'',
-            password:''
-        }
-        if(!userName && !passWord) {
-            let action = actionCreators.loginStatus(params, 'notoken')
-            dispatch(action)
-        }else{
-            params.userName = userName.value
-            params.password = passWord.value
-            let action = actionCreators.loginStatus(params)
-            dispatch(action)
-        }
+        
         
     },
 
-    handleFindPwo() {
-
-    }
 
     
 });
 
 
 const mapState = (state) => ({
-    login:state.getIn(['login', 'isLogin']),
-    pwd:state.getIn(['login', 'pwd'])
+    
 });
 
 export default connect(mapState, mapDispatch)(Login)

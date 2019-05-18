@@ -4,14 +4,21 @@ import { Redirect } from 'react-router-dom'
 import LeftCon from './common/LeftWrapper'
 import MiddleWrapper from './common/MiddleWrapper'
 import RightWrapper from './common/RightWrapper'
+import { sessionGetItem } from '../../api'
 import { 
     ConWrapper,
     RightCon
  } from './style'
 
 class Home extends PureComponent {
+    constructor(props) {
+        super(props)
+        this.state = {
+            login:sessionGetItem('token')
+        }
+    }
     render () {
-        const { login } = this.props;
+        const { login } = this.state;
         if(login){
             return (
                 <ConWrapper>
@@ -30,7 +37,7 @@ class Home extends PureComponent {
 }
 
 const mapState = (state) => ({
-    login:state.getIn(['login', 'isLogin'])
+    
 })
 
 export default connect(mapState, null)(Home) 

@@ -102,6 +102,12 @@ export const LeftItemLi = styled.li`
         display:block;
         height:100%;
     }
+    &.nowork{
+        display:none;
+    }
+    &.handleActice{
+        background:#f7f7f7;
+    }
 `;
 
 export const LeftButton = styled.div`

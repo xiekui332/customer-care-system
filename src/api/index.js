@@ -28,6 +28,38 @@ export const sendCode = (params) => {
     })
 }
 
+
+// 获取session数据
+export const sessionGetItem = (params) => {
+    return JSON.parse(sessionStorage.getItem(params))
+}
+
+// 存储session数据
+export const sessionSetItem = (key, value) => {
+    sessionStorage.setItem(key, JSON.stringify(value))
+}
+
+
+
+
+// 登陆后修改密码
+export const alterPassword = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post(baseUrl + '/user/updatepwdbyold', QS.stringify(params))
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+} 
+
+
+
+
+
+
 // 获取home页数据
 
 export const getHomeData = () => {
