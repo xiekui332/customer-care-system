@@ -135,42 +135,75 @@ const mapDispatch = (dispatch) => ({
         let params = {}
         // panelType === 1 是修改密码
         if(panelType === 1) {
-            sessionSetItem('changepwd', false)
-            const action = actionCreators.changepwd(sessionGetItem('changepwd'))
-            dispatch(action)
             
-            if(!newPwd.input.value) {
-                message.error('请输入新密码');
-            }else if(newPwd.input.value !== aginNewPwd.input.value) {
-                message.error('两次输入密码不一致');
-            }else {
-                params = {
-                    userId:sessionGetItem('user').userId,
-                    oldPwd:oldPwd.input.value,
-                    password:newPwd.input.value
-                }
-                alterPassword(params)
-                .then((res) => {
-                    console.log(res)
-                    if(res.code === 1 && res.msg === 'success') {
-                        sessionSetItem('changepwd', false)
-                        this.setState({
-                            changepwd:false
-                        })
+            if(sessionGetItem('changepwd')) {
+                if(!newPwd.input.value) {
+                    message.error('请输入新密码');
+                }else if(newPwd.input.value !== aginNewPwd.input.value) {
+                    message.error('两次输入密码不一致');
+                }else {
+                    params = {
+                        userId:sessionGetItem('user').userId,
+                        oldPwd:oldPwd.input.value,
+                        password:newPwd.input.value
                     }
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-
+                    alterPassword(params, sessionGetItem('token'))
+                    .then((res) => {
+                        console.log(res)
+                        if(res.code === 1 && res.msg === 'success') {
+                            sessionSetItem('changepwd', false)
+                            const action = actionCreators.changepwd(sessionGetItem('changepwd'))
+                            dispatch(action)
+                            this.setState({
+                                changepwd:false
+                            })
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+    
+                }
+            }else{
+                if(!oldPwd.input.value) {
+                    message.error('请输入旧密码');
+                }
+                else if(!newPwd.input.value) {
+                    message.error('请输入新密码');
+                }else if(newPwd.input.value !== aginNewPwd.input.value) {
+                    message.error('两次输入密码不一致');
+                }else {
+                    params = {
+                        userId:sessionGetItem('user').userId,
+                        oldPwd:oldPwd.input.value,
+                        password:newPwd.input.value
+                    }
+                    alterPassword(params, sessionGetItem('token'))
+                    .then((res) => {
+                        console.log(res)
+                        if(res.code === 1 && res.msg === 'success') {
+                            sessionSetItem('changepwd', false)
+                            const action = actionCreators.changepwd(sessionGetItem('changepwd'))
+                            dispatch(action)
+                            this.setState({
+                                changepwd:false
+                            })
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+    
+                }
             }
+            
+            
             
             
         }else{
 
         }
     }
-
 })
 
 export default connect(mapState, mapDispatch)(Mine)

@@ -1,1 +1,3 @@
 [0516/112209.192:ERROR:http_transport_win.cc(276)] WinHttpSendRequest: 操作成功完成。 (0x0)
+[0520/175825.700:ERROR:process_info.cc(359)] UncheckedAllocate
+[0520/175847.080:ERROR:http_transport_win.cc(276)] WinHttpSendRequest: 操作成功完成。 (0x0)

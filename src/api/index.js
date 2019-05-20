@@ -1,11 +1,11 @@
 import service from './request'
 import QS from 'qs' // 引入qs模块，用来序列化post类型的数据
-const baseUrl = "http://148.70.204.30";
+// const baseUrl = "http://148.70.204.30";
 
 //login
 export const login = (params) => {
     return new Promise((resolve, reject) => {
-        service.post(baseUrl + '/user/login', QS.stringify(params))
+        service.post('/user/login', QS.stringify(params))
         .then((res) => {
             resolve(res)
         })
@@ -18,7 +18,7 @@ export const login = (params) => {
 // 发送验证码
 export const sendCode = (params) => {
     return new Promise((resolve, reject) => {
-        service.post(baseUrl + '/user/smsfindpwd', QS.stringify(params))
+        service.post('/user/smsfindpwd', QS.stringify(params))
         .then((res) => {
             resolve(res)
         })
@@ -45,7 +45,7 @@ export const sessionSetItem = (key, value) => {
 // 登陆后修改密码
 export const alterPassword = (params) => {
     return new Promise((resolve, reject) => {
-        service.post(baseUrl + '/user/updatepwdbyold', QS.stringify(params))
+        service.post('/user/updatepwdbyold', QS.stringify(params))
         .then((res) => {
             resolve(res)
         })
@@ -55,7 +55,38 @@ export const alterPassword = (params) => {
     })
 } 
 
+// 检测手机号
+export const checkmobile = /^1[34578]\d{9}$/
 
+// 检测身份证号
+export const checkidCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+
+// 创建用户
+export const createUser = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post('/user/save', QS.stringify(params))
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
+
+
+// 获取用户列表
+export const userList = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post('/user/list', params)
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
 
 
 

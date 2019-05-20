@@ -6,12 +6,17 @@ const service = axios.create({
     withCredentials: true // 选项表明了是否是跨域请求
 })
 
-
-service.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+// service.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 // request
 service.interceptors.request.use(
     config => {
+        if(sessionStorage.getItem("token")) {
+            config.headers = {
+                "Authorization":"Bearer " + JSON.parse(sessionStorage.getItem("token")),
+                'Content-Type':'application/x-www-form-urlencoded'
+            }
+        }
         return config;
     }, err => {
         console.log('请求失败')

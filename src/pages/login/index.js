@@ -82,6 +82,8 @@ class Login extends PureComponent{
                     history.push({pathname :"/mine"})
                 }
             })
+        }else if(login && pwd === false) {
+            history.push({pathname :"/"})
         }
     }
 
@@ -185,7 +187,11 @@ class Login extends PureComponent{
                     sessionStorage.setItem(
                         "user", JSON.stringify(data.data.user)
                     );
-                    sessionSetItem('changepwd', true);
+                    if(!passWord.value) {
+                        sessionSetItem('changepwd', true);
+                    }else{
+                        sessionSetItem('changepwd', false);
+                    }
                     this.setState({
                         login:true
                     })
