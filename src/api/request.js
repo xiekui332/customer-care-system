@@ -6,7 +6,6 @@ const service = axios.create({
     withCredentials: true // 选项表明了是否是跨域请求
 })
 
-// service.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 // request
 service.interceptors.request.use(

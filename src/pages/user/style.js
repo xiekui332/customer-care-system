@@ -304,7 +304,6 @@ export const SearchWrapper = styled.div`
         font-size:12px;
         color:#999;
     }
-    margin-bottom:20px;
     transition:all ease-in .2s;
     &.searchel-show{
         height:160px;
@@ -336,5 +335,9 @@ export const SearchInput = styled.input`
 `;
 
 export const StatusWrapper = styled.div`
+    
+`;
+
+export const UserListWapper = styled.div`
     
 `;

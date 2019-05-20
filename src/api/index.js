@@ -88,6 +88,19 @@ export const userList = (params) => {
     })
 }
 
+// 获取用户详情
+export const userDetail = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post('/user/detail', params)
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
+
 
 
 

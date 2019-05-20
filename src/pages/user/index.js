@@ -2,7 +2,7 @@ import React, { PureComponent, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import LeftCon from '../home/common/LeftWrapper'
-import { sessionGetItem, checkmobile, checkidCard, createUser, userList } from '../../api'
+import { sessionGetItem, checkmobile, checkidCard, createUser, userList, userDetail } from '../../api'
 import { Tooltip, Input, Select, message, Empty } from 'antd';
 
 import {
@@ -27,7 +27,8 @@ import {
     SearchWrapper,
     SearchCondition,
     SearchInput,
-    StatusWrapper
+    StatusWrapper,
+    UserListWapper
     
 } from './style'
 
@@ -44,7 +45,9 @@ class User extends PureComponent {
             load:true,
             add:false,
             search:false,
-            edit:false
+            edit:false,
+            userName:'',
+            mobilePhone:''
         }
 
         this.resetHeight = this.resetHeight.bind(this)
@@ -65,10 +68,10 @@ class User extends PureComponent {
                             <MiddleHeader>
                                 <span>用户管理</span>
                                 <OperateWrapper>
-                                    <Tooltip title="新建用户" onClick={() => {this.handleAddMustor(this.addmustorEl)}}>
+                                    <Tooltip title="新建用户" onClick={() => {this.handleAddMustor(this.addmustorEl, this.searchEl)}}>
                                         <span className="iconfont">&#xe64c;</span>
                                     </Tooltip>
-                                    <Tooltip title="搜索" onClick={() => {this.handleSearch(this.search)}}>
+                                    <Tooltip title="搜索" onClick={() => {this.handleSearch(this.searchEl, this.addmustorEl)}}>
                                         <span className="iconfont">&#xe7c0;</span>
                                     </Tooltip>
                                     <Tooltip title="编辑" onClick={() => {}}>
@@ -88,51 +91,62 @@ class User extends PureComponent {
                                 </AddCustomerWrapper>
 
                                 <SearchWrapper 
-                                    ref={(search) => {this.search = search}}
+                                    ref={(search) => {this.searchEl = search}}
                                 >
                                     <SearchCondition>
                                         <span>用户名</span>
-                                        <SearchInput placeholder="请输入用户名"></SearchInput>
+                                        <SearchInput placeholder="请输入用户名" 
+                                            ref={(input) => {this.searchNameEl = input}}
+                                        ></SearchInput>
                                     </SearchCondition>
                                     <SearchCondition>
                                         <span>手机号</span>
-                                        <SearchInput placeholder="请输入手机号"></SearchInput>
+                                        <SearchInput placeholder="请输入手机号"
+                                            ref={(input) => {this.searchMobileEl = input}}
+                                        ></SearchInput>
                                     </SearchCondition>
 
                                     <AddButtonWrapper>
-                                        <AddCusButton className="add-cancel">取消</AddCusButton>
-                                        <AddCusButton className="add-save">保存</AddCusButton>
+                                        <AddCusButton className="add-cancel" onClick={() => {this.handleCancel(this.searchEl)}}>取消</AddCusButton>
+                                        <AddCusButton className="add-save" onClick={() => {this.handleSave(this.searchNameEl, this.searchMobileEl)}}>确定</AddCusButton>
                                     </AddButtonWrapper>
                                 </SearchWrapper> 
 
-                                {
-                                    userList.length > 0?
-                                    userList.map((item, index) => {
-                                        return (
-                                            <MiddleList key={item.userId}>
-                                                <MiddleChceckBox>
-                                                    <span className="iconfont">&#xe617;</span>
-                                                </MiddleChceckBox>
-                                                {
-                                                    item.src?
-                                                    <img src={src} alt="" />
-                                                    :<span className="iconfont">&#xe61a;</span>
-                                                }
-                                                
-                                                <CustomerInfo >
-                                                    <p>
-                                                        <span>{item.name }</span>
-                                                        <span>{item.mobilePhone }</span>
-                                                    </p>
-                                                    <p>
-                                                    {item.idcard}
-                                                    </p>
-                                                </CustomerInfo>
-                                            </MiddleList>
-                                        )
-                                    })
-                                    :""
-                                }
+                                <UserListWapper ref={(userlistwrapper) => {this.userlistwrapper = userlistwrapper}}>
+                                    {
+                                        userList.length > 0?
+                                        userList.map((item, index) => {
+                                            return (
+                                                <MiddleList 
+                                                    className="user-list"
+                                                    ref={(userlist) => {this.userlist = userlist}}
+                                                    key={item.userId}
+                                                    onClick={() => {this.handleList(this.userlistwrapper, index, item.userId)}}
+                                                >
+                                                    <MiddleChceckBox>
+                                                        <span className="iconfont">&#xe617;</span>
+                                                    </MiddleChceckBox>
+                                                    {
+                                                        item.src?
+                                                        <img src={src} alt="" />
+                                                        :<span className="iconfont">&#xe61a;</span>
+                                                    }
+                                                    
+                                                    <CustomerInfo >
+                                                        <p>
+                                                            <span>{item.name }</span>
+                                                            <span>{item.mobilePhone }</span>
+                                                        </p>
+                                                        <p>
+                                                        {item.idcard}
+                                                        </p>
+                                                    </CustomerInfo>
+                                                </MiddleList>
+                                            )
+                                        })
+                                        :""
+                                    }
+                                </UserListWapper>
                                 
                             </MiddleListWrapper>
                         </UserMiddle>
@@ -209,7 +223,7 @@ class User extends PureComponent {
                                 </AddContent>
                             </StatusWrapper>
                         
-                            <Empty className="ant-empty" description={'暂无数据'} />
+                            <Empty className={add?"ant-empty isHide":"ant-empty isShow"} description={'暂无数据'} />
                         </UserRight>
                     </UserCon>
                 </UserWrapper>
@@ -250,10 +264,9 @@ class User extends PureComponent {
     // getList methods
     getData() {
         if(this.state.load) {
-            let userInfo = this.state.userInfo;
             let params = {
-                userName:userInfo.userName,
-                mobilePhone:userInfo.mobilePhone,
+                userName:this.state.userName,
+                mobilePhone:this.state.mobilePhone,
                 pageNum:this.state.pageNum,
                 pageSize:this.state.pageSize
             }
@@ -293,8 +306,9 @@ class User extends PureComponent {
     // methods
     
     // 新建用户
-    handleAddMustor(addmustorEl) {
+    handleAddMustor(addmustorEl, searchEl) {
         addmustorEl.classList.add('add-customer-show')
+        searchEl.classList.remove('searchel-show')
     }
 
     // 重新计算高度
@@ -304,8 +318,30 @@ class User extends PureComponent {
     }
 
     // 搜索
-    handleSearch(searchel) {
-        searchel.classList.add('searchel-show')
+    handleSearch(searchEl, addmustorEl) {
+        searchEl.classList.add('searchel-show')
+        addmustorEl.classList.remove('add-customer-show')
+    }
+
+    // 取消
+    handleCancel(searchEl) {
+        searchEl.classList.remove('searchel-show')
+    }
+
+    // 确定
+    handleSave(searchNameEl, searchMobileEl) {
+        this.setState({
+            userName:searchNameEl.value,
+            mobilePhone:searchMobileEl.value,
+            pageNum:1,
+            pageSize:10,
+            load:true,
+            userList:[]
+        }, () => {
+            this.getData()
+        })
+        
+
     }
 
     // 保存用户
@@ -348,6 +384,23 @@ class User extends PureComponent {
                 message.error(err.msg)
             })
         }
+    }
+
+    // 点击用户列表
+    handleList(boxel, index, id) {
+        for(let i = 0; i < boxel.childNodes.length; i ++) {
+            boxel.childNodes[i].classList.remove('selected')
+        }
+        boxel.childNodes[index].classList.add('selected')
+        userDetail({userId:id}).then((res) => {
+            let data = res.data;
+            
+            if(data.code === 1 && data.msg === 'success') {
+                this.setState({
+                    add:true
+                })
+            }
+        })
     }
 
     // 用户类型

@@ -149,14 +149,12 @@ const mapDispatch = (dispatch) => ({
                     }
                     alterPassword(params, sessionGetItem('token'))
                     .then((res) => {
-                        console.log(res)
-                        if(res.code === 1 && res.msg === 'success') {
+                        let data = res.data;
+                        if(data.code === 1 && data.msg === 'success') {
                             sessionSetItem('changepwd', false)
                             const action = actionCreators.changepwd(sessionGetItem('changepwd'))
                             dispatch(action)
-                            this.setState({
-                                changepwd:false
-                            })
+                            message.success('修改成功');
                         }
                     })
                     .catch((err) => {
@@ -180,14 +178,15 @@ const mapDispatch = (dispatch) => ({
                     }
                     alterPassword(params, sessionGetItem('token'))
                     .then((res) => {
-                        console.log(res)
-                        if(res.code === 1 && res.msg === 'success') {
+                        let data = res.data;
+                        if(data.code === 1 && data.msg === 'success') {
                             sessionSetItem('changepwd', false)
                             const action = actionCreators.changepwd(sessionGetItem('changepwd'))
                             dispatch(action)
-                            this.setState({
-                                changepwd:false
-                            })
+                            message.success('修改成功');
+                            oldPwd.input.value = ''
+                            newPwd.input.value = ''
+                            aginNewPwd.input.value = ''
                         }
                     })
                     .catch((err) => {
