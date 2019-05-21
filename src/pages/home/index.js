@@ -22,7 +22,7 @@ class Home extends PureComponent {
         if(login){
             return (
                 <ConWrapper>
-                    <LeftCon/>
+                    <LeftCon />
                     <RightCon>
                         <MiddleWrapper />
                         <RightWrapper />

@@ -47,7 +47,7 @@ class Message extends PureComponent {
         if(login){
             return(
                 <MessagePage>
-                    <LeftCon/>
+                    <LeftCon />
                     <MessageWrapper>
                         <MessageMiddle className="editSrollBar">
                             <MessageTitle>短信管理</MessageTitle>

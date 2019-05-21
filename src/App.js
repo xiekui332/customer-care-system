@@ -20,6 +20,7 @@ function App() {
               {
                 <Fragment>
                   <Route path="/" exact component={Home} ></Route>
+                  <Route path="/home" exact component={Home} ></Route>
                   <Route path="/message" exact component={Message} ></Route>
                   <Route path="/mine" exact component={Mine} ></Route>
                   <Route path="/login" exact component={Login} ></Route>

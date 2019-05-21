@@ -19,6 +19,7 @@ import {
 class MiddleWrapper extends PureComponent{
     render () {
         const { fileList, customerDetail, spin, isAdd } = this.props;
+        const user = JSON.parse(sessionStorage.getItem("user"))
         // console.log(isAdd)
         return (
             <DetailWrapper>
@@ -30,7 +31,7 @@ class MiddleWrapper extends PureComponent{
                         <Tooltip title="">
                             <span className="iconfont">&#xe62f;</span>
                         </Tooltip>
-                        <Tooltip title="">
+                        <Tooltip title="" className={user.userType === 2?"isHide":"isShow"}>
                             <span className="iconfont transferIcon">&#xe60c;</span>
                         </Tooltip>
                     </RightHeaderWrapper>

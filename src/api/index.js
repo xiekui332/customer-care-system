@@ -102,6 +102,34 @@ export const userDetail = (params) => {
 }
 
 
+// 删除用户
+export const userDelete = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post('/user/del', params)
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
+
+
+// 待办事项列表
+export const todoList = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post('/todo/list', params)
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
+
+
 
 
 // 获取home页数据

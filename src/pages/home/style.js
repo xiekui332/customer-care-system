@@ -105,7 +105,7 @@ export const LeftItemLi = styled.li`
     &.nowork{
         display:none;
     }
-    &.handleActice{
+    &>a.handleActice{
         background:#f7f7f7;
     }
 `;
@@ -175,7 +175,6 @@ export const DetailWrapper = styled.div`
         margin-top:20px;
     }
     & .transferIcon{
-        margin-right:30px;
         margin-left:20px;
     }
 `;
@@ -484,6 +483,7 @@ export const RightHeaderWrapper = styled.div`
         display:block;
         width:0;
     }
+    padding-right:30px;
 `;
 
 export const RightWrapper = styled.div`

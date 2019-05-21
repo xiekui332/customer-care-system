@@ -1,9 +1,9 @@
-import React, { PureComponent, Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import LeftCon from '../home/common/LeftWrapper'
-import { sessionGetItem, checkmobile, checkidCard, createUser, userList, userDetail } from '../../api'
-import { Tooltip, Input, Select, message, Empty } from 'antd';
+import { sessionGetItem, checkmobile, checkidCard, createUser, userList, userDetail, userDelete } from '../../api'
+import { Tooltip, Input, Select, message, Empty, Modal } from 'antd';
 
 import {
     UserWrapper,
@@ -15,7 +15,6 @@ import {
     MiddleListWrapper,
     AddCustomerWrapper,
     MiddleList,
-    MiddleChceckBox,
     CustomerInfo,
     AddCusHeadWrapper,
     AddButtonWrapper,
@@ -28,11 +27,14 @@ import {
     SearchCondition,
     SearchInput,
     StatusWrapper,
-    UserListWapper
+    UserListWapper,
+    UserOprate,
+    EditItem,
+    MiddleChceckBoxSmall
     
 } from './style'
 
-class User extends PureComponent {
+class User extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -47,16 +49,20 @@ class User extends PureComponent {
             search:false,
             edit:false,
             userName:'',
-            mobilePhone:''
+            mobilePhone:'',
+            userId:'',
+            userDelArr:[]
         }
 
         this.resetHeight = this.resetHeight.bind(this)
         this.getData = this.getData.bind(this)
+        this.getUserDetail = this.getUserDetail.bind(this)
     }
 
     render () {
-        const { login, userList, add, search, edit } = this.state;
+        const { login, userList, add, edit, userId } = this.state;
         const Option = Select.Option;
+        const confirm = Modal.confirm;
         let src = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556782759160&di=2e2df9eae570460adfc6bec7e2887d3c&imgtype=0&src=http%3A%2F%2Fwenwen.soso.com%2Fp%2F20120208%2F20120208165308-1774101526.jpg";
 
         if(login) {
@@ -74,7 +80,7 @@ class User extends PureComponent {
                                     <Tooltip title="搜索" onClick={() => {this.handleSearch(this.searchEl, this.addmustorEl)}}>
                                         <span className="iconfont">&#xe7c0;</span>
                                     </Tooltip>
-                                    <Tooltip title="编辑" onClick={() => {}}>
+                                    <Tooltip title="编辑" onClick={() => {this.handleUserDelete(this.useroparateel, this.userlistwrapper)}}>
                                         <span className="iconfont">&#xe693;</span>
                                     </Tooltip>
                                 </OperateWrapper>
@@ -86,7 +92,7 @@ class User extends PureComponent {
                             >
                                 <AddCustomerWrapper 
                                     ref={(addmustorEl) => {this.addmustorEl = addmustorEl}}
-                                    onClick={() => {}}>
+                                    onClick={() => {this.handleAdd()}}>
                                     新建用户
                                 </AddCustomerWrapper>
 
@@ -118,14 +124,16 @@ class User extends PureComponent {
                                         userList.map((item, index) => {
                                             return (
                                                 <MiddleList 
-                                                    className="user-list"
-                                                    ref={(userlist) => {this.userlist = userlist}}
+                                                    className={item.active?"selected":""}
                                                     key={item.userId}
-                                                    onClick={() => {this.handleList(this.userlistwrapper, index, item.userId)}}
+                                                    onClick={() => {this.handleList(this.userlistwrapper, index, item.userId, edit, item.active)}}
                                                 >
-                                                    <MiddleChceckBox>
-                                                        <span className="iconfont">&#xe617;</span>
-                                                    </MiddleChceckBox>
+                                                    
+                                                    <MiddleChceckBoxSmall className={edit?"middleChceckBox":" "}>
+                                                        <span className={edit && item.active?"iconfont isShow":"iconfont isHide"}>&#xe617;</span>
+                                                    </MiddleChceckBoxSmall>
+                                                    
+
                                                     {
                                                         item.src?
                                                         <img src={src} alt="" />
@@ -146,18 +154,34 @@ class User extends PureComponent {
                                         })
                                         :""
                                     }
+
+                                    
                                 </UserListWapper>
-                                
+
+                                <UserOprate 
+                                    ref={(useroparateel) => {this.useroparateel = useroparateel}}    
+                                >
+                                    {/* <EditItem onClick={() => {this.usertransfer()}}>
+                                        <span className="iconfont">&#xe60c;</span>
+                                        <p>移交</p>
+                                    </EditItem> */}
+                                    <EditItem onClick={() => {this.userdelete(confirm)}}>
+                                        <span className="iconfont">&#xe619;</span>
+                                        <p>删除</p>
+                                    </EditItem>
+                                </UserOprate>
                             </MiddleListWrapper>
                         </UserMiddle>
 
                         <UserRight>
-                            <StatusWrapper className={add?"isShow":"isHide"}>
+                            <StatusWrapper 
+                                className={add?"isShow":"isHide"}
+                                >
                                 <AddCusHeadWrapper>
-                                    <AddCusHeadText onClick={() => {this.handleAdd()}}>新建用户</AddCusHeadText>
+                                    <AddCusHeadText>新建用户</AddCusHeadText>
                                     <AddButtonWrapper>
-                                        <AddCusButton className="add-cancel">取消</AddCusButton>
-                                        <AddCusButton className="add-save" onClick={() => {this.handleAddSave(this.name, this.idCard, this.mobile)}}>保存</AddCusButton>
+                                        <AddCusButton className="add-cancel" onClick={() => {this.handleAddCancel()}}>取消</AddCusButton>
+                                        <AddCusButton className="add-save" onClick={() => {this.handleAddSave(this.name, this.idCard, this.mobile, userId)}}>保存</AddCusButton>
                                     </AddButtonWrapper>
                                 </AddCusHeadWrapper>
                                 
@@ -171,7 +195,6 @@ class User extends PureComponent {
                                                     className="add-input"
                                                     placeholder="请输入姓名"
                                                     ref = {(input) => {this.name = input}}
-                                                    value=''
                                                 />
                                             <p></p>
                                         </AddItem>
@@ -182,7 +205,6 @@ class User extends PureComponent {
                                                     className="add-input"
                                                     placeholder="请输入身份证"
                                                     ref = {(input) => {this.idCard = input}}
-                                                    value=''
                                                 />
                                             <p></p>
                                         </AddItem>
@@ -193,7 +215,6 @@ class User extends PureComponent {
                                                     className="add-input"
                                                     placeholder="请输入手机号码"
                                                     ref = {(input) => {this.mobile = input}}
-                                                    value=''
                                                 />
                                             <p></p>
                                         </AddItem>
@@ -207,6 +228,7 @@ class User extends PureComponent {
                                                 placeholder="请选择用户类别"
                                                 optionFilterProp="children"
                                                 onChange={(value) => {this.userkind(value)}}
+                                                value={this.state.userType}
                                                 filterOption={(input, option) =>
                                                     option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                                 }
@@ -272,6 +294,10 @@ class User extends PureComponent {
             }
             userList(params).then((res) => {
                 let data = res.data;
+                data.data.list.map((item, index) => (
+                    item.active = false
+                ))
+                
                 if(data.code === 1 && data.msg === 'success') {
                     this.setState({
                         userList:this.state.userList.concat(data.data.list)
@@ -298,7 +324,9 @@ class User extends PureComponent {
         this.setState({
             add:true,
             search:false,
-            edit:false
+            userId:""
+        },() => {
+           
         })
     }
 
@@ -345,15 +373,29 @@ class User extends PureComponent {
     }
 
     // 保存用户
-    handleAddSave(nameel, idCardel, mobileel) {
-        let params = {
-            name:'',
-            idcard:'',
-            mobilePhone:'',
-            userType:'',
-            remark:'',
-            relationship:''
+    handleAddSave(nameel, idCardel, mobileel, userId) {
+        let params = {}
+        if(userId) {
+            params = {
+                userId:"",
+                name:'',
+                idcard:'',
+                mobilePhone:'',
+                userType:'',
+                remark:'',
+                relationship:''
+            }
+        }else{
+            params = {
+                name:'',
+                idcard:'',
+                mobilePhone:'',
+                userType:'',
+                remark:'',
+                relationship:''
+            }
         }
+
         if(!nameel.input.value) {
             message.error('请填写用户名')
         }else if(!idCardel.input.value || !checkidCard.test(idCardel.input.value)) {
@@ -363,6 +405,9 @@ class User extends PureComponent {
         }else if(!this.state.userType) {
             message.error('请选择用户类别')
         }else {
+            if(userId) {
+                params.userId = userId
+            }
             params.name = nameel.input.value
             params.idcard = idCardel.input.value
             params.mobilePhone = mobileel.input.value
@@ -373,9 +418,22 @@ class User extends PureComponent {
             createUser(params)
             .then((res) => {
                 let data = res.data;
-                console.log(data)
                 if(data.code === 1 && data.msg === 'success') {
+                   
+                    message.success('新建成功')
+                    nameel.input.value = ''
+                    idCardel.input.value = ''
+                    mobileel.input.value = ''
                     
+                    this.setState({
+                        userList:[],
+                        load:true,
+                        pageNum:1,
+                        pageSize:10,
+                        userType:''
+                    }, () => {
+                        this.getData() 
+                    })
                 }else {
                     message.error(data.msg)
                 }
@@ -386,19 +444,70 @@ class User extends PureComponent {
         }
     }
 
+    // 取消保存用户
+    handleAddCancel() {
+        this.setState({
+            add:false
+        })
+    }
+
     // 点击用户列表
-    handleList(boxel, index, id) {
-        for(let i = 0; i < boxel.childNodes.length; i ++) {
-            boxel.childNodes[i].classList.remove('selected')
+    handleList(boxel, index, id, edit, active) {
+        let userdata = this.state.userList;
+        if(!edit) {
+            if(active) {
+                return 
+            }else{
+                for(let i = 0; i < userdata.length; i ++) {
+                    userdata[i].active = false
+                }
+                userdata[index].active = true;
+                this.setState({
+                    userList:userdata
+                })
+
+                this.getUserDetail(id)
+                
+            }
+            
+        }else{
+            if(active) {
+                
+            }else{
+                this.getUserDetail(id)
+            }
+            
+            userdata[index].active = !userdata[index].active
+            this.state.userDelArr.push(id)
+            this.setState({
+                userList:userdata
+            })
+            
         }
-        boxel.childNodes[index].classList.add('selected')
+        
+        
+    }
+
+
+    // 获取用户详情的方法
+    getUserDetail(id) {
         userDetail({userId:id}).then((res) => {
             let data = res.data;
             
             if(data.code === 1 && data.msg === 'success') {
                 this.setState({
-                    add:true
+                    add:true,
+                    userId:id
+                }, () => {
+                    if(data.data){
+                        this.name.input.value = data.data.name
+                        this.idCard.input.value = data.data.idcard
+                        this.mobile.input.value = data.data.mobilePhone
+                        this.userkind(data.data.userType.toString())
+                    }
+                    
                 })
+
             }
         })
     }
@@ -409,6 +518,83 @@ class User extends PureComponent {
             userType:value
         })
     }
+
+
+    // 编辑用户
+    handleUserDelete(useroparateel, userlistwrapper) {
+        this.setState({
+            edit:!this.state.edit
+        }, () => {
+            let userdata = this.state.userList;
+            if(!this.state.edit) {
+                for(let i = 0; i < userdata.length; i ++) {
+                    userdata[i].active = false
+                }
+                this.setState({
+                    userList:userdata
+                })
+                // 编辑时底部弹出
+                useroparateel.classList.remove('useroparate-active')
+                userlistwrapper.classList.remove('padding-active')
+            }else{
+                // 编辑时底部弹出
+                useroparateel.classList.add('useroparate-active')
+                userlistwrapper.classList.add('padding-active')
+            }
+
+            
+        })
+        
+    }
+
+    // 移交用户
+    usertransfer() {
+        console.log(this.state.userDelArr)
+    }
+
+    // 删除用户
+    userdelete(confirm) {
+        let data = this.state.userList,
+            deleArr = [];
+            let that = this;
+        data.map((item, index) => (
+            item.active?deleArr.push(item.userId):""
+        ))
+        let params = {
+            userId:JSON.stringify(deleArr)
+        }
+        if(!deleArr.length) {
+            return
+        }
+        confirm({
+            title: '确认删除?',
+            okText:"确定",
+            cancelText:"取消",
+            onOk() {
+                userDelete(params).then((res) => {
+                    let data = res.data
+                    if(data.code === 1 && data.msg === 'success') {
+                        message.success('删除成功')
+                        that.setState({
+                            userList:[],
+                            load:true,
+                            pageNum:1,
+                            pageSize:10
+                        }, () => {
+                            that.getData() 
+                        })
+                    }else{
+                        message.error(data.msg)
+                    }
+                })
+            },
+            onCancel() {
+              console.log('Cancel');
+            },
+          });
+        
+    }
+
 }
 
 export default connect()(User)

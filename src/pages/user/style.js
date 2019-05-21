@@ -78,6 +78,7 @@ export const MiddleListWrapper = styled.div`
     &.MiddleListWrapper-active{
         padding-bottom:75px;
     }
+    
 `;
 
 // 新建用户部分
@@ -117,7 +118,7 @@ export const MiddleList = styled.div`
         border-left:4px solid #55a12f;
         box-sizing: content-box;
     }
-    .iconfont{
+    >.iconfont{
         display:block;
         font-size:40px;
         color:#DDD;
@@ -126,39 +127,6 @@ export const MiddleList = styled.div`
     }
 `;
 
-export const MiddleChceckBox = styled.div`
-    width:0;
-    opacity:0;
-    border-radius:50%;
-    border:1px solid #dcdcdc;
-    background:#fff;
-    float:left;
-    margin:30px -5px 0 15px;
-    position:relative;
-    span{
-        color:#55a12f;
-        position:absolute;
-        top: -5px;
-        left: -1px;
-        font-size: 19px;
-        display:none;
-    }
-    &.middle-check-box-show{
-        width:20px;
-        height:20px;
-        opacity:1;
-        span{
-            display:block;
-        }
-    }
-    &.middleChceckBox-show{
-        display:block;
-        width:20px;
-        height:20px;
-        opacity:1;
-    }
-    transition:all ease-in .2s;
-`;
 
 export const CustomerInfo = styled.div`
     float:left;
@@ -226,7 +194,6 @@ export const AddCusButton = styled.div`
 `;
 
 export const AddContent = styled.div`
-    width:600px;
     margin:30px 0 50px 50px;
 `;
 
@@ -339,5 +306,72 @@ export const StatusWrapper = styled.div`
 `;
 
 export const UserListWapper = styled.div`
-    
+    &.padding-active{
+        padding-bottom:75px;
+    }
+`;
+
+export const UserOprate = styled.div`
+    width:100%;
+    height:75px;
+    display:flex;
+    position: absolute;
+    left: 0;
+    bottom: -75px;
+    background: #fff;
+    border: 1px solid #f7f7f7;
+    box-sizing: border-box;
+    transition: all ease-in .2s;
+    &.useroparate-active{
+        bottom: 0px;
+    }
+`;
+
+export const EditItem = styled.div`
+    flex:1;
+    height:100%;
+    text-align:center;
+    font-size:14px;
+    color:#999;
+    padding-top:10px;
+    cursor:pointer;
+    .iconfont{
+        font-size:20px;
+    }
+    &:hover{
+        color:#666;
+    }
+`;
+
+export const MiddleChceckBoxSmall = styled.div`
+    width:0px;
+    height:0px;
+    border-radius:50%;
+    border:1px solid #dcdcdc;
+    background:#fff;
+    float:left;
+    margin:30px -5px 0 15px;
+    position:relative;
+    >span.iconfont{
+        color:#55a12f;
+        position:absolute;
+        top: -5px;
+        left: 0px;
+        font-size: 19px;
+    }
+    &.middle-check-box-show{
+        width:20px;
+        height:20px;
+        opacity:1;
+        span{
+            display:block;
+        }
+    }
+    &.middleChceckBox{
+        width:20px;
+        height:20px;
+        opacity:1;
+        display:block;
+    }
+    transition:all ease-in .1s;
 `;

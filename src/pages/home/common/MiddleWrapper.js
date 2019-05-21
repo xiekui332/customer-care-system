@@ -31,6 +31,9 @@ class MiddleWrapper extends PureComponent{
                 handleEditCustomer, isAdd,
                 isEdit 
         } = this.props;
+
+        const user = JSON.parse(sessionStorage.getItem("user"))
+        
         return (
             <Customer className="customer">
                 <MiddleHeader>
@@ -101,7 +104,7 @@ class MiddleWrapper extends PureComponent{
                         <span className="iconfont">&#xe619;</span>
                         <p>删除</p>
                     </EditItem>
-                    <EditItem>
+                    <EditItem className={user.userType === 2?"isHide":"isShow"}>
                         <span className="iconfont">&#xe60c;</span>
                         <p>移交</p>
                     </EditItem>

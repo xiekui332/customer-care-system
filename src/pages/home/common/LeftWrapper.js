@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import customer from '../../../statics/images/nav_icon_guanli.png'
 import message from '../../../statics/images/nav_icon_duanxi.png'
 import mine from '../../../statics/images/nav_icon_wo.png'
@@ -50,31 +50,16 @@ class LeftCon extends PureComponent {
                         <span className="iconfont">&#xe61a;</span>:
                         <img src={user.logo} alt="" />
                     }
-                    <p>{user.userName } /{ part}</p>
+                    <p>{user.name } /{ part}</p>
                 </LeftCustomer>
 
                 <LeftItemUl
                     ref={(ul) => {this.ul = ul}}>
-                    <LeftItemLi className={user.userType === 1?"isShow":"isHide"}
-                        ref={(li) => {this.liUser = li}}
-                        onClick={() => {this.handleActive(this.ul, this.liUser)}}>
-                        {
-                            changepwd?
-                            <div>
-                                <img src={customer} alt="" />
-                                <span>用户管理</span>
-                            </div>
-                            :
-                            <Link to={"/user"} replace>
-                                <img src={customer} alt="" />
-                                <span>用户管理</span>
-                            </Link>
-                        }
-                        
-                    </LeftItemLi>
+                    
                     <LeftItemLi
                         ref={(li) => {this.liCust = li}}
-                        onClick={() => {this.handleActive(this.ul, this.liCust)}}>
+                        // onClick={() => {this.handleActive(this.ul, this.liCust)}}
+                        >
                         {
                             changepwd?
                             <div>
@@ -82,16 +67,41 @@ class LeftCon extends PureComponent {
                                 <span>客户管理</span>
                             </div>
                             :
-                            <Link to={"/"} replace>
+                            <NavLink to={"/home"} replace activeClassName="handleActice" >
                                 <img src={customer} alt="" />
                                 <span>客户管理</span>
-                            </Link>
+                            </NavLink>
                         }
                         
                     </LeftItemLi>
+                    
+                    {
+                        user.userType === 1?
+                        <LeftItemLi 
+                            ref={(li) => {this.liUser = li}}
+                            // onClick={() => {this.handleActive(this.ul, this.liUser)}}
+                            >
+                            {
+                                changepwd?
+                                <div>
+                                    <img src={customer} alt="" />
+                                    <span>用户管理</span>
+                                </div>
+                                :
+                                <NavLink to={"/user"} replace activeClassName="handleActice">
+                                    <img src={customer} alt="" />
+                                    <span>用户管理</span>
+                                </NavLink>
+                            }
+                            
+                        </LeftItemLi>
+                        :""
+                    }
+
                     <LeftItemLi className="nowork"
                         ref={(li) => {this.liMess = li}}
-                        onClick={() => {this.handleActive(this.ul, this.liMess)}}>
+                        // onClick={() => {this.handleActive(this.ul, this.liMess)}}
+                        >
                         {
                             changepwd?
                             <div>
@@ -99,15 +109,16 @@ class LeftCon extends PureComponent {
                                 <span>短信管理</span>
                             </div>
                             :
-                            <Link to={"/message"} replace>
+                            <NavLink to={"/message"} replace activeClassName="handleActice">
                                     <img src={message} alt="" />
                                     <span>短信管理</span>
-                            </Link>
+                            </NavLink>
                         }
                     </LeftItemLi>
                     <LeftItemLi
                         ref={(li) => {this.liMine = li}}
-                        onClick={() => {this.handleActive(this.ul, this.liMine)}}>
+                        // onClick={() => {this.handleActive(this.ul, this.liMine)}}
+                        >
                         {
                             changepwd?
                             <div>
@@ -118,13 +129,13 @@ class LeftCon extends PureComponent {
                                 </span> 
                             </div>
                             :
-                            <Link to={"/mine"} replace>
+                            <NavLink to={"/mine"} replace activeClassName="handleActice">
                                 <img src={mine} alt="" />  
                                 <span>
                                     我的
                                     <i></i>
                                 </span> 
-                            </Link>
+                            </NavLink>
                         }
                     </LeftItemLi>
                 </LeftItemUl>

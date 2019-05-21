@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import LeftCon from '../home/common/LeftWrapper'
 import { Empty, Tabs, Button, Input, message  } from 'antd';
-import { sessionGetItem, alterPassword, sessionSetItem } from '../../api'
+import { sessionGetItem, alterPassword, sessionSetItem, todoList } from '../../api'
 import { actionCreators } from './store'
 
 import { 
@@ -29,7 +29,9 @@ class Mine extends PureComponent {
         this.state = {
             login:sessionGetItem('token'),
             list:[1,2,3,4,5,6,7,8,9],
-            panelType:1
+            panelType:1,
+            userId:JSON.parse(sessionStorage.getItem("user")).userId,
+            data:[]
         }
     }
 
@@ -37,6 +39,8 @@ class Mine extends PureComponent {
         const TabPane = Tabs.TabPane;
         const { login, panelType } = this.state;
         const operations = <Button onClick={() => {this.props.handleSave(panelType, this.oldPwd, this.newPwd, this.aginNewPwd, this.changeOldPwd, this.changeNewTel)}}>保存</Button>;
+        
+
         if(login){
             return(
                 <MineWrapepr>
@@ -122,6 +126,26 @@ class Mine extends PureComponent {
     }
 
 
+    componentDidMount() {
+        let params = {
+            userId:this.state.userId
+        }
+
+        todoList(params).then((res) => {
+            let data = res.data;
+            console.log(data)
+            if(data.code === 1 && data.msg === 'success') {
+                if(data.data) {
+                    this.setState({
+                        data:data.data
+                    })
+                }else{
+                    message.error('暂无数据');
+                }
+            }
+        })
+    }
+
     
 }
 
@@ -155,6 +179,8 @@ const mapDispatch = (dispatch) => ({
                             const action = actionCreators.changepwd(sessionGetItem('changepwd'))
                             dispatch(action)
                             message.success('修改成功');
+                            newPwd.input.value = ''
+                            aginNewPwd.input.value = ''
                         }
                     })
                     .catch((err) => {

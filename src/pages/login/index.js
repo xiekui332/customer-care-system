@@ -50,7 +50,7 @@ class Login extends PureComponent{
             )
         }
         else if(login && pwd){
-            return <Redirect to="/"></Redirect>
+            return <Redirect to="/home"></Redirect>
         }
         else if(login && !pwd){
             return (
@@ -83,7 +83,7 @@ class Login extends PureComponent{
                 }
             })
         }else if(login && pwd === false) {
-            history.push({pathname :"/"})
+            history.push({pathname :"/home"})
         }
     }
 
