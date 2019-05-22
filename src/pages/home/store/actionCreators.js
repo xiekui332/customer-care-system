@@ -1,88 +1,33 @@
 import * as constants from './constants'
-import { getHomeData, getCustomerDetail } from "../../../api"
 
 
 
 
 // 获取MiddleList数据
-export const getMiddleList = () => {
+export const getMiddleList = (data) => {
     return (dispatch) => {
-        getHomeData().then((res) => {
-            let result = res.data;
-            // console.log(result)
-            if(result.success === true){
-                let action = {
-                    type:constants.CHANGE_HOME_DATA,
-                    list:result
-                }
-                dispatch(action)
-            }
-        })
-        .catch((err) => {
-
-        })
+        let action = {
+            type:constants.CHANGE_HOME_DATA,
+            list:data
+        }
+        dispatch(action)
     }
 }
 
-// 点击MiddleList数据
-export const clickMiddleList = (index, id, active, isEdit) => {
-    return (dispatch) => {
-        
-        if(active === true){
-            return
-        }
-
-        let action = {
-            type:constants.IS_LOADING,
-            active:true
-        }
-        dispatch(action)
-
-        getCustomerDetail(id).then((res) => {
-            let result = res.data;
-            // console.log(result)
-            if(result.success === true){
-                let action = {
-                    type:constants.CLICK_MIDDLE_LIST,
-                    status:true,
-                    index,
-                    data:result,
-                    isEdit
-                }
-                dispatch(action)
-
-                let action_two = {
-                    type:constants.IS_LOADING,
-                    active:false
-                }
-                dispatch(action_two)
-            }
-        })
-
-        
-        
-    }
-};
 
 
-// 点击新建客户
-export const clickAddCustomer = (bool) => {
+
+// 点击新建客户派发action
+export const changeIsAdd = (params) => {
     return (dispatch) => {
         let action = {
             type:constants.IS_ADD,
-            bool
+            isAdd:params.isAdd
         }
         dispatch(action)
     }
 };
 
-// 点击编辑
-export const clickEdit = (bool) => {
-    return (dispatch) => {
-        let action = {
-            type:constants.IS_EDIT,
-            bool
-        }
-        dispatch(action)
-    }
-}
+
+
+

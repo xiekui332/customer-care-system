@@ -130,13 +130,19 @@ export const todoList = (params) => {
 }
 
 
-
-
-// 获取home页数据
-
-export const getHomeData = () => {
+// 获取客户列表数据
+export const getCustomerList = (params, urlType) => {
+    let url = ''
+    if(urlType === 2) {
+        url = '/customer/list'
+    }else if(urlType === 3) {
+        url = '/customer/auditlist'
+    }else if(urlType === 4) {
+        url = '/customer/alllist'
+    }
+    
     return new Promise((resolve, reject) => {
-        service.get('/api/userInfo.json')
+        service.post(url, params)
         .then((res) => {
             resolve(res)
         })
@@ -144,12 +150,14 @@ export const getHomeData = () => {
             reject(err)
         })
     })
-};
+}
+
+
 
 // 登陆
-export const userLogin = (count, passWord) => {
+export const handlecustomDelete = (params) => {
     return new Promise((resolve, reject) => {
-        service.get('/api/login.json?count=' + count + '&passWord=' + passWord)
+        service.post('/customer/del', params)
         .then((res) => {
             resolve(res)
         })
@@ -157,7 +165,13 @@ export const userLogin = (count, passWord) => {
             reject(err)
         })
     })
-};
+}
+
+
+
+
+
+
 
 
 // 客户详情

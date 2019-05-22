@@ -177,6 +177,9 @@ export const DetailWrapper = styled.div`
     & .transferIcon{
         margin-left:20px;
     }
+    .ant-empty{
+        margin-top:5%;
+    }
 `;
 
 export const MiddleHeader = styled.div`
@@ -212,6 +215,9 @@ export const SearchWrapper = styled.div`
     }
     margin-bottom:20px;
     transition:all ease-in .2s;
+    &.searchWrapper{
+        height:160px;
+    }
 `;
 
 export const SearchInput = styled.input`
@@ -337,7 +343,7 @@ export const MiddleListWrapper = styled.div`
         border-radius: 4px;
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     }
-    &.MiddleListWrapper-active{
+    &.middleListWrapper-active{
         padding-bottom:75px;
     }
 `;
@@ -353,6 +359,9 @@ export const AddCustomerWrapper = styled.div`
     line-height:80px;
     cursor:default;
     transition:all ease-in .2s;
+    &.addcustomer-show{
+        height:80px;
+    }
 `;
 
 export const MiddleList = styled.div`
@@ -375,6 +384,13 @@ export const MiddleList = styled.div`
         border-left:4px solid #55a12f;
         box-sizing: content-box;
     }
+    >.iconfont{
+        display:block;
+        font-size:40px;
+        color:#DDD;
+        float:left;
+        margin:9px 15px 20px 25px;
+    }
 `;
 
 export const MiddleChceckBox = styled.div`
@@ -392,7 +408,6 @@ export const MiddleChceckBox = styled.div`
         top: -5px;
         left: -1px;
         font-size: 19px;
-        display:none;
     }
     &.middle-check-box-show{
         width:20px;
@@ -402,7 +417,7 @@ export const MiddleChceckBox = styled.div`
             display:block;
         }
     }
-    &.middleChceckBox-show{
+    &.middleChceckBox{
         display:block;
         width:20px;
         height:20px;

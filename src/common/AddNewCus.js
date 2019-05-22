@@ -1,7 +1,8 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Upload, Icon, Modal } from 'antd';
+import { Upload, Icon, Modal, Radio  } from 'antd';
 import "antd/dist/antd.css";
+import { actionCreators } from '../pages/home/store'
 import {
     AddWrapper,
     AddCusHeadWrapper,
@@ -22,11 +23,20 @@ import {
 } from './style'
 
 class AddNewCus extends PureComponent{
+    constructor(props) {
+        super(props)
+        this.state = {
+            value:1
+        }
+
+    }
 
     render() {
         const { isAdd, inputBlur, addSelectDown, addClickLi, 
-                previewVisible, previewImage, fileList 
+                previewVisible, previewImage, fileList,
+                handlecusCancel
         } = this.props;
+        const RadioGroup = Radio.Group;
 
         const uploadButton = (
         <div>
@@ -40,8 +50,12 @@ class AddNewCus extends PureComponent{
                 <AddCusHeadWrapper>
                     <AddCusHeadText>新建客户</AddCusHeadText>
                     <AddButtonWrapper>
-                        <AddCusButton className="add-cancel">取消</AddCusButton>
-                        <AddCusButton className="add-save">保存</AddCusButton>
+                        <AddCusButton className="add-cancel" onClick={() => {
+                            handlecusCancel(this.cusNameEl, this.cusIdcardEl, this.cusMobileEl, this.cusAddressEl, this.cusConEl, this.cusKindEl, this.cusMoneyEl)}}
+                        >取消</AddCusButton>
+                        <AddCusButton className="add-save" onClick={() => {
+
+                        }}>保存</AddCusButton>
                     </AddButtonWrapper>
                 </AddCusHeadWrapper>
 
@@ -52,7 +66,7 @@ class AddNewCus extends PureComponent{
                                 <input
                                     className="add-input"
                                     placeholder="请输入姓名"
-                                    ref = {(input) => {this.input = input}}
+                                    ref = {(input) => {this.cusNameEl = input}}
                                     onBlur={() => {inputBlur(this.input)}}
                                 />
                             <p></p>
@@ -62,7 +76,7 @@ class AddNewCus extends PureComponent{
                                 <input
                                     className="add-input"
                                     placeholder="请输入身份证号码"
-                                    ref = {(input) => {this.input = input}}
+                                    ref = {(input) => {this.cusIdcardEl = input}}
                                     onBlur={() => {inputBlur(this.input)}}
                                 />
                             <p></p>
@@ -72,9 +86,37 @@ class AddNewCus extends PureComponent{
                                 <input
                                     className="add-input"
                                     placeholder="请输入手机号码"
-                                    ref = {(input) => {this.input = input}}
+                                    ref = {(input) => {this.cusMobileEl = input}}
                                     onBlur={() => {inputBlur(this.input)}}
                                 />
+                            <p></p>
+                        </AddItem>
+                        <AddItem>
+                            <AddTitle><span>*</span>常住地址</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入常住地址"
+                                    ref = {(input) => {this.cusAddressEl = input}}
+                                    onBlur={() => {inputBlur(this.input)}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        <AddItem>
+                            <AddTitle><span></span>经营内容</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入经营内容"
+                                    ref = {(input) => {this.cusConEl = input}}
+                                    onBlur={() => {inputBlur(this.input)}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        <AddItem>
+                            <AddTitle><span></span>是否有经营合伙人</AddTitle>
+                            <RadioGroup onChange={(e) => {this.changeRadio(e)}} value={this.state.value}>
+                                <Radio value={0}>无</Radio>
+                                <Radio value={1}>有</Radio>
+                            </RadioGroup>
                             <p></p>
                         </AddItem>
                         <AddItem>
@@ -83,7 +125,7 @@ class AddNewCus extends PureComponent{
                                 <input
                                     className="add-input"
                                     placeholder="请输入行业名称"
-                                    ref = {(input) => {this.input = input}}
+                                    ref = {(input) => {this.cusKindEl = input}}
                                     onBlur={() => {inputBlur(this.input)}}
                                     disabled="disabled"
                                 />
@@ -105,7 +147,7 @@ class AddNewCus extends PureComponent{
                                 <input
                                     className="add-input"
                                     placeholder="请输入"
-                                    ref = {(input) => {this.input = input}}
+                                    ref = {(input) => {this.cusMoneyEl = input}}
                                     onBlur={() => {inputBlur(this.input)}}
                                 />
                                 <span className="add-number">万</span>
@@ -145,6 +187,14 @@ class AddNewCus extends PureComponent{
             
         )
     }
+
+
+    // 经营合伙人
+    changeRadio(e) {
+        this.setState({
+            value: e.target.value,
+        });
+    }
 }
 
 const mapDispatch = (dispatch) => ({
@@ -176,7 +226,28 @@ const mapDispatch = (dispatch) => ({
 
     handleChange(fileList ) {
 
+    },
+
+    // 取消
+    handlecusCancel(cusNameEl, cusIdcardEl, cusMobileEl, cusAddressEl, cusConEl, cusKindEl, cusMoneyEl) {
+        cusNameEl.value = ''
+        cusIdcardEl.value = ''
+        cusMobileEl.value = ''
+        cusAddressEl.value = ''
+        cusConEl.value = ''
+        cusMoneyEl.value = ''
+        let params = {
+            isAdd:false
+        }
+        let action = actionCreators.changeIsAdd(params)
+        dispatch(action)
+    },
+
+    //  保存
+    handlecusSave() {
+        
     }
+    
 })
 
 const mapState = (state) => ({

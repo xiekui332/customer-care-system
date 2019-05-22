@@ -14,7 +14,8 @@ class Home extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            login:sessionGetItem('token')
+            login:sessionGetItem('token'),
+            
         }
     }
     render () {
@@ -34,10 +35,16 @@ class Home extends PureComponent {
         }
         
     }
+
+    
 }
 
 const mapState = (state) => ({
     
 })
 
-export default connect(mapState, null)(Home) 
+const mapDispatch = (dispatch) => ({
+    
+})
+
+export default connect(mapState, mapDispatch)(Home) 

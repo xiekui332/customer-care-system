@@ -55,31 +55,33 @@ class LeftCon extends PureComponent {
 
                 <LeftItemUl
                     ref={(ul) => {this.ul = ul}}>
+                    {
+                        user.userType === 2?
+                        <LeftItemLi
+                            ref={(li) => {this.liCust = li}}
+                            >
+                            {
+                                changepwd?
+                                <div>
+                                    <img src={customer} alt="" />
+                                    <span>客户管理</span>
+                                </div>
+                                :
+                                <NavLink to={"/home"} replace activeClassName="handleActice" >
+                                    <img src={customer} alt="" />
+                                    <span>客户管理</span>
+                                </NavLink>
+                            }
+                            
+                        </LeftItemLi>
+                        :""
+                    }
                     
-                    <LeftItemLi
-                        ref={(li) => {this.liCust = li}}
-                        // onClick={() => {this.handleActive(this.ul, this.liCust)}}
-                        >
-                        {
-                            changepwd?
-                            <div>
-                                <img src={customer} alt="" />
-                                <span>客户管理</span>
-                            </div>
-                            :
-                            <NavLink to={"/home"} replace activeClassName="handleActice" >
-                                <img src={customer} alt="" />
-                                <span>客户管理</span>
-                            </NavLink>
-                        }
-                        
-                    </LeftItemLi>
                     
                     {
                         user.userType === 1?
                         <LeftItemLi 
                             ref={(li) => {this.liUser = li}}
-                            // onClick={() => {this.handleActive(this.ul, this.liUser)}}
                             >
                             {
                                 changepwd?
@@ -100,7 +102,6 @@ class LeftCon extends PureComponent {
 
                     <LeftItemLi className="nowork"
                         ref={(li) => {this.liMess = li}}
-                        // onClick={() => {this.handleActive(this.ul, this.liMess)}}
                         >
                         {
                             changepwd?
@@ -117,7 +118,6 @@ class LeftCon extends PureComponent {
                     </LeftItemLi>
                     <LeftItemLi
                         ref={(li) => {this.liMine = li}}
-                        // onClick={() => {this.handleActive(this.ul, this.liMine)}}
                         >
                         {
                             changepwd?
@@ -166,15 +166,6 @@ class LeftCon extends PureComponent {
         sessionStorage.clear()
     }
 
-    //  点击左侧菜单
-    handleActive(ulEl, liEl) {
-        let elList = ulEl.childNodes
-        for(let i = 0; i < elList.length; i ++) {
-            elList[i].classList.remove('handleActice')
-        }
-        liEl.classList.add('handleActice')
-
-    }
     
 }
 

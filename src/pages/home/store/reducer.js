@@ -14,10 +14,9 @@ const defaultState = fromJS({
         // 客户详情
         customerDetail:{},
     },
-    // loading
-    spin:false,
-    // add
+    spin:false,             // loading
     isAdd:false,
+    edit:false,
     previewVisible: false,
     previewImage: '',
     fileList: [{
@@ -26,7 +25,8 @@ const defaultState = fromJS({
       status: 'done',
       url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
     }],
-    isEdit:false
+    isEdit:false,
+    homeList:[]
     
 
 })
@@ -55,7 +55,7 @@ export default ((state = defaultState, action) => {
     switch(action.type) {
         case constants.CHANGE_HOME_DATA:
         return state.merge({
-            userInfo:fromJS(action.list.data)
+            homeList:fromJS(action.list)
         });
         case constants.CLICK_MIDDLE_LIST:
         return changeMiddleListAcrtive(state, action)
@@ -65,7 +65,7 @@ export default ((state = defaultState, action) => {
         });
         case constants.IS_ADD:
         return state.merge({
-            isAdd:fromJS(action.bool)
+            isAdd:fromJS(action.isAdd)
         });
         case constants.IS_EDIT:
         return state.merge({

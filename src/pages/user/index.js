@@ -50,8 +50,7 @@ class User extends Component {
             edit:false,
             userName:'',
             mobilePhone:'',
-            userId:'',
-            userDelArr:[]
+            userId:''
         }
 
         this.resetHeight = this.resetHeight.bind(this)
@@ -165,7 +164,7 @@ class User extends Component {
                                         <span className="iconfont">&#xe60c;</span>
                                         <p>移交</p>
                                     </EditItem> */}
-                                    <EditItem onClick={() => {this.userdelete(confirm)}}>
+                                    <EditItem onClick={() => {this.handleuserdelete(confirm)}}>
                                         <span className="iconfont">&#xe619;</span>
                                         <p>删除</p>
                                     </EditItem>
@@ -478,7 +477,6 @@ class User extends Component {
             }
             
             userdata[index].active = !userdata[index].active
-            this.state.userDelArr.push(id)
             this.setState({
                 userList:userdata
             })
@@ -549,11 +547,11 @@ class User extends Component {
 
     // 移交用户
     usertransfer() {
-        console.log(this.state.userDelArr)
+        
     }
 
     // 删除用户
-    userdelete(confirm) {
+    handleuserdelete(confirm) {
         let data = this.state.userList,
             deleArr = [];
             let that = this;

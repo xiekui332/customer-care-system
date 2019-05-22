@@ -18,7 +18,7 @@ import {
 
 class MiddleWrapper extends PureComponent{
     render () {
-        const { fileList, customerDetail, spin, isAdd } = this.props;
+        const { fileList, customerDetail, spin, isAdd, edit } = this.props;
         const user = JSON.parse(sessionStorage.getItem("user"))
         // console.log(isAdd)
         return (
@@ -26,7 +26,7 @@ class MiddleWrapper extends PureComponent{
                 {/* 添加客户内容 */}
                 <AddNewCus></AddNewCus>
 
-                <div className={isAdd?"isHide":"isShow"}>
+                <div className={edit?"isShow":"isHide"}>
                     <RightHeaderWrapper className={spin || !customerDetail?"isOpacity":"" }>
                         <Tooltip title="">
                             <span className="iconfont">&#xe62f;</span>
@@ -109,11 +109,18 @@ class MiddleWrapper extends PureComponent{
                             :''
                         }
                         
-                        <Empty className={customerDetail || spin?"isHide":"isShow" } description={'暂无数据'} />
+                        
+                        
                     
                     
                     </RightWrapper>
                 </div>
+
+                {
+                    !edit && !isAdd?
+                    <Empty className="" description={'暂无数据'} />
+                    :""
+                }
             </DetailWrapper>
         )
     }
@@ -143,10 +150,7 @@ class MiddleWrapper extends PureComponent{
 
 const mapDispatch = (dispatch) => ({
     onChange() {
-        // 动态赋值table
-        // let tableWidth = document.getElementsByTagName('table')[0].offsetWidth;
-        // console.log(tableWidth)
-        // document.getElementsByClassName('swiper-wrapper')[0].style.width = tableWidth
+
     }
 })
 
@@ -154,7 +158,8 @@ const mapState = (state) => ({
     fileList:state.getIn(['left','userInfo']).toJS().fileList,
     customerDetail:state.getIn(['left','userInfo']).toJS().customerDetail,
     spin:state.getIn(['left','spin']),
-    isAdd:state.getIn(['left', 'isAdd'])
+    isAdd:state.getIn(['left', 'isAdd']),
+    edit:state.getIn(['left', 'edit'])
 })
 
 export default connect(mapState, mapDispatch)(MiddleWrapper)
