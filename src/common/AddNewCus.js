@@ -1,8 +1,9 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Upload, Icon, Modal, Radio  } from 'antd';
+import { Upload, Icon, Modal, Radio, Select, message, Button } from 'antd';
 import "antd/dist/antd.css";
 import { actionCreators } from '../pages/home/store'
+import { handleUpload, getsystemData } from '../api'
 import {
     AddWrapper,
     AddCusHeadWrapper,
@@ -12,7 +13,6 @@ import {
     AddContent,
     AddTitle,
     AddItem,
-    SelectBox,
     AddUl,
     AddLi,
     AddUpload,
@@ -22,26 +22,34 @@ import {
     FileName
 } from './style'
 
-class AddNewCus extends PureComponent{
+class AddNewCus extends Component{
     constructor(props) {
         super(props)
         this.state = {
-            value:1
+            value:0,
+            previewVisible: false,
+            previewImage: '',
+            fileList: [],
+            loading:false,
+            attachFile:[],
+            systemData:{}
         }
 
     }
-
+ 
     render() {
-        const { isAdd, inputBlur, addSelectDown, addClickLi, 
-                previewVisible, previewImage, fileList,
-                handlecusCancel
+        const { 
+            isAdd, addClickLi, handlecusCancel
         } = this.props;
+        const { previewVisible, previewImage, fileList, attachFile, systemData } = this.state;
+
         const RadioGroup = Radio.Group;
+        const Option = Select.Option;
 
         const uploadButton = (
         <div>
             <Icon type="plus" />
-            <div className="ant-upload-text">Upload</div>
+            <div className="ant-upload-text">上传</div>
         </div>
         );
 
@@ -54,7 +62,18 @@ class AddNewCus extends PureComponent{
                             handlecusCancel(this.cusNameEl, this.cusIdcardEl, this.cusMobileEl, this.cusAddressEl, this.cusConEl, this.cusKindEl, this.cusMoneyEl)}}
                         >取消</AddCusButton>
                         <AddCusButton className="add-save" onClick={() => {
-
+                            this.handleSaveData(
+                                this.cusNameEl,
+                                this.cusIdcardEl,
+                                this.cusMobileEl,
+                                this.cusAddressEl,
+                                this.cusConEl,
+                                this.state.value,
+                                this.state.userType,
+                                this.cusMoneyEl,
+                                fileList,
+                                attachFile
+                                )
                         }}>保存</AddCusButton>
                     </AddButtonWrapper>
                 </AddCusHeadWrapper>
@@ -67,7 +86,6 @@ class AddNewCus extends PureComponent{
                                     className="add-input"
                                     placeholder="请输入姓名"
                                     ref = {(input) => {this.cusNameEl = input}}
-                                    onBlur={() => {inputBlur(this.input)}}
                                 />
                             <p></p>
                         </AddItem>
@@ -77,7 +95,6 @@ class AddNewCus extends PureComponent{
                                     className="add-input"
                                     placeholder="请输入身份证号码"
                                     ref = {(input) => {this.cusIdcardEl = input}}
-                                    onBlur={() => {inputBlur(this.input)}}
                                 />
                             <p></p>
                         </AddItem>
@@ -87,7 +104,6 @@ class AddNewCus extends PureComponent{
                                     className="add-input"
                                     placeholder="请输入手机号码"
                                     ref = {(input) => {this.cusMobileEl = input}}
-                                    onBlur={() => {inputBlur(this.input)}}
                                 />
                             <p></p>
                         </AddItem>
@@ -97,7 +113,6 @@ class AddNewCus extends PureComponent{
                                     className="add-input"
                                     placeholder="请输入常住地址"
                                     ref = {(input) => {this.cusAddressEl = input}}
-                                    onBlur={() => {inputBlur(this.input)}}
                                 />
                             <p></p>
                         </AddItem>
@@ -107,13 +122,15 @@ class AddNewCus extends PureComponent{
                                     className="add-input"
                                     placeholder="请输入经营内容"
                                     ref = {(input) => {this.cusConEl = input}}
-                                    onBlur={() => {inputBlur(this.input)}}
                                 />
                             <p></p>
                         </AddItem>
                         <AddItem>
                             <AddTitle><span></span>是否有经营合伙人</AddTitle>
-                            <RadioGroup onChange={(e) => {this.changeRadio(e)}} value={this.state.value}>
+                            <RadioGroup 
+                                    className="radio-group"
+                                    onChange={(e) => {this.changeRadio(e)}} 
+                                    value={this.state.value}>
                                 <Radio value={0}>无</Radio>
                                 <Radio value={1}>有</Radio>
                             </RadioGroup>
@@ -121,20 +138,24 @@ class AddNewCus extends PureComponent{
                         </AddItem>
                         <AddItem>
                             <AddTitle><span></span>行业名称</AddTitle>
-                            <SelectBox onClick={addSelectDown}>
-                                <input
-                                    className="add-input"
-                                    placeholder="请输入行业名称"
-                                    ref = {(input) => {this.cusKindEl = input}}
-                                    onBlur={() => {inputBlur(this.input)}}
-                                    disabled="disabled"
-                                />
+                            <Select
+                                showSearch
+                                style={{ width: '60%', marginBottom:20 }}
+                                placeholder="请选择用户类别"
+                                optionFilterProp="children"
+                                onChange={(value) => {this.customkind(value)}}
+                                value={this.state.userType}
+                                filterOption={(input, option) =>
+                                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                            >
+                                {
+                                    systemData.industryClass.map((item, index) => (
+                                        <Option value="item" key={item}>{item}</Option>
+                                    ))
+                                }
                                 
-                                <p></p>
-                                <span className="iconfont">&#xe612;</span>
-
-                                
-                            </SelectBox>
+                            </Select>
                             <AddUl className="add-ul">
                                 <AddLi 
                                     onClick={() => {addClickLi(2)}}
@@ -148,7 +169,6 @@ class AddNewCus extends PureComponent{
                                     className="add-input"
                                     placeholder="请输入"
                                     ref = {(input) => {this.cusMoneyEl = input}}
-                                    onBlur={() => {inputBlur(this.input)}}
                                 />
                                 <span className="add-number">万</span>
                             <p></p>
@@ -158,18 +178,22 @@ class AddNewCus extends PureComponent{
                     <AddUpload>
                         <AddTitle><span></span>图片上传</AddTitle>
                         <AddUploadWrapper>
+
                         <div className="clearfix">
                             <Upload
-                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                            listType="picture-card"
-                            fileList={fileList}
-                            onPreview={this.handlePreview}
-                            onChange={this.handleChange}
-                            >
-                            {fileList.length >= 3 ? null : uploadButton}
+                                accept=".jpg, .jpeg, .png"
+                                customRequest={(file) => {this.customRequest(file)}}
+                                listType="picture-card"
+                                fileList={fileList}
+                                onPreview={(file) => {this.handlePreview(file)}}
+                                onChange={(file, fileList, event) => {this.handleChange(file, fileList, event)}}
+                                onRemove={(file) => {this.handleonRemove(file)}}
+                                >
+                                {fileList.length >= 9 ? null : uploadButton}
                             </Upload>
-                            <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-                            <img alt="example" style={{ width: '100%' }} src={previewImage} />
+
+                            <Modal visible={previewVisible} footer={null} onCancel={(file) => {this.handleCancel(file)}}>
+                                <img alt="example" style={{ width: '100%' }} src={previewImage} />
                             </Modal>
                         </div>
                         </AddUploadWrapper>
@@ -177,15 +201,47 @@ class AddNewCus extends PureComponent{
 
                     <AddFileWrapper>
                         <AddTitle><span></span>附件上传</AddTitle>
-                        <AddFile>
-                            <FileName></FileName>
-                            <span className="iconfont">&#xe619;</span>
-                        </AddFile>
+                        {
+                            attachFile.map((item, index) => (
+                                <AddFile key={item.uid}>
+                                    <FileName>{item.name}</FileName>
+                                    <span className="iconfont" onClick={() => { this.handleAttachDel(item, attachFile) }}>&#xe619;</span>
+                                </AddFile>
+                            ))
+                            
+                        }
+                        <AddUploadWrapper>
+                            <div className="clearfix clearfix-two">
+                                <Upload 
+                                    accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                    customRequest={(file) => { this.attachRequest(file) }}
+                                    fileList={attachFile}
+                                    
+                                >
+                                <Button className="uploadButton">
+                                    <Icon type="upload" /> 附件上传
+                                </Button>
+                                </Upload>
+                            </div>
+                        </AddUploadWrapper>
                     </AddFileWrapper>
                 </AddContent>
             </AddWrapper>
             
         )
+    }
+
+    componentDidMount() {
+        getsystemData().then((res) => {
+            let data = res.data;
+            if(data.code === 1 && data.msg === 'success') {
+                this.setState({
+                    systemData:data.data
+                }, () => {
+                    console.log(this.state.systemData)
+                })
+            }
+        })
     }
 
 
@@ -195,37 +251,133 @@ class AddNewCus extends PureComponent{
             value: e.target.value,
         });
     }
+
+    // 行业分类
+    customkind(value) {
+
+    }
+
+    // 新建客户保存
+    handleSaveData(cusNameEl, cusIdcardEl, cusMobileEl, cusAddressEl, cusConEl, value, userType, cusMoneyEl) {
+
+    }
+
+    handleCancel = (file) => {
+        this.setState({ previewVisible: false })
+    };
+
+    // 预览图片
+    handlePreview = file => {
+        this.setState({
+            previewImage: file.url || file.thumbUrl,
+            previewVisible: true,
+        });
+    };
+
+    handleChange = (file, fileList, event ) => {
+        
+    };
+
+    // onRemove  
+    handleonRemove(file) {
+        let fileList = this.state.fileList
+        fileList.map((item, index) => (
+            item === file?fileList.splice(index, 1):''
+        ))
+        this.setState({
+            fileList:fileList
+        }, () => {
+            
+        })
+    }
+
+
+    // 自定义上传
+    customRequest(option) {
+        const formData = new FormData();
+        const fileUrl = '/attach/upload';
+        let newFiles = []
+        let obj = {}
+        formData.append('file',option.file);
+        handleUpload(fileUrl, formData).then((res) => {
+            let data = res.data
+            if(data.code === 1 && data.msg === 'success') {
+                message.success('上传成功')
+                obj.name = data.data.attach.origName
+                obj.uid =  data.data.attach.attachId 
+                obj.status = 'done'
+                obj.url = data.data.attachHost + data.data.attach.attachPath
+                newFiles.push(obj)
+                let newFile = this.state.fileList
+                this.setState({
+                    fileList: newFile.concat(newFiles)
+                }, () => {
+                    console.log(this.state.fileList)
+                })
+            }else{
+                message.success('上传失败')
+            }
+        })
+        .catch((err) => {
+            message.error(err.msg)
+        })
+
+    }
+
+    // 附件自定义上传 file, fileList
+    attachRequest(option) {
+        const formData = new FormData();
+        const fileUrl = '/attach/upload';
+        let newFiles = []
+        let obj = {}
+        formData.append('file',option.file);
+        handleUpload(fileUrl, formData).then((res) => {
+            let data = res.data
+            if(data.code === 1 && data.msg === 'success') {
+                message.success('上传成功')
+                obj.name = data.data.attach.origName
+                obj.uid =  data.data.attach.attachId 
+                obj.status = 'done'
+                obj.url = data.data.attachHost + data.data.attach.attachPath
+                newFiles.push(obj)
+                let newFile = this.state.attachFile
+                this.setState({
+                    attachFile: newFile.concat(newFiles)
+                }, () => {
+                    // console.log(this.state.attachFile)
+                })
+            }else{
+                message.success('上传失败')
+            }
+        })
+        .catch((err) => {
+            message.error(err.msg)
+        })
+    }
+
+
+    // 附件上传删除
+    handleAttachDel(file, attachFile) {
+        attachFile.map((item, index) => (
+            item === file?attachFile.splice(index, 1):''
+        ))
+
+        this.setState({
+            attachFile:attachFile
+        })
+    }
+
+
+    
 }
 
 const mapDispatch = (dispatch) => ({
 
-    inputBlur(input) {
-        let value = input.value
-        console.log(value)
-    },
-
-    // 下拉
-    addSelectDown() {
-        let el = document.getElementsByClassName('add-ul')[0]
-            el.classList.add('add-ul-show')
-    },
 
     // 选择li
     addClickLi(kind) {
         let el = document.getElementsByClassName('add-ul')[0]
             el.classList.remove('add-ul-show')
-    },
-
-    handleCancel () {
-
-    },
-
-    handlePreview() {
-
-    },
-
-    handleChange(fileList ) {
-
     },
 
     // 取消
@@ -251,10 +403,7 @@ const mapDispatch = (dispatch) => ({
 })
 
 const mapState = (state) => ({
-    isAdd:state.getIn(['left', 'isAdd']),
-    previewVisible:state.getIn(['left', 'previewVisible']),
-    previewImage:state.getIn(['left', 'previewImage']),
-    fileList:state.getIn(['left', 'fileList']).toJS()
+    isAdd:state.getIn(['left', 'isAdd'])
 })
 
 export default connect(mapState, mapDispatch)(AddNewCus)

@@ -59,8 +59,10 @@ export const Globalstyle = createGlobalStyle`
   }
   .isShow{
       display:block;
+      transition:all ease-in .05s;
   }
   .isHide{
       display:none;
+      transition:all ease-in .05s;
   }
 `;

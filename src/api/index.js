@@ -1,6 +1,6 @@
 import service from './request'
 import QS from 'qs' // 引入qs模块，用来序列化post类型的数据
-// const baseUrl = "http://148.70.204.30";
+// import { baseUrl } from '../config'
 
 //login
 export const login = (params) => {
@@ -154,7 +154,7 @@ export const getCustomerList = (params, urlType) => {
 
 
 
-// 登陆
+// 
 export const handlecustomDelete = (params) => {
     return new Promise((resolve, reject) => {
         service.post('/customer/del', params)
@@ -167,6 +167,32 @@ export const handlecustomDelete = (params) => {
     })
 }
 
+
+export const handleUpload = (fileUrl, params) => {
+    return new Promise((resolve, reject) => {
+        service.post(fileUrl, params)
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
+
+
+// 获取系统参数
+export const getsystemData = () => {
+    return new Promise((resolve, reject) => {
+        service.post('/sys/params')
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })  
+}
 
 
 
@@ -186,3 +212,4 @@ export const getCustomerDetail = (id) => {
         })
     })
 }
+

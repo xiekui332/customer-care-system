@@ -45,7 +45,7 @@ export const AddCusButton = styled.div`
 `;
 
 export const AddContent = styled.div`
-    width:600px;
+width:600px;
     margin:30px auto 50px;
 `;
 
@@ -66,9 +66,9 @@ export const AddTitle = styled.div`
 `;
 
 export const AddItem = styled.div`
-    
+
     &>.add-input{
-        width:400px;
+        width: 60%;
         font-size:14px;
         outline:none;
         height:30px;
@@ -96,7 +96,12 @@ export const AddItem = styled.div`
         line-height:30px;
         margin-right:50px;
     }
-    
+    .radio-group{
+        margin-top:5px;
+    }
+    .ant-radio-checked .ant-radio-inner{
+        border-color:#55a12f;
+    }
 `;
 
 export const SelectBox = styled.div`
@@ -177,10 +182,21 @@ export const AddUpload = styled.div`
 export const AddUploadWrapper = styled.div`
     width:460px;
     min-height:100px;
+    margin-left: 110px;
+    .uploadButton{
+        margin-top:0px;
+    }
+    .clearfix-two{
+        width:350px;
+        .ant-upload-list-text{
+            display:none;
+        }
+    }
 `;
 
 export const AddFileWrapper = styled.div`
     overflow:hidden;
+    margin-top:10px;
 `;
 
 export const AddFile = styled.div`
@@ -193,10 +209,11 @@ export const AddFile = styled.div`
     }
 `;
 export const FileName = styled.div`
-    height:30px;
     width:300px;
     border:1px solid #dcdcdc;
     border-radius:5px;
     line-height:30px;
     float:left;
+    font-size:13px;
+    padding-left:10px;
 `;

@@ -15,19 +15,10 @@ const defaultState = fromJS({
         customerDetail:{},
     },
     spin:false,             // loading
-    isAdd:false,
+    isAdd:true,
     edit:false,
-    previewVisible: false,
-    previewImage: '',
-    fileList: [{
-      uid: '-1',
-      name: 'xxx.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    }],
     isEdit:false,
     homeList:[]
-    
 
 })
 
@@ -69,8 +60,8 @@ export default ((state = defaultState, action) => {
         });
         case constants.IS_EDIT:
         return state.merge({
-                    isEdit:fromJS(action.bool)
-                });
+            isEdit:fromJS(action.bool)
+        });
         default:
         return state;
     }
