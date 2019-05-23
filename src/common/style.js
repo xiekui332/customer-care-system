@@ -66,7 +66,13 @@ export const AddTitle = styled.div`
 `;
 
 export const AddItem = styled.div`
-
+    .ant-select-selection__placeholder, .ant-select-search__field__placeholder{
+        font-size:13px;
+    }
+    &>.active{
+        border:1px solid red!important;
+    }
+    
     &>.add-input{
         width: 60%;
         font-size:14px;

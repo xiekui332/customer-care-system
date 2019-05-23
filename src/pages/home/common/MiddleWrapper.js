@@ -43,7 +43,8 @@ class MiddleWrapper extends PureComponent{
             demandAmount:'',            // 需求金额（万元）
             pageNum:1,  
             pageSize:10,
-            customerId:''
+            customerId:'',
+            changeData:this.props.changeAddStatus
         }
     }
 
@@ -54,7 +55,7 @@ class MiddleWrapper extends PureComponent{
                 isAddAction
         } = this.props;
         const { isAdd, search, edit } = this.state;
-        // console.log(homeList)
+        console.log(homeList)
         const confirm = Modal.confirm;
         
         return (
@@ -148,6 +149,19 @@ class MiddleWrapper extends PureComponent{
         )
     }
 
+    componentWillReceiveProps(nextProps) {
+        console.log(nextProps)
+        if(nextProps.changeAddStatus === true) {
+            // this.getListData()
+        }
+        
+    }
+
+    componentDidUpdate() {
+        if(this.state.changeData) {
+            this.getListData()
+        }
+    }
 
     componentDidMount() {
         this.props.resetHeight()
@@ -156,6 +170,7 @@ class MiddleWrapper extends PureComponent{
 
     // 获取list
     getListData() {
+        console.log(this.state.changeData)
         let data = this.state.user;
         let { name, mobilePhone, companyName, yearlyTurnoverSymbol, yearlyTurnover, propertySymbol, property, liabilitiesSymbol, liabilities, demandAmountSymbol, 
             demandAmount, pageNum, pageSize
@@ -212,68 +227,24 @@ class MiddleWrapper extends PureComponent{
             let data = res.data;
             if(data.code === 1 && data.msg === 'success') {
                 // 测试数据
-                data.data = {
-                    "list": [
-                        {
-                            "customerId": 1,
-                            "userId": 1,
-                            "name": "张三",
-                            "idcard": "320926195511175276",
-                            "mobilePhone": "13212345678",
-                            "companyName": "aaa",
-                            "status":0,
-                            "photo":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556782759160&di=2e2df9eae570460adfc6bec7e2887d3c&imgtype=0&src=http%3A%2F%2Fwenwen.soso.com%2Fp%2F20120208%2F20120208165308-1774101526.jpg",
-                            "createTime": "2019-05-01 18:09:30"
-                        },
-                        {
-                            "customerId": 2,
-                            "userId": 2,
-                            "name": "张三",
-                            "idcard": "320926195511175276",
-                            "mobilePhone": "13212345678",
-                            "companyName": "aaa",
-                            "status":0,
-                            "photo":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556782759160&di=2e2df9eae570460adfc6bec7e2887d3c&imgtype=0&src=http%3A%2F%2Fwenwen.soso.com%2Fp%2F20120208%2F20120208165308-1774101526.jpg",
-                            "createTime": "2019-05-01 18:09:30"
-                        },
-                        {
-                            "customerId": 3,
-                            "userId": 3,
-                            "name": "张三",
-                            "idcard": "320926195511175276",
-                            "mobilePhone": "13212345678",
-                            "companyName": "aaa",
-                            "status":0,
-                            "photo":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556782759160&di=2e2df9eae570460adfc6bec7e2887d3c&imgtype=0&src=http%3A%2F%2Fwenwen.soso.com%2Fp%2F20120208%2F20120208165308-1774101526.jpg",
-                            "createTime": "2019-05-01 18:09:30"
-                        },
-                        {
-                            "customerId": 4,
-                            "userId": 4,
-                            "name": "张三",
-                            "idcard": "320926195511175276",
-                            "mobilePhone": "13212345678",
-                            "companyName": "aaa",
-                            "status":0,
-                            "photo":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556782759160&di=2e2df9eae570460adfc6bec7e2887d3c&imgtype=0&src=http%3A%2F%2Fwenwen.soso.com%2Fp%2F20120208%2F20120208165308-1774101526.jpg",
-                            "createTime": "2019-05-01 18:09:30"
-                        },
-                        {
-                            "customerId": 5,
-                            "userId": 5,
-                            "name": "张三",
-                            "idcard": "320926195511175276",
-                            "mobilePhone": "13212345678",
-                            "companyName": "aaa",
-                            "status":0,
-                            "photo":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556782759160&di=2e2df9eae570460adfc6bec7e2887d3c&imgtype=0&src=http%3A%2F%2Fwenwen.soso.com%2Fp%2F20120208%2F20120208165308-1774101526.jpg",
-                            "createTime": "2019-05-01 18:09:30"
-                        }
-                    ],
-                    "total": 1,
-                    "pageNum": 1,
-                    "pageSize": 20
-                }
+                // data.data = {
+                //     "list": [
+                //         {
+                //             "customerId": 1,
+                //             "userId": 1,
+                //             "name": "张三",
+                //             "idcard": "320926195511175276",
+                //             "mobilePhone": "13212345678",
+                //             "companyName": "aaa",
+                //             "status":0,
+                //             "photo":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556782759160&di=2e2df9eae570460adfc6bec7e2887d3c&imgtype=0&src=http%3A%2F%2Fwenwen.soso.com%2Fp%2F20120208%2F20120208165308-1774101526.jpg",
+                //             "createTime": "2019-05-01 18:09:30"
+                //         }
+                //     ],
+                //     "total": 1,
+                //     "pageNum": 1,
+                //     "pageSize": 20
+                // }
 
                 if(data.data) {
                     data.data.list.map((item, index) => (
@@ -421,6 +392,10 @@ const mapDispatch = (dispatch) => ({
     disCusList(data) {
         let action = actionCreators.getMiddleList(data)
         dispatch(action)
+
+        let action_two = actionCreators.changeAddStatus(false)
+        dispatch(action_two)
+
     },
 
 
@@ -445,7 +420,8 @@ const mapState = (state) => ({
     customerList:state.getIn(['left', 'userInfo']).toJS().customerList,
     isAdd:state.getIn(['left', 'isAdd']),
     isEdit:state.getIn(['left', 'isEdit']),
-    homeList:state.getIn(['left', 'homeList']).toJS()
+    homeList:state.getIn(['left', 'homeList']).toJS(),
+    changeAddStatus:state.getIn(['left', 'changeAddStatus'])
 })
 
 export default connect(mapState, mapDispatch)(MiddleWrapper)

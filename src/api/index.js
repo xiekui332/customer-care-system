@@ -196,6 +196,20 @@ export const getsystemData = () => {
 
 
 
+// 添加客户
+export const addCustom = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post('/customer/add', QS.stringify(params))
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })  
+}
+
+
 
 
 

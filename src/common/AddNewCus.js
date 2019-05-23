@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Upload, Icon, Modal, Radio, Select, message, Button } from 'antd';
 import "antd/dist/antd.css";
 import { actionCreators } from '../pages/home/store'
-import { handleUpload, getsystemData } from '../api'
+import { handleUpload, getsystemData, addCustom, checkidCard, checkmobile } from '../api'
 import {
     AddWrapper,
     AddCusHeadWrapper,
@@ -32,7 +32,8 @@ class AddNewCus extends Component{
             fileList: [],
             loading:false,
             attachFile:[],
-            systemData:{}
+            systemData:{},
+            kindSelected:''
         }
 
     }
@@ -41,7 +42,7 @@ class AddNewCus extends Component{
         const { 
             isAdd, addClickLi, handlecusCancel
         } = this.props;
-        const { previewVisible, previewImage, fileList, attachFile, systemData } = this.state;
+        const { previewVisible, previewImage, fileList, attachFile, systemData, kindSelected } = this.state;
 
         const RadioGroup = Radio.Group;
         const Option = Select.Option;
@@ -59,7 +60,7 @@ class AddNewCus extends Component{
                     <AddCusHeadText>新建客户</AddCusHeadText>
                     <AddButtonWrapper>
                         <AddCusButton className="add-cancel" onClick={() => {
-                            handlecusCancel(this.cusNameEl, this.cusIdcardEl, this.cusMobileEl, this.cusAddressEl, this.cusConEl, this.cusKindEl, this.cusMoneyEl)}}
+                            handlecusCancel(this.cusNameEl, this.cusIdcardEl, this.cusMobileEl, this.cusAddressEl, this.cusConEl, kindSelected, this.cusMoneyEl)}}
                         >取消</AddCusButton>
                         <AddCusButton className="add-save" onClick={() => {
                             this.handleSaveData(
@@ -69,7 +70,7 @@ class AddNewCus extends Component{
                                 this.cusAddressEl,
                                 this.cusConEl,
                                 this.state.value,
-                                this.state.userType,
+                                kindSelected,
                                 this.cusMoneyEl,
                                 fileList,
                                 attachFile
@@ -144,15 +145,19 @@ class AddNewCus extends Component{
                                 placeholder="请选择用户类别"
                                 optionFilterProp="children"
                                 onChange={(value) => {this.customkind(value)}}
-                                value={this.state.userType}
+                                value={kindSelected}
                                 filterOption={(input, option) =>
                                     option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                 }
                             >
                                 {
-                                    systemData.industryClass.map((item, index) => (
-                                        <Option value="item" key={item}>{item}</Option>
-                                    ))
+                                    // 要做容错处理
+                                    systemData.industryClass && systemData.industryClass.map((item, index) => {
+                                        return (
+                                            <Option key={item}>{item}</Option>
+                                        )
+                                        
+                                    })
                                 }
                                 
                             </Select>
@@ -238,7 +243,7 @@ class AddNewCus extends Component{
                 this.setState({
                     systemData:data.data
                 }, () => {
-                    console.log(this.state.systemData)
+                    // console.log(this.state.systemData)
                 })
             }
         })
@@ -254,12 +259,58 @@ class AddNewCus extends Component{
 
     // 行业分类
     customkind(value) {
-
+        this.setState({
+            kindSelected:value
+        })
     }
 
     // 新建客户保存
-    handleSaveData(cusNameEl, cusIdcardEl, cusMobileEl, cusAddressEl, cusConEl, value, userType, cusMoneyEl) {
+    handleSaveData(cusNameEl, cusIdcardEl, cusMobileEl, cusAddressEl, cusConEl, value, kindSelected, cusMoneyEl, fileList, attachFile) {
+        let params = {}
+        let attachs = []
+        fileList.concat(attachFile).map((item, index) => (
+            attachs.push(item.uid)
+        ))
+        // test
+        cusNameEl.value = '小菜'
+        cusIdcardEl.value = 142603199303283737
+        cusMobileEl.value = 18334794858
+        cusAddressEl.value = '象牙公寓'
 
+        if(!cusNameEl.value) {
+            message.error('请输入客户姓名')
+        }else if(!cusIdcardEl.value || !checkidCard.test(cusIdcardEl.value)) {
+            message.error('请输入正确身份证号码')
+        }else if(!cusMobileEl.value || !checkmobile.test(cusMobileEl.value)) {
+            message.error('请输入正确电话号码')
+        }else if(!cusAddressEl.value) {
+            message.error('请输入常住地址')
+        }
+        
+        else{
+            
+
+            params.name = cusNameEl.value
+            params.idcard = cusIdcardEl.value
+            params.mobilePhone = cusMobileEl.value
+            params.address = cusAddressEl.value
+            params.businessContent = cusConEl.value   // 经营内容
+            params.isBusinessPartner = value          // 是否有经营合伙人（0无 1有）
+            params.industryClass = kindSelected       // 所属行业
+            params.liabilities = cusMoneyEl.value     // 负债（万元）
+            params.attachId = attachs.join(',')
+            
+
+            addCustom(params).then((res) => {
+                
+                message.success('添加成功')
+                let data = res.data;
+                if(data.code === 1 && data.msg === 'success') {
+                    console.log(data)
+                    this.props.handleAddStatus(true)
+                }
+            })
+        }
     }
 
     handleCancel = (file) => {
@@ -368,6 +419,7 @@ class AddNewCus extends Component{
     }
 
 
+
     
 }
 
@@ -396,8 +448,9 @@ const mapDispatch = (dispatch) => ({
     },
 
     //  保存
-    handlecusSave() {
-        
+    handleAddStatus() {
+        let action = actionCreators.changeAddStatus(true)
+        dispatch(action)
     }
     
 })

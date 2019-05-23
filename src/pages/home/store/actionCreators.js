@@ -29,7 +29,15 @@ export const changeIsAdd = (params) => {
 };
 
 
-
-
+// 添加客户成功状态
+export const changeAddStatus = (bool) => {
+    return (dispatch) => {
+        let action = {
+            type:constants.CHANGE_ADD_STATUS,
+            addStatus:bool
+        }
+        dispatch(action)
+    }
+}
 
 

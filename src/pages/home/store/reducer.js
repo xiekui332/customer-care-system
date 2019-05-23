@@ -18,8 +18,8 @@ const defaultState = fromJS({
     isAdd:true,
     edit:false,
     isEdit:false,
-    homeList:[]
-
+    homeList:[],
+    changeAddStatus:false
 })
 
 //  点击MiddleList数据
@@ -61,6 +61,11 @@ export default ((state = defaultState, action) => {
         case constants.IS_EDIT:
         return state.merge({
             isEdit:fromJS(action.bool)
+        });
+        
+        case constants.CHANGE_ADD_STATUS:
+        return state.merge({
+            changeAddStatus:fromJS(action.addStatus)
         });
         default:
         return state;
