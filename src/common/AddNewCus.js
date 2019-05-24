@@ -60,7 +60,7 @@ class AddNewCus extends Component{
                     <AddCusHeadText>新建客户</AddCusHeadText>
                     <AddButtonWrapper>
                         <AddCusButton className="add-cancel" onClick={() => {
-                            handlecusCancel(this.cusNameEl, this.cusIdcardEl, this.cusMobileEl, this.cusAddressEl, this.cusConEl, kindSelected, this.cusMoneyEl)}}
+                            handlecusCancel(this.cusNameEl, this.cusIdcardEl, this.cusMobileEl, this.cusAddressEl, this.cusConEl, this.cusCompanyEl, this.cusMoneyEl)}}
                         >取消</AddCusButton>
                         <AddCusButton className="add-save" onClick={() => {
                             this.handleSaveData(
@@ -69,6 +69,7 @@ class AddNewCus extends Component{
                                 this.cusMobileEl,
                                 this.cusAddressEl,
                                 this.cusConEl,
+                                this.cusCompanyEl,
                                 this.state.value,
                                 kindSelected,
                                 this.cusMoneyEl,
@@ -123,6 +124,15 @@ class AddNewCus extends Component{
                                     className="add-input"
                                     placeholder="请输入经营内容"
                                     ref = {(input) => {this.cusConEl = input}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        <AddItem>
+                            <AddTitle><span></span>公司名称</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入公司名称"
+                                    ref = {(input) => {this.cusCompanyEl = input}}
                                 />
                             <p></p>
                         </AddItem>
@@ -265,17 +275,20 @@ class AddNewCus extends Component{
     }
 
     // 新建客户保存
-    handleSaveData(cusNameEl, cusIdcardEl, cusMobileEl, cusAddressEl, cusConEl, value, kindSelected, cusMoneyEl, fileList, attachFile) {
+    handleSaveData(cusNameEl, cusIdcardEl, cusMobileEl, cusAddressEl, cusConEl, cusCompanyEl, value, kindSelected, cusMoneyEl, fileList, attachFile) {
         let params = {}
         let attachs = []
         fileList.concat(attachFile).map((item, index) => (
-            attachs.push(item.uid)
+            attachs.push({
+                attachId:item.uid
+            })
+            // attachs.push(item.uid)
         ))
         // test
-        cusNameEl.value = '小菜'
-        cusIdcardEl.value = 142603199303283737
-        cusMobileEl.value = 18334794858
-        cusAddressEl.value = '象牙公寓'
+        // cusNameEl.value = '小菜'
+        // cusIdcardEl.value = 142603199303283737
+        // cusMobileEl.value = 18334794858
+        // cusAddressEl.value = '象牙公寓'
 
         if(!cusNameEl.value) {
             message.error('请输入客户姓名')
@@ -295,19 +308,21 @@ class AddNewCus extends Component{
             params.mobilePhone = cusMobileEl.value
             params.address = cusAddressEl.value
             params.businessContent = cusConEl.value   // 经营内容
+            params.companyName = cusCompanyEl.value   // 公司名称
             params.isBusinessPartner = value          // 是否有经营合伙人（0无 1有）
             params.industryClass = kindSelected       // 所属行业
             params.liabilities = cusMoneyEl.value     // 负债（万元）
-            params.attachId = attachs.join(',')
+            params.attachs = attachs
             
 
             addCustom(params).then((res) => {
-                
-                message.success('添加成功')
                 let data = res.data;
                 if(data.code === 1 && data.msg === 'success') {
-                    console.log(data)
+                    message.success('添加成功')
+                    // console.log(data)
                     this.props.handleAddStatus(true)
+                }else{
+                    message.error(data.msg)
                 }
             })
         }
@@ -433,12 +448,14 @@ const mapDispatch = (dispatch) => ({
     },
 
     // 取消
-    handlecusCancel(cusNameEl, cusIdcardEl, cusMobileEl, cusAddressEl, cusConEl, cusKindEl, cusMoneyEl) {
+    handlecusCancel(cusNameEl, cusIdcardEl, cusMobileEl, cusAddressEl, cusConEl, cusCompanyEl, cusMoneyEl) {
         cusNameEl.value = ''
         cusIdcardEl.value = ''
         cusMobileEl.value = ''
         cusAddressEl.value = ''
         cusConEl.value = ''
+        cusCompanyEl.value = ''
+        
         cusMoneyEl.value = ''
         let params = {
             isAdd:false

@@ -15,11 +15,13 @@ const defaultState = fromJS({
         customerDetail:{},
     },
     spin:false,             // loading
-    isAdd:true,
+    isAdd:false,
     edit:false,
     isEdit:false,
     homeList:[],
-    changeAddStatus:false
+    changeAddStatus:false,
+    customerDetail:{},            // 客户详情
+    showDetail:false
 })
 
 //  点击MiddleList数据
@@ -67,7 +69,25 @@ export default ((state = defaultState, action) => {
         return state.merge({
             changeAddStatus:fromJS(action.addStatus)
         });
+        
+        case constants.CHANGE_CUSDETAIL:
+        return state.merge({
+            customerDetail:fromJS(action.data)
+        });
+        
+        case constants.CHANGE_SHOW:
+        return state.merge({
+            showDetail:fromJS(action.bool)
+        });
+        
+        case constants.CHANGE_SPIN:
+        return state.merge({
+            spin:fromJS(action.bool)
+        });
         default:
         return state;
     }
 })
+
+
+// CHANGE_SPIN

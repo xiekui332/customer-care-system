@@ -5,3 +5,10 @@ export const IS_ADD = 'is_add';
 export const IS_EDIT = 'is_edit';
 export const CHANGE_LOGOUT = 'CHANGE_LOGOUT';
 export const CHANGE_ADD_STATUS = 'CHANGE_ADD_STATUS';
+export const CHANGE_CUSDETAIL = 'CHANGE_CUSDETAIL';
+export const CHANGE_SHOW = 'CHANGE_SHOW';
+export const CHANGE_SPIN = 'CHANGE_SPIN';
+
+
+
+// CHANGE_SPIN

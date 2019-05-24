@@ -142,7 +142,7 @@ export const getCustomerList = (params, urlType) => {
     }
     
     return new Promise((resolve, reject) => {
-        service.post(url, params)
+        service.post(url, QS.stringify(params))
         .then((res) => {
             resolve(res)
         })
@@ -215,9 +215,9 @@ export const addCustom = (params) => {
 
 
 // 客户详情
-export const getCustomerDetail = (id) => {
+export const getCustomerDetail = (params) => {
     return new Promise((resolve, reject) => {
-        service.get('/api/customerDetail.json')
+        service.post('/customer/detail', QS.stringify(params))
         .then((res) => {
             resolve(res)
         })

@@ -365,6 +365,7 @@ export const AddCustomerWrapper = styled.div`
 `;
 
 export const MiddleList = styled.div`
+    clear:both;
     height:80px;
     border-left:4px solid #f7f7f7;
     cursor:default;
@@ -515,6 +516,10 @@ export const RightWrapper = styled.div`
 `;
 
 export const RightContentWrapper = styled.table`
+    .no-data{
+        color:#999;
+        font-size:13px;
+    }
     width:100%;  
     border:1px solid #f7f7f7;
     tr{
@@ -599,4 +604,9 @@ export const FileItem = styled.div`
     margin:5px 10px;
     border-radius:3px;
     border:1px solid #dcdcdc;
+`;
+
+
+export const TransferWrapper = styled.div`
+    
 `;

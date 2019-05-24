@@ -147,10 +147,10 @@ class LeftCon extends PureComponent {
                             <span>退出</span>
                         </Link>
                     </div>
-                    <div>
+                    {/* <div>
                         <span className="iconfont">&#xe60a;</span>
                         <span>资料备份</span>
-                    </div>
+                    </div> */}
                 </LeftButton>
             </LeftWrapper>
         )

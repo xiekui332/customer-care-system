@@ -41,3 +41,40 @@ export const changeAddStatus = (bool) => {
 }
 
 
+// 查询客户详情
+export const changeCusDetail = (data) => {
+    return (dispatch) => {
+        let action = {
+            type:constants.CHANGE_CUSDETAIL,
+            data
+        }
+        dispatch(action)
+    }
+}  
+
+
+// 改变展示客户详情状态
+export const changeShowDetail = (bool) => {
+    return (dispatch) => {
+        let action = {
+            type:constants.CHANGE_SHOW,
+            bool
+        }
+        dispatch(action)
+    }
+} 
+
+// 加载中状态 changeSpin
+
+export const changeSpin = (bool) => {
+    return (dispatch) => {
+        let action = {
+            type:constants.CHANGE_SPIN,
+            bool
+        }
+        dispatch(action)
+    }
+} 
+
+
+

@@ -275,6 +275,11 @@ class User extends Component {
         
     }
 
+    componentWillUnmount() {
+        let el = this.listWrapper;
+        el.addEventListener('scroll')
+    }
+
     componentDidUpdate() {
         if(this.state.login) {
             this.resetHeight(this.listWrapper)

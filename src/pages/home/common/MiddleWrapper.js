@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { actionCreators } from '../store'
 import { Tooltip, Modal, message } from 'antd';
 import "antd/dist/antd.css";
-import { handlecustomDelete, getCustomerList } from '../../../api'
+import { handlecustomDelete, getCustomerList, getCustomerDetail } from '../../../api'
 import { 
     Customer,
     MiddleHeader,
@@ -19,7 +19,8 @@ import {
     AddCusButton,
     MiddleChceckBox,
     EditWrapper,
-    EditItem
+    EditItem,
+    TransferWrapper
 } from '../style'
 
 class MiddleWrapper extends PureComponent{
@@ -30,6 +31,7 @@ class MiddleWrapper extends PureComponent{
             search:false,
             edit:false,
             user:JSON.parse(sessionStorage.getItem("user")),
+            load:true,
             name:'',
             mobilePhone:'',
             companyName:'',               // 公司名称
@@ -53,9 +55,11 @@ class MiddleWrapper extends PureComponent{
                 handleCancelCustomer,
                 homeList,
                 isAddAction
+
         } = this.props;
         const { isAdd, search, edit } = this.state;
-        console.log(homeList)
+        const user = JSON.parse(sessionStorage.getItem("user"))
+        // console.log(homeList)
         const confirm = Modal.confirm;
         
         return (
@@ -120,7 +124,7 @@ class MiddleWrapper extends PureComponent{
                                         <span>{item.mobilePhone}</span>
                                     </p>
                                     <p>
-                                        {item.companyName}
+                                        {item.companyName || '暂无公司信息'}
                                     </p>
                                 </CustomerInfo>
                             </MiddleList>
@@ -132,10 +136,15 @@ class MiddleWrapper extends PureComponent{
 
                 {/* 底部批量操做部分 */}
                 <EditWrapper ref={(editWrapper) => {this.editWrapperEl = editWrapper}}>
-                    <EditItem>
-                        <span className="iconfont">&#xe60c;</span>
-                        <p>移交</p>
-                    </EditItem>
+                    {
+                        user.userType === 2?
+                        <EditItem onClick={() => {this.handleToTransfer()}}>
+                            <span className="iconfont">&#xe60c;</span>
+                            <p>移交</p>
+                        </EditItem>
+                        :""
+                    }
+                    
                     <EditItem onClick={() => {this.handledelete(confirm, homeList)}}>
                         <span className="iconfont">&#xe619;</span>
                         <p>删除</p>
@@ -145,14 +154,19 @@ class MiddleWrapper extends PureComponent{
                         <p>资料备份</p>
                     </EditItem> */}
                 </EditWrapper>
+                
+
+                {/* 点击移交出现 */}
+                <TransferWrapper>
+
+                </TransferWrapper>
             </Customer>
         )
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps)
         if(nextProps.changeAddStatus === true) {
-            // this.getListData()
+            this.getListData()
         }
         
     }
@@ -163,99 +177,121 @@ class MiddleWrapper extends PureComponent{
         }
     }
 
+
     componentDidMount() {
         this.props.resetHeight()
         this.getListData()
+        
+        let el = this.middleListWrapperEl;
+        el.addEventListener('scroll', () => {
+            if(el.scrollTop + el.clientHeight === el.scrollHeight) {
+                this.setState({
+                    pageNum: this.state.pageNum + 1
+                }, () => {
+                    this.getListData('concatList')
+                })
+            }
+        })
+
+    }
+
+    
+
+    componentWillUnmount() {
+        let el = this.middleListWrapperEl;
+        el.addEventListener('scroll')
     }
 
     // 获取list
-    getListData() {
-        console.log(this.state.changeData)
-        let data = this.state.user;
-        let { name, mobilePhone, companyName, yearlyTurnoverSymbol, yearlyTurnover, propertySymbol, property, liabilitiesSymbol, liabilities, demandAmountSymbol, 
-            demandAmount, pageNum, pageSize
-        } = this.state;
-        let urlType = data.userType
-        let params = {}
-        if(urlType === 2) {
-            // 客户经理
-            params = {
-                name:name,
-                mobilePhone:mobilePhone,
-                companyName:companyName,
-                yearlyTurnoverSymbol:yearlyTurnoverSymbol,
-                yearlyTurnover:yearlyTurnover,
-                propertySymbol:propertySymbol,
-                property:property,
-                liabilitiesSymbol:liabilitiesSymbol,
-                liabilities:liabilities,
-                demandAmountSymbol:demandAmountSymbol,
-                demandAmount:demandAmount,
-                pageNum:pageNum,
-                pageSize:pageSize
-            }
-        }else if(urlType === 3) {
-            // 审核员
-            params = {
-                name:name,
-                mobilePhone:mobilePhone,
-                companyName:companyName,
-                pageNum:pageNum,
-                pageSize:pageSize
-                
-            }
-        }else if(urlType === 4) {
-            // 业务管理员
-            params = {
-                name:name,
-                mobilePhone:mobilePhone,
-                companyName:companyName,
-                yearlyTurnoverSymbol:yearlyTurnoverSymbol,
-                yearlyTurnover:yearlyTurnover,
-                propertySymbol:propertySymbol,
-                property:property,
-                liabilitiesSymbol:liabilitiesSymbol,
-                liabilities:liabilities,
-                demandAmountSymbol:demandAmountSymbol,
-                demandAmount:demandAmount,
-                pageNum:pageNum,
-                pageSize:pageSize
-            }
-        }
+    getListData(condition) {
+        // console.log(this.state.changeData)
+        // console.log(this.state.load)
+        if(this.state.load) {
 
-        getCustomerList(params, urlType).then((res) => {
-            let data = res.data;
-            if(data.code === 1 && data.msg === 'success') {
-                // 测试数据
-                // data.data = {
-                //     "list": [
-                //         {
-                //             "customerId": 1,
-                //             "userId": 1,
-                //             "name": "张三",
-                //             "idcard": "320926195511175276",
-                //             "mobilePhone": "13212345678",
-                //             "companyName": "aaa",
-                //             "status":0,
-                //             "photo":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556782759160&di=2e2df9eae570460adfc6bec7e2887d3c&imgtype=0&src=http%3A%2F%2Fwenwen.soso.com%2Fp%2F20120208%2F20120208165308-1774101526.jpg",
-                //             "createTime": "2019-05-01 18:09:30"
-                //         }
-                //     ],
-                //     "total": 1,
-                //     "pageNum": 1,
-                //     "pageSize": 20
-                // }
-
-                if(data.data) {
-                    data.data.list.map((item, index) => (
-                        item.active = false
-                    ))
-                    this.props.disCusList(data.data.list)
+            let data = this.state.user;
+            let { name, mobilePhone, companyName, yearlyTurnoverSymbol, yearlyTurnover, propertySymbol, property, liabilitiesSymbol, liabilities, demandAmountSymbol, 
+                demandAmount, pageNum, pageSize
+            } = this.state;
+            let urlType = data.userType
+            let params = {}
+            if(urlType === 2) {
+                // 客户经理
+                params = {
+                    name:name,
+                    mobilePhone:mobilePhone,
+                    companyName:companyName,
+                    yearlyTurnoverSymbol:yearlyTurnoverSymbol,
+                    yearlyTurnover:yearlyTurnover,
+                    propertySymbol:propertySymbol,
+                    property:property,
+                    liabilitiesSymbol:liabilitiesSymbol,
+                    liabilities:liabilities,
+                    demandAmountSymbol:demandAmountSymbol,
+                    demandAmount:demandAmount,
+                    pageNum:pageNum,
+                    pageSize:pageSize
                 }
-            }else{
-                message.error(data.msg);
+            }else if(urlType === 3) {
+                // 审核员
+                params = {
+                    name:name,
+                    mobilePhone:mobilePhone,
+                    companyName:companyName,
+                    pageNum:pageNum,
+                    pageSize:pageSize
+                    
+                }
+            }else if(urlType === 4) {
+                // 业务管理员
+                params = {
+                    name:name,
+                    mobilePhone:mobilePhone,
+                    companyName:companyName,
+                    yearlyTurnoverSymbol:yearlyTurnoverSymbol,
+                    yearlyTurnover:yearlyTurnover,
+                    propertySymbol:propertySymbol,
+                    property:property,
+                    liabilitiesSymbol:liabilitiesSymbol,
+                    liabilities:liabilities,
+                    demandAmountSymbol:demandAmountSymbol,
+                    demandAmount:demandAmount,
+                    pageNum:pageNum,
+                    pageSize:pageSize
+                }
             }
-        })
+
+            getCustomerList(params, urlType).then((res) => {
+                let data = res.data;
+                if(data.code === 1 && data.msg === 'success') {
+
+                    if(data.data) {
+                        data.data.list.map((item, index) => (
+                            item.active = false
+                        ))
+                        let newhomeList = this.props.homeList
+                        // 滚动加载的数据
+                        if(condition === 'concatList') {
+                            this.props.disCusList(newhomeList.concat(data.data.list))
+                        }else{
+                            this.props.disCusList(data.data.list)
+                        }
+                        this.props.handleChangeStatus()
+                        if(data.data.hasNextPage) {
+                            this.setState({
+                                load:true
+                            })
+                        }else {
+                            this.setState({
+                                load:false
+                            })
+                        }
+                    }
+                }else{
+                    message.error(data.msg);
+                }
+            })
+
+        }
     }
 
     
@@ -305,6 +341,11 @@ class MiddleWrapper extends PureComponent{
 
     // 点击列表
     handleList(homeList, item, index, customerId, active, edit) {
+        let params = {
+            isAdd:false
+        }
+        this.props.isAddAction(params)
+        
         if(!edit) {
             if(active) {
                 return 
@@ -313,20 +354,47 @@ class MiddleWrapper extends PureComponent{
                     homeList[i].active = false
                 }
                 homeList[index].active = true;
+                this.props.disShowDetail(true)
+                this.props.disSpin(true)
                 
                 this.props.disCusList(homeList)
-                // this.getUserDetail(userId)
+                let params = {
+                    id:customerId
+                }
+                getCustomerDetail(params).then((res) => {
+                    let data = res.data
+                    if(data.code === 1 && data.msg === 'success') {
+                        if(data.data) {
+                            console.log(data.attachs)
+                            this.props.disCusDetail(data.data)
+                            this.props.disSpin(false)
+                        }
+                    }
+                })
                 
             }
         }else {
             if(active) {
                 
             }else{
-                // this.getUserDetail(userId)
+                homeList[index].active = !homeList[index].active
+                this.props.disCusList(homeList)
+                this.props.disShowDetail(true)
+                this.props.disSpin(true)
+                let params = {
+                    id:customerId
+                }
+                getCustomerDetail(params).then((res) => {
+                    let data = res.data
+                    if(data.code === 1 && data.msg === 'success') {
+                        if(data.data) {
+                            console.log(data)
+                            this.props.disCusDetail(data.data)
+                            this.props.disSpin(false)
+                        }
+                    }
+                })
             }
-            
-            homeList[index].active = !homeList[index].active
-            this.props.disCusList(homeList)
         }
     }
 
@@ -379,8 +447,17 @@ class MiddleWrapper extends PureComponent{
                 isAdd:true
             }
             isAddAction(params)
+            this.props.disShowDetail(false)
         })
     }
+
+
+    // 点击移交
+    handleToTransfer() {
+
+    }
+
+
 
   
 }
@@ -409,6 +486,31 @@ const mapDispatch = (dispatch) => ({
     // 点击新建客户派发action
     isAddAction(params) {
         let action = actionCreators.changeIsAdd(params)
+        dispatch(action)
+    },
+
+
+    // 派发客户详情action
+    disCusDetail(data) {
+        let action = actionCreators.changeCusDetail(data)
+        dispatch(action)
+    },
+
+    // 派发展示客户详情状态
+    disShowDetail(bool) {
+        let action = actionCreators.changeShowDetail(bool)
+        dispatch(action)
+    },
+
+    // 派发加载中
+    disSpin(bool) {
+        let action = actionCreators.changeSpin(bool)
+        dispatch(action)
+    },
+
+    //  改变新增客户后的状态
+    handleChangeStatus() {
+        let action = actionCreators.changeAddStatus(false)
         dispatch(action)
     }
 
