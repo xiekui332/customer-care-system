@@ -5,6 +5,7 @@ import customer from '../../../statics/images/nav_icon_guanli.png'
 import message from '../../../statics/images/nav_icon_duanxi.png'
 import mine from '../../../statics/images/nav_icon_wo.png'
 import { actionCreators } from '../store'
+import { todoList } from '../../../api'
 import {
     LeftWrapper,
     LeftTop,
@@ -19,12 +20,14 @@ class LeftCon extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            
+            userId:JSON.parse(sessionStorage.getItem("user")).userId,
+            msg:false
         }
     }
 
     render () {
         const { changepwd } = this.props;
+        const { msg } = this.state;
         const user = JSON.parse(sessionStorage.getItem("user"))
 
         let part = '';
@@ -133,7 +136,12 @@ class LeftCon extends PureComponent {
                                 <img src={mine} alt="" />  
                                 <span>
                                     我的
-                                    <i></i>
+                                    {
+                                        msg?
+                                        <i></i>
+                                        :''
+                                    }
+                                    
                                 </span> 
                             </NavLink>
                         }
@@ -160,6 +168,29 @@ class LeftCon extends PureComponent {
 
     componentDidMount() {
         this.props.getHomeData()
+        let params = {
+            userId:this.state.userId
+        }
+
+        todoList(params).then((res) => {
+            let data = res.data;
+            // console.log(data)
+            if(data.code === 1 && data.msg === 'success') {
+                if(data.data) {
+                    this.setState({
+                        msg:true
+                    }, () => {
+                        this.props.handleMineDate(data.data)
+                    })
+                    
+                }else{
+                    this.setState({
+                        msg:false
+                    })
+                    // message.info('暂无消息');
+                }
+            }
+        })
     }
 
     handleLogout() {
@@ -178,6 +209,12 @@ const mapDispatch = (dispatch) => ({
     // 获取首页数据
     getHomeData() {
         const action = actionCreators.getMiddleList()
+        dispatch(action)
+    },
+
+    // 派发我的状态
+    handleMineDate(data) {
+        const action = actionCreators.changeMineData()
         dispatch(action)
     }
 })

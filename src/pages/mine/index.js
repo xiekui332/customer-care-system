@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import LeftCon from '../home/common/LeftWrapper'
 import { Empty, Tabs, Button, Input, message  } from 'antd';
-import { sessionGetItem, alterPassword, sessionSetItem, todoList } from '../../api'
+import { sessionGetItem, alterPassword, sessionSetItem } from '../../api'
 import { actionCreators } from './store'
 
 import { 
@@ -30,7 +30,6 @@ class Mine extends PureComponent {
             login:sessionGetItem('token'),
             list:[1,2,3,4,5,6,7,8,9],
             panelType:1,
-            userId:JSON.parse(sessionStorage.getItem("user")).userId,
             data:[]
         }
     }
@@ -38,6 +37,8 @@ class Mine extends PureComponent {
     render() {
         const TabPane = Tabs.TabPane;
         const { login, panelType } = this.state;
+        const { mineData } = this.props;
+        console.log(mineData)
         const operations = <Button onClick={() => {this.props.handleSave(panelType, this.oldPwd, this.newPwd, this.aginNewPwd, this.changeOldPwd, this.changeNewTel)}}>保存</Button>;
         
 
@@ -126,31 +127,11 @@ class Mine extends PureComponent {
     }
 
 
-    componentDidMount() {
-        let params = {
-            userId:this.state.userId
-        }
-
-        todoList(params).then((res) => {
-            let data = res.data;
-            console.log(data)
-            if(data.code === 1 && data.msg === 'success') {
-                if(data.data) {
-                    this.setState({
-                        data:data.data
-                    })
-                }else{
-                    message.error('暂无数据');
-                }
-            }
-        })
-    }
-
     
 }
 
 const mapState = (state) => ({
-    
+    mineData:state.getIn(['left', 'mineData']).toJS()
 })
 
 const mapDispatch = (dispatch) => ({

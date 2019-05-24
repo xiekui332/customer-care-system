@@ -20,7 +20,13 @@ import {
     MiddleChceckBox,
     EditWrapper,
     EditItem,
-    TransferWrapper
+    TransferWrapper,
+    PositionWrapper,
+    Tolist,
+    TotransferItem,
+    ToTraItem,
+    TotransferButton
+
 } from '../style'
 
 class MiddleWrapper extends PureComponent{
@@ -30,6 +36,7 @@ class MiddleWrapper extends PureComponent{
             isAdd:false,
             search:false,
             edit:false,
+            visible:true,
             user:JSON.parse(sessionStorage.getItem("user")),
             load:true,
             name:'',
@@ -46,24 +53,66 @@ class MiddleWrapper extends PureComponent{
             pageNum:1,  
             pageSize:10,
             customerId:'',
-            changeData:this.props.changeAddStatus
+            changeData:this.props.changeAddStatus,
+            totransfer:[
+                {
+                    id:1,
+                    name:'小菜',
+                    mobile:18334974858,
+                    idCard:142603199303283737
+                },
+                {
+                    id:2,
+                    name:'小菜',
+                    mobile:18334974858,
+                    idCard:142603199303283737
+                },
+                {
+                    id:3,
+                    name:'小菜',
+                    mobile:18334974858,
+                    idCard:142603199303283737
+                },
+                {
+                    id:4,
+                    name:'小菜',
+                    mobile:18334974858,
+                    idCard:142603199303283737
+                },
+                {
+                    id:5,
+                    name:'小菜',
+                    mobile:18334974858,
+                    idCard:142603199303283737
+                },
+                {
+                    id:6,
+                    name:'小菜',
+                    mobile:18334974858,
+                    idCard:142603199303283737
+                }
+
+            ]
         }
     }
 
     render () {
         const { 
                 handleCancelCustomer,
-                homeList,
                 isAddAction
 
         } = this.props;
-        const { isAdd, search, edit } = this.state;
+        let homeList = []
+        if(this.props.homeList) {
+            homeList = this.props.homeList.toJS()
+        }
+        const { isAdd, search, edit, totransfer } = this.state;
         const user = JSON.parse(sessionStorage.getItem("user"))
         // console.log(homeList)
         const confirm = Modal.confirm;
         
         return (
-            <Customer className="customer">
+            <Customer className="customer" ref={(middleWrapper) => {this.modalWrapper = middleWrapper}}>
                 <MiddleHeader>
                     <span>客户管理</span>
                     <OperateWrapper>
@@ -138,7 +187,7 @@ class MiddleWrapper extends PureComponent{
                 <EditWrapper ref={(editWrapper) => {this.editWrapperEl = editWrapper}}>
                     {
                         user.userType === 2?
-                        <EditItem onClick={() => {this.handleToTransfer()}}>
+                        <EditItem onClick={() => {this.handleToTransfer(this.transferWrapEl, homeList)}}>
                             <span className="iconfont">&#xe60c;</span>
                             <p>移交</p>
                         </EditItem>
@@ -157,8 +206,30 @@ class MiddleWrapper extends PureComponent{
                 
 
                 {/* 点击移交出现 */}
-                <TransferWrapper>
-
+                <TransferWrapper ref={(transferWrap) => {this.transferWrapEl = transferWrap}}>
+                    <PositionWrapper>
+                        <div className="top-wrapper" onClick={() => {this.hideTotransfer(this.transferWrapEl)}}></div>
+                        <Tolist className="editSrollBar">
+                            {
+                                totransfer.map((item, index) => (
+                                    <TotransferItem className='active' key={item.id}>
+                                        <ToTraItem>
+                                            <span className="title">{item.name}</span>
+                                            <span className="mobile">{item.mobile}</span>
+                                        </ToTraItem>
+                                        <ToTraItem>
+                                            <span className="idCard">{item.idCard}</span>
+                                        </ToTraItem>
+                                    </TotransferItem>
+                                ))
+                            }
+                           
+                        </Tolist>
+                        <div className="botton-wrapper">
+                            <TotransferButton>确认移交</TotransferButton>
+                        </div>
+                    </PositionWrapper>
+                    
                 </TransferWrapper>
             </Customer>
         )
@@ -199,7 +270,7 @@ class MiddleWrapper extends PureComponent{
 
     componentWillUnmount() {
         let el = this.middleListWrapperEl;
-        el.addEventListener('scroll')
+        el.onscroll = ''
     }
 
     // 获取list
@@ -264,15 +335,17 @@ class MiddleWrapper extends PureComponent{
                 let data = res.data;
                 if(data.code === 1 && data.msg === 'success') {
 
-                    if(data.data) {
+                    if(data.data.list) {
                         data.data.list.map((item, index) => (
                             item.active = false
                         ))
                         let newhomeList = this.props.homeList
                         // 滚动加载的数据
                         if(condition === 'concatList') {
+                            // console.log(newhomeList.concat(data.data.list))
                             this.props.disCusList(newhomeList.concat(data.data.list))
                         }else{
+                            // console.log(data.data.list)
                             this.props.disCusList(data.data.list)
                         }
                         this.props.handleChangeStatus()
@@ -453,8 +526,22 @@ class MiddleWrapper extends PureComponent{
 
 
     // 点击移交
-    handleToTransfer() {
+    handleToTransfer(transferWrapEl, homeList) {
+        let data = []
+        homeList.map((item, index) => (
+            item.active === true?data.push(item):''
+        ))
+        if(data.length) {
+            transferWrapEl.classList.add('active')
+        }else{
+            message.info('请先选择要移交的客户')
+        }
+        
+    }
 
+    // 隐藏移交列表
+    hideTotransfer(transferWrapEl) {
+        transferWrapEl.classList.remove('active')
     }
 
 
@@ -464,9 +551,9 @@ class MiddleWrapper extends PureComponent{
 
 
 const mapDispatch = (dispatch) => ({
-    
     // 改变客户列表数据
     disCusList(data) {
+        // debugger
         let action = actionCreators.getMiddleList(data)
         dispatch(action)
 
@@ -519,10 +606,9 @@ const mapDispatch = (dispatch) => ({
 })
 
 const mapState = (state) => ({
-    customerList:state.getIn(['left', 'userInfo']).toJS().customerList,
     isAdd:state.getIn(['left', 'isAdd']),
     isEdit:state.getIn(['left', 'isEdit']),
-    homeList:state.getIn(['left', 'homeList']).toJS(),
+    homeList:state.getIn(['left', 'homeList']),
     changeAddStatus:state.getIn(['left', 'changeAddStatus'])
 })
 

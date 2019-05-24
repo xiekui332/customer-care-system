@@ -608,5 +608,107 @@ export const FileItem = styled.div`
 
 
 export const TransferWrapper = styled.div`
-    
+    position:absolute;
+    left:0;
+    bottom:-100%;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.4);
+    transition:all ease-in .3s;
+    opacity:0;
+    &.active{
+        opacity:1;
+        bottom:0;
+    }
 `;
+
+export const PositionWrapper = styled.div`
+    position:relative;
+    height:100%;
+    .botton-wrapper{
+        position:absolute;
+        bottom:0;
+        background:#fff;
+        height:100px;
+        width:100%;
+        z-index:2;
+    }
+    .top-wrapper{
+        width:100%;
+        height:100%;
+        position:absolute;
+        top:0;
+        left:0;
+        z-index:1;
+    }
+`;
+
+export const Tolist = styled.div`
+    position:absolute;
+    left:0;
+    z-index:2;
+    bottom:100px;
+    width:100%;
+    height:60%;
+    overflow:auto;
+    background:#fff;
+    
+    &::-webkit-scrollbar-track-piece { 
+        background-color:#f7f7f7;
+    }
+    &.editSrollBar::-webkit-scrollbar{
+        width: 8px;
+    }
+    &.editSrollBar::-webkit-scrollbar-thumb
+    {
+        background-color:#f6f6f6;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    }
+`;
+
+export const TotransferItem = styled.div`
+    clear:both;
+    padding:15px 40px;
+    border-bottom:1px solid #f7f7f7;
+    &.active{
+        background:#f7f7f7;
+    }
+    cursor:default;
+`;
+
+export const ToTraItem = styled.div`
+    .title{
+        font-size:16px;
+        color:#333;
+        padding-right:20px;
+        padding-bottom:20px;
+    }
+    .mobile{
+        font-size:14px;
+        color:#999;
+    }
+    .idCard{
+        font-size:14px;
+        color:#999;
+    }
+`;
+
+export const TotransferButton = styled.div`
+    width:300px;
+    height:40px;
+    background:#55a12f;
+    font-size:13px;
+    text-align:center;
+    line-height:40px;
+    color:#fff;
+    border-radius:5px;
+    margin:30px auto 0;
+    cursor:pointer;
+`;
+
+
+
+
+
+// top-wrapper

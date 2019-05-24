@@ -119,7 +119,7 @@ export const userDelete = (params) => {
 // 待办事项列表
 export const todoList = (params) => {
     return new Promise((resolve, reject) => {
-        service.post('/todo/list', params)
+        service.post('/todo/list', QS.stringify(params))
         .then((res) => {
             resolve(res)
         })

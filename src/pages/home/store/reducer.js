@@ -21,7 +21,8 @@ const defaultState = fromJS({
     homeList:[],
     changeAddStatus:false,
     customerDetail:{},            // 客户详情
-    showDetail:false
+    showDetail:false,
+    mineData:[]
 })
 
 //  点击MiddleList数据
@@ -84,10 +85,15 @@ export default ((state = defaultState, action) => {
         return state.merge({
             spin:fromJS(action.bool)
         });
+        
+        case constants.CHANGE_MINE_STATUS:
+        return state.merge({
+            mineData:fromJS(action.data)
+        });
         default:
         return state;
     }
 })
 
 
-// CHANGE_SPIN
+// CHANGE_MINE_STATUS

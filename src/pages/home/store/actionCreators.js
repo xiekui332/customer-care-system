@@ -76,5 +76,17 @@ export const changeSpin = (bool) => {
     }
 } 
 
+// 我的短消息状态 
+
+export const changeMineData = (data) => {
+    return (dispatch) => {
+        let action = {
+            type:constants.CHANGE_MINE_STATUS,
+            data
+        }
+        dispatch(action)
+    }
+} 
 
 
+// changeMineData

@@ -279,16 +279,18 @@ class AddNewCus extends Component{
         let params = {}
         let attachs = []
         fileList.concat(attachFile).map((item, index) => (
-            attachs.push({
-                attachId:item.uid
-            })
+            attachs.push(
+                {
+                    attachId:item.uid
+                }
+            )
             // attachs.push(item.uid)
         ))
         // test
-        // cusNameEl.value = '小菜'
-        // cusIdcardEl.value = 142603199303283737
-        // cusMobileEl.value = 18334794858
-        // cusAddressEl.value = '象牙公寓'
+        cusNameEl.value = '小菜'
+        cusIdcardEl.value = 142603199303283737
+        cusMobileEl.value = 18334794858
+        cusAddressEl.value = '象牙公寓'
 
         if(!cusNameEl.value) {
             message.error('请输入客户姓名')
@@ -314,7 +316,7 @@ class AddNewCus extends Component{
             params.liabilities = cusMoneyEl.value     // 负债（万元）
             params.attachs = attachs
             
-
+            console.log(params)
             addCustom(params).then((res) => {
                 let data = res.data;
                 if(data.code === 1 && data.msg === 'success') {
