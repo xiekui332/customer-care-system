@@ -83,20 +83,20 @@ class AddNewCus extends Component{
                 <AddContent>
                     <Fragment>
                         <AddItem>
+                            <AddTitle><span>*</span>柜员号</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入柜员号"
+                                    ref = {(input) => {this.cusIdcardEl = input}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        <AddItem>
                             <AddTitle><span>*</span>客户姓名</AddTitle>
                                 <input
                                     className="add-input"
                                     placeholder="请输入姓名"
                                     ref = {(input) => {this.cusNameEl = input}}
-                                />
-                            <p></p>
-                        </AddItem>
-                        <AddItem>
-                            <AddTitle><span>*</span>身份证号码</AddTitle>
-                                <input
-                                    className="add-input"
-                                    placeholder="请输入身份证号码"
-                                    ref = {(input) => {this.cusIdcardEl = input}}
                                 />
                             <p></p>
                         </AddItem>
@@ -278,14 +278,14 @@ class AddNewCus extends Component{
     handleSaveData(cusNameEl, cusIdcardEl, cusMobileEl, cusAddressEl, cusConEl, cusCompanyEl, value, kindSelected, cusMoneyEl, fileList, attachFile) {
         let params = {}
         let attachs = []
-        fileList.concat(attachFile).map((item, index) => (
-            attachs.push(
-                {
+        fileList.concat(attachFile).map((item, index) => {
+            return (
+                attachs.push({
                     attachId:item.uid
-                }
+                })
             )
-            // attachs.push(item.uid)
-        ))
+            
+        })
         // test
         cusNameEl.value = '小菜'
         cusIdcardEl.value = 142603199303283737
@@ -317,6 +317,7 @@ class AddNewCus extends Component{
             params.attachs = attachs
             
             console.log(params)
+            // return
             addCustom(params).then((res) => {
                 let data = res.data;
                 if(data.code === 1 && data.msg === 'success') {

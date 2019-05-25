@@ -37,6 +37,7 @@ export const MineMiddle = styled.div`
     }
     .empty{
         color:#999;
+        font-size:12px;
     }
 `;
 

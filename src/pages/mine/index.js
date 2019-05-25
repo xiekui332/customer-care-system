@@ -28,7 +28,6 @@ class Mine extends PureComponent {
         super(props)
         this.state = {
             login:sessionGetItem('token'),
-            list:[1,2,3,4,5,6,7,8,9],
             panelType:1,
             data:[]
         }
@@ -37,8 +36,22 @@ class Mine extends PureComponent {
     render() {
         const TabPane = Tabs.TabPane;
         const { login, panelType } = this.state;
-        const { mineData } = this.props;
-        console.log(mineData)
+        const user = JSON.parse(sessionStorage.getItem("user"))
+        let part = '';
+        if(user.userType === 1) {
+            part = "用户管理员"
+        }else if(user.userType === 2) {
+            part = "客户经理"
+        }else if(user.userType === 3) {
+            part = "审核员"
+        }else if(user.userType === 4) {
+            part = "业务管理员"
+        }
+        let mineData = []
+        if(this.props.mineData && this.props.mineData.length) {
+            mineData = this.props.mineData
+        }
+        // console.log(mineData)
         const operations = <Button onClick={() => {this.props.handleSave(panelType, this.oldPwd, this.newPwd, this.aginNewPwd, this.changeOldPwd, this.changeNewTel)}}>保存</Button>;
         
 
@@ -52,26 +65,26 @@ class Mine extends PureComponent {
 
                             <MineMessage>
                                 <div>
-                                    <UserName>考辛斯 </UserName><UserRole> / 客户经理</UserRole>
+                                    <UserName>{user.name} </UserName><UserRole> / {part}</UserRole>
                                 </div>
                                 <UserNumberWrapper>
-                                    <UserNumPhone>18665898988</UserNumPhone>
-                                    <UserNumIdcard>1422341865332165</UserNumIdcard>
+                                    <UserNumPhone>{user.mobilePhone}</UserNumPhone>
+                                    <UserNumIdcard>{user.idcard}</UserNumIdcard>
                                 </UserNumberWrapper>
                             </MineMessage>
 
                             <ToDealt>待办事项</ToDealt>
 
                             {   
-                                this.state.list.length > 0?
-                                this.state.list.map((item, index) => {
+                                mineData && mineData.length?
+                                mineData.map((item, index) => {
                                     return (
-                                        <ToDealtItem key={item}>
-                                            这里是收到的待办事项，一般是系统通知这里 不会收到短信内容
+                                        <ToDealtItem key={item.todoId}>
+                                            {item.content}
                                             <span className="iconfont">×</span>
                                         </ToDealtItem>
                                     )
-                                }):<Empty description="暂无内容" className="empty" />
+                                }):<Empty description="暂无事项" className="empty" />
                             }
                             
                         </MineMiddle>

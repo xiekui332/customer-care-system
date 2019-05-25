@@ -21,6 +21,11 @@ class Home extends PureComponent {
     render () {
         const { login } = this.state;
         if(login){
+            let user = JSON.parse(sessionStorage.getItem("user"))
+            // console.log(user.userType)
+            if(user && user.userType === 1) {
+                return <Redirect to="/user"></Redirect>
+            }
             return (
                 <ConWrapper>
                     <LeftCon />

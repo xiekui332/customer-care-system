@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { actionCreators } from '../store'
-import { Tooltip, Modal, message } from 'antd';
+import { Tooltip, Modal, message, Select  } from 'antd';
 import "antd/dist/antd.css";
 import { handlecustomDelete, getCustomerList, getCustomerDetail } from '../../../api'
 import { 
@@ -25,7 +25,8 @@ import {
     Tolist,
     TotransferItem,
     ToTraItem,
-    TotransferButton
+    TotransferButton,
+    SearchMoreCodition
 
 } from '../style'
 
@@ -60,53 +61,25 @@ class MiddleWrapper extends PureComponent{
                     name:'小菜',
                     mobile:18334974858,
                     idCard:142603199303283737
-                },
-                {
-                    id:2,
-                    name:'小菜',
-                    mobile:18334974858,
-                    idCard:142603199303283737
-                },
-                {
-                    id:3,
-                    name:'小菜',
-                    mobile:18334974858,
-                    idCard:142603199303283737
-                },
-                {
-                    id:4,
-                    name:'小菜',
-                    mobile:18334974858,
-                    idCard:142603199303283737
-                },
-                {
-                    id:5,
-                    name:'小菜',
-                    mobile:18334974858,
-                    idCard:142603199303283737
-                },
-                {
-                    id:6,
-                    name:'小菜',
-                    mobile:18334974858,
-                    idCard:142603199303283737
                 }
 
             ]
         }
+
+        this.handleCancelSearch = this.handleCancelSearch.bind(this)
     }
 
     render () {
         const { 
-                handleCancelCustomer,
                 isAddAction
 
         } = this.props;
+        const Option = Select.Option;
         let homeList = []
         if(this.props.homeList) {
             homeList = this.props.homeList.toJS()
         }
-        const { isAdd, search, edit, totransfer } = this.state;
+        const { isAdd, search, edit, totransfer, yearlyTurnoverSymbol, propertySymbol, liabilitiesSymbol, demandAmountSymbol } = this.state;
         const user = JSON.parse(sessionStorage.getItem("user"))
         // console.log(homeList)
         const confirm = Modal.confirm;
@@ -141,17 +114,127 @@ class MiddleWrapper extends PureComponent{
                     {/* 搜索 */}
                     <SearchWrapper className={search?"searchWrapper":''}>
                         <SearchCondition>
-                            <span>用户名</span>
-                            <SearchInput placeholder="请输入用户名"></SearchInput>
+                            <div className="condition-select">
+                                <p>客户姓名</p>
+                                <SearchInput 
+                                    placeholder="请输入客户姓名"
+                                    ref={(input) => {this.cusName = input}}
+                                ></SearchInput>
+                            </div>
+                            <div className="condition-select">
+                                <p>公司名称</p>
+                                <SearchInput 
+                                    placeholder="请输入公司名称"
+                                    ref={(input) => {this.cusCompanyName = input}}
+                                ></SearchInput>
+                            </div>
                         </SearchCondition>
-                        <SearchCondition>
-                            <span>手机号</span>
-                            <SearchInput placeholder="请输入手机号"></SearchInput>
-                        </SearchCondition>
+                       
+                        <SearchMoreCodition>
+                            <div className="condition-select">
+                                <p>年营业额</p>
+                                <Select
+                                    style={{ width: '50%' }}
+                                    showSearch
+                                    placeholder="请选择"
+                                    onChange={(value) => {this.handleyearlyTurnoverEl(value)}}
+                                    value={yearlyTurnoverSymbol}
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    <Option value=">">&gt;</Option>
+                                    <Option value="<">&lt;</Option>
+                                    <Option value="=">=</Option>
+                                </Select>
+                                <SearchInput 
+                                    className="small-input"
+                                    placeholder="年营业额(万元)"
+                                    ref={(input) => {this.yearlyTurnoverEl = input}}
+                                ></SearchInput>
+                            </div>
+                            <div className="condition-select">
+                                <p>资产情况</p>
+                                <Select
+                                    style={{ width: '50%' }}
+                                    showSearch
+                                    placeholder="请选择"
+                                    onChange={(value) => {this.handlepropertyEl(value)}}
+                                    value={propertySymbol}
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    <Option value=">">&gt;</Option>
+                                    <Option value="<">&lt;</Option>
+                                    <Option value="=">=</Option>
+                                </Select>
+                                <SearchInput 
+                                    className="small-input"
+                                    placeholder="资产情况(万元)"
+                                    ref={(input) => {this.propertyEl = input}}
+                                ></SearchInput>
+                            </div>
+                        </SearchMoreCodition>
+                        <SearchMoreCodition>
+                            <div className="condition-select">
+                                <p>负债情况</p>
+                                <Select
+                                    style={{ width: '50%' }}
+                                    showSearch
+                                    placeholder="请选择"
+                                    onChange={(value) => {this.handleliabilitiesEl(value)}}
+                                    value={liabilitiesSymbol}
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    <Option value=">">&gt;</Option>
+                                    <Option value="<">&lt;</Option>
+                                    <Option value="=">=</Option>
+                                </Select>
+                                <SearchInput 
+                                    className="small-input"
+                                    placeholder="负债情况(万元)"
+                                    ref={(input) => {this.liabilitiesEl = input}}
+                                ></SearchInput>
+                            </div>
+                            <div className="condition-select">
+                                <p>需求金额</p>
+                                <Select
+                                    style={{ width: '50%' }}
+                                    showSearch
+                                    placeholder="请选择"
+                                    onChange={(value) => {this.handledemandAmountEl(value)}}
+                                    value={demandAmountSymbol}
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    <Option value=">">&gt;</Option>
+                                    <Option value="<">&lt;</Option>
+                                    <Option value="=">=</Option>
+                                </Select>
+                                <SearchInput 
+                                    className="small-input"
+                                    placeholder="需求金额(万元)"
+                                    ref={(input) => {this.demandAmountEl = input}}
+                                ></SearchInput>
+                            </div>
+                        </SearchMoreCodition>
+
 
                         <AddButtonWrapper>
-                            <AddCusButton className="add-cancel" onClick={handleCancelCustomer}>取消</AddCusButton>
-                            <AddCusButton className="add-save">保存</AddCusButton>
+                            <AddCusButton className="add-cancel" 
+                                onClick={() => {this.handleCancelSearch(this.cusName, this.cusCompanyName)}}
+                            >取消</AddCusButton>
+                            <AddCusButton className="add-save"
+                                onClick={() => {this.handleSaveSearch(this.cusName, this.cusCompanyName, this.yearlyTurnoverEl, this.propertyEl, this.liabilitiesEl, this.demandAmountEl)}}
+                            >保存</AddCusButton>
                         </AddButtonWrapper>
                     </SearchWrapper> 
 
@@ -273,6 +356,70 @@ class MiddleWrapper extends PureComponent{
         el.onscroll = ''
     }
 
+    // 年营业额
+    handleyearlyTurnoverEl(value) {
+        // console.log(value)
+        this.setState({
+            yearlyTurnoverSymbol:value
+        })
+    }
+
+    // 资产情况
+    handlepropertyEl(value) {
+        this.setState({
+            propertySymbol:value
+        })
+    }
+
+
+    // 负债情况
+    handleliabilitiesEl(value) {
+        this.setState({
+            liabilitiesSymbol:value
+        })
+    }
+
+    // 需求金额
+    handledemandAmountEl(value) {
+        this.setState({
+            demandAmountSymbol:value
+        })
+    }
+
+    // 转义
+    unhtml(str) {
+        return str ? str.replace(/[<">']/g, (a) => {
+            return {
+                '<': '&lt;',
+                '>': '&gt;',
+            }[a]
+        }) : '';
+    }
+
+    // 搜索取消
+    handleCancelSearch(cusName, cusCompanyName) {
+        this.setState({
+            search:false
+        }, () => {
+            cusName.value = ''
+            cusCompanyName.value = ''
+        })
+    }
+
+    // 搜索保存
+    handleSaveSearch(cusName, cusCompanyName, yearlyTurnoverEl, propertyEl, liabilitiesEl, demandAmountEl) {
+        this.setState({
+            name:cusName.value,
+            companyName:cusCompanyName.value,
+            yearlyTurnover:yearlyTurnoverEl.value,
+            property:propertyEl.value,
+            liabilities:liabilitiesEl.value,
+            demandAmount:demandAmountEl.value
+        }, () => {
+            this.getListData()
+        })
+    }
+
     // 获取list
     getListData(condition) {
         // console.log(this.state.changeData)
@@ -330,12 +477,13 @@ class MiddleWrapper extends PureComponent{
                     pageSize:pageSize
                 }
             }
-
             getCustomerList(params, urlType).then((res) => {
                 let data = res.data;
                 if(data.code === 1 && data.msg === 'success') {
-
-                    if(data.data.list) {
+                    this.setState({
+                        search:false
+                    })
+                    if(data.data && data.data.list) {
                         data.data.list.map((item, index) => (
                             item.active = false
                         ))
@@ -438,7 +586,7 @@ class MiddleWrapper extends PureComponent{
                     let data = res.data
                     if(data.code === 1 && data.msg === 'success') {
                         if(data.data) {
-                            console.log(data.attachs)
+                            console.log(data)
                             this.props.disCusDetail(data.data)
                             this.props.disSpin(false)
                         }

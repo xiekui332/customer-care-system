@@ -28,6 +28,19 @@ export const UserRight = styled.div`
     .ant-empty{
         margin-top:50px;
     }
+    overflow-y:auto;
+    &::-webkit-scrollbar-track-piece { 
+        background-color:#f7f7f7;
+    }
+    &.editSrollBar::-webkit-scrollbar{
+        width: 8px;
+    }
+    &.editSrollBar::-webkit-scrollbar-thumb
+    {
+        background-color:#f6f6f6;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    }
 `;
 
 export const MiddleHeader = styled.div`

@@ -91,7 +91,7 @@ export const userList = (params) => {
 // 获取用户详情
 export const userDetail = (params) => {
     return new Promise((resolve, reject) => {
-        service.post('/user/detail', params)
+        service.post('/user/detail', QS.stringify(params))
         .then((res) => {
             resolve(res)
         })

@@ -83,6 +83,7 @@ class Login extends PureComponent{
                 }
             })
         }else if(login && pwd === false) {
+            
             history.push({pathname :"/home"})
         }
     }
@@ -102,8 +103,8 @@ class Login extends PureComponent{
                     <LoginCondition className={this.state.loginCondition?"isShow":"isHide"}>
                         <LoginTitle>大竹农商银行客户关怀系统</LoginTitle>
                         <LoginInputWrapper>
-                            <p>用户名</p>
-                            <UserInput placeholder="请输入用户名" ref={(input) => this.userName = input} ></UserInput>
+                            <p>柜员号</p>
+                            <UserInput placeholder="请输入柜员号" ref={(input) => this.userName = input} ></UserInput>
                         </LoginInputWrapper>
                         <LoginInputWrapper>
                             <p>密码</p>
@@ -122,12 +123,12 @@ class Login extends PureComponent{
                         <FindWrapper>
                             <p>找回密码</p>
                             <LoginInputWrapper>
-                                <p>手机号</p>
-                                <UserInput placeholder="请输入手机号" ref={(input) => this.phoneNumber = input} ></UserInput>
+                                <p>柜员号</p>
+                                <UserInput placeholder="请输入柜员号" ref={(input) => this.idCard = input} ></UserInput>
                             </LoginInputWrapper>
                             <LoginInputWrapper>
-                                <p>身份证号</p>
-                                <UserInput placeholder="请输入身份证号" ref={(input) => this.idCard = input} ></UserInput>
+                                <p>手机号</p>
+                                <UserInput placeholder="请输入手机号" ref={(input) => this.phoneNumber = input} ></UserInput>
                             </LoginInputWrapper>
                             <LoginInputWrapper>
                                 <p>短信验证码</p>
@@ -154,7 +155,7 @@ class Login extends PureComponent{
     checkLogin(userName, passWord) {
         if(!userName.value){
             this.setState({
-                msg:"用户名",
+                msg:"柜员号",
                 status:true
             })
         }
@@ -170,10 +171,10 @@ class Login extends PureComponent{
             })
 
             let params = {
-                userName:'',
+                cabinetNo:'',
                 password:''
             }
-            params.userName = userName.value
+            params.cabinetNo = userName.value
             params.password = passWord.value
             login(params).then((res) => {
                 let data = res.data;

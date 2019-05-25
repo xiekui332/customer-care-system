@@ -197,7 +197,10 @@ export const MiddleHeader = styled.div`
 
 // 搜索部分
 export const SearchWrapper = styled.div`
+    position: absolute;
+    top: 60px;
     height:0;
+    box-shadow:0 1px 0px #eee;
     overflow:hidden;
     background:#f7f7f7;
     input{
@@ -206,31 +209,30 @@ export const SearchWrapper = styled.div`
         border-radius:5px;
         padding:0 10px;
     }
-    input:focus{
-        border:1px solid #55a12f;
-    }
     input::placeholder{
-        font-size:12px;
+        font-size:13px;
         color:#999;
     }
     margin-bottom:20px;
     transition:all ease-in .2s;
     &.searchWrapper{
-        height:160px;
+        height:270px;
     }
 `;
 
 export const SearchInput = styled.input`
     display:block;
-    width:200px;
+    width:100%;
     height:30px;
     float:left;
-    margin-top:20px;
+    margin-top:-5px;
+    &:focus{
+        border:1px solid #55a12f;
+    }
 `;
 
 export const SearchCondition = styled.div`
-    display:block;
-    width:340px;
+    display:flex;
     margin:0px auto;
     overflow:hidden;
     span{
@@ -241,6 +243,9 @@ export const SearchCondition = styled.div`
         line-height:30px;
         margin-top:20px;
         margin-right:10px;
+    }
+    .condition-select{
+        padding:5px 20px;
     }
 `;
 
@@ -707,8 +712,41 @@ export const TotransferButton = styled.div`
     cursor:pointer;
 `;
 
+export const SearchMoreCodition = styled.div`
+    width:100%;
+    display:flex;
+    .condition-select{
+        flex:1;
+        padding:5px 20px;
+        >p{
+            float:left;
+        }
+        .ant-select{
+            margin-top:-10px!important;
+            float:left;
+            margin-left:10px!important;
+            margin-top:0px!important;
+           
+        }
+        .ant-select-selection__placeholder, .ant-select-search__field__placeholder{
+            font-size:12px;
+            line-height:15px;
+        }
+        .ant-select-selection--single{
+            height:25px;
+            
+        }
+        .ant-select-selection-selected-value{
+            line-height:20px;
+        }
+        .small-input{
+            display:block;
+        }
+    }
+`;
 
 
 
 
-// top-wrapper
+
+// SearchMoreCodition

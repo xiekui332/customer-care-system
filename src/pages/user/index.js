@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import LeftCon from '../home/common/LeftWrapper'
-import { sessionGetItem, checkmobile, checkidCard, createUser, userList, userDetail, userDelete } from '../../api'
+import { sessionGetItem, checkmobile, createUser, userList, userDetail, userDelete } from '../../api'
 import { Tooltip, Input, Select, message, Empty, Modal } from 'antd';
 
 import {
@@ -46,11 +46,13 @@ class User extends Component {
             pageSize:10,
             load:true,
             add:false,
+            nodata:true,
             search:false,
             edit:false,
             userName:'',
             mobilePhone:'',
-            userId:''
+            userId:'',
+            userDetail:{}
         }
 
         this.resetHeight = this.resetHeight.bind(this)
@@ -59,7 +61,8 @@ class User extends Component {
     }
 
     render () {
-        const { login, userList, add, edit, userId } = this.state;
+        const { login, userList, add, edit, userId, nodata, userDetail } = this.state;
+        // console.log(userDetail)
         const Option = Select.Option;
         const confirm = Modal.confirm;
         let src = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556782759160&di=2e2df9eae570460adfc6bec7e2887d3c&imgtype=0&src=http%3A%2F%2Fwenwen.soso.com%2Fp%2F20120208%2F20120208165308-1774101526.jpg";
@@ -145,7 +148,7 @@ class User extends Component {
                                                             <span>{item.mobilePhone }</span>
                                                         </p>
                                                         <p>
-                                                        {item.idcard}
+                                                        {item.cabinetNo}
                                                         </p>
                                                     </CustomerInfo>
                                                 </MiddleList>
@@ -172,7 +175,7 @@ class User extends Component {
                             </MiddleListWrapper>
                         </UserMiddle>
 
-                        <UserRight>
+                        <UserRight className="editSrollBar">
                             <StatusWrapper 
                                 className={add?"isShow":"isHide"}
                                 >
@@ -180,7 +183,7 @@ class User extends Component {
                                     <AddCusHeadText>新建用户</AddCusHeadText>
                                     <AddButtonWrapper>
                                         <AddCusButton className="add-cancel" onClick={() => {this.handleAddCancel()}}>取消</AddCusButton>
-                                        <AddCusButton className="add-save" onClick={() => {this.handleAddSave(this.name, this.idCard, this.mobile, userId)}}>保存</AddCusButton>
+                                        <AddCusButton className="add-save" onClick={() => {this.handleAddSave(this.name, this.idCard, this.mobile, userId, this.organNum, this.organName)}}>保存</AddCusButton>
                                     </AddButtonWrapper>
                                 </AddCusHeadWrapper>
                                 
@@ -188,22 +191,25 @@ class User extends Component {
                                 
                                 <AddContent>
                                     <Fragment>
+
+                                        <AddItem>
+                                            <AddTitle><span>*</span>柜员号</AddTitle>
+                                                <Input 
+                                                    className="add-input"
+                                                    placeholder="请输入柜员号"
+                                                    ref = {(input) => {this.idCard = input}}
+                                                    value={userDetail.cabinetNo}
+                                                />
+                                            <p></p>
+                                        </AddItem>
+
                                         <AddItem>
                                             <AddTitle><span>*</span>用户姓名</AddTitle>
                                                 <Input 
                                                     className="add-input"
                                                     placeholder="请输入姓名"
                                                     ref = {(input) => {this.name = input}}
-                                                />
-                                            <p></p>
-                                        </AddItem>
-
-                                        <AddItem>
-                                            <AddTitle><span>*</span>身份证</AddTitle>
-                                                <Input 
-                                                    className="add-input"
-                                                    placeholder="请输入身份证"
-                                                    ref = {(input) => {this.idCard = input}}
+                                                    value={userDetail.name}
                                                 />
                                             <p></p>
                                         </AddItem>
@@ -214,6 +220,7 @@ class User extends Component {
                                                     className="add-input"
                                                     placeholder="请输入手机号码"
                                                     ref = {(input) => {this.mobile = input}}
+                                                    value={userDetail.mobilePhone}
                                                 />
                                             <p></p>
                                         </AddItem>
@@ -239,12 +246,34 @@ class User extends Component {
                                             <p></p>
                                         </AddItem>
 
+                                        <AddItem>
+                                            <AddTitle><span>*</span>机构号</AddTitle>
+                                                <Input 
+                                                    className="add-input"
+                                                    placeholder="请输入机构号"
+                                                    ref = {(input) => {this.organNum = input}}
+                                                    value={userDetail.orgNo}
+                                                />
+                                            <p></p>
+                                        </AddItem>
+
+                                        <AddItem>
+                                            <AddTitle><span>*</span>机构名称</AddTitle>
+                                                <Input 
+                                                    className="add-input"
+                                                    placeholder="请输入机构名称"
+                                                    ref = {(input) => {this.organName = input}}
+                                                    value={userDetail.orgName}
+                                                />
+                                            <p></p>
+                                        </AddItem>
+
                                         
                                     </Fragment>
                                 </AddContent>
                             </StatusWrapper>
                         
-                            <Empty className={add?"ant-empty isHide":"ant-empty isShow"} description={'暂无数据'} />
+                            <Empty className={nodata?"ant-empty isShow":"ant-empty isHide"} description={'暂无数据'} />
                         </UserRight>
                     </UserCon>
                 </UserWrapper>
@@ -262,7 +291,7 @@ class User extends Component {
 
             // 滚动翻页
             el.addEventListener('scroll', () => {
-                if(el.scrollTop + el.clientHeight + 1 > el.scrollHeight) {
+                if(el.scrollTop + el.clientHeight === el.scrollHeight) {
                     this.setState({
                         pageNum: this.state.pageNum + 1
                     }, () => {
@@ -277,7 +306,7 @@ class User extends Component {
 
     componentWillUnmount() {
         let el = this.listWrapper;
-        el.addEventListener('scroll')
+        el.onscroll = ''
     }
 
     componentDidUpdate() {
@@ -328,7 +357,8 @@ class User extends Component {
         this.setState({
             add:true,
             search:false,
-            userId:""
+            userId:"",
+            nodata:false
         },() => {
            
         })
@@ -377,47 +407,58 @@ class User extends Component {
     }
 
     // 保存用户
-    handleAddSave(nameel, idCardel, mobileel, userId) {
+    handleAddSave(nameel, idCardel, mobileel, userId, organNum, organName) {
         let params = {}
         if(userId) {
             params = {
                 userId:"",
                 name:'',
-                idcard:'',
+                cabinetNo:'',
                 mobilePhone:'',
                 userType:'',
                 remark:'',
-                relationship:''
+                relationship:'',
+                orgNo:'',
+                orgName:''
             }
         }else{
             params = {
                 name:'',
-                idcard:'',
+                cabinetNo:'',
                 mobilePhone:'',
                 userType:'',
                 remark:'',
-                relationship:''
+                relationship:'',
+                orgNo:'',
+                orgName:''
             }
         }
 
-        if(!nameel.input.value) {
+        if(!idCardel.input.value) {
+            message.error('请填写正确柜员号')
+        }else if(!nameel.input.value) {
             message.error('请填写用户名')
-        }else if(!idCardel.input.value || !checkidCard.test(idCardel.input.value)) {
-            message.error('请填写正确身份证')
         }else if(!mobileel.input.value || !checkmobile.test(mobileel.input.value)) {
             message.error('请填写正确手机号码')
         }else if(!this.state.userType) {
             message.error('请选择用户类别')
-        }else {
+        }else if(!organNum.input.value) {
+            message.error('请填写机构号')
+        }else if(!organName.input.value) {
+            message.error('请填写机构名称')
+        }
+        else {
             if(userId) {
                 params.userId = userId
             }
             params.name = nameel.input.value
-            params.idcard = idCardel.input.value
+            params.cabinetNo = idCardel.input.value
             params.mobilePhone = mobileel.input.value
             params.userType = this.state.userType
             params.remark = ''
             params.relationship = ''
+            params.orgNo = organNum.input.value
+            params.orgName = organName.input.value
            
             createUser(params)
             .then((res) => {
@@ -498,18 +539,23 @@ class User extends Component {
             let data = res.data;
             
             if(data.code === 1 && data.msg === 'success') {
-                this.setState({
-                    add:true,
-                    userId:id
-                }, () => {
-                    if(data.data){
-                        this.name.input.value = data.data.name
-                        this.idCard.input.value = data.data.idcard
-                        this.mobile.input.value = data.data.mobilePhone
-                        this.userkind(data.data.userType.toString())
-                    }
+                if(data.data) {
+                    this.userkind(data.data.userType.toString())
+                    this.setState({
+                        add:true,
+                        userId:id,
+                        nodata:false,
+                        userDetail:data.data
+                    }, () => {
+                        
+                    })
                     
-                })
+                }else{
+                    this.setState({
+                        add:false,
+                        nodata:true
+                    })
+                }
 
             }
         })
