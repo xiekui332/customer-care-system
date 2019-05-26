@@ -208,6 +208,10 @@ export const AddFileWrapper = styled.div`
 export const AddFile = styled.div`
     width:400px;
     overflow:hidden;
+    margin: 10px 0 10px 120px;
+    &:first-child{
+        margin-top:-20px;
+    }
     & .iconfont{
         display:block;
         float:left;

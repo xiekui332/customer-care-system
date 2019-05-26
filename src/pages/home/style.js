@@ -200,6 +200,7 @@ export const SearchWrapper = styled.div`
     position: absolute;
     top: 60px;
     height:0;
+    z-index: 1;
     box-shadow:0 1px 0px #eee;
     overflow:hidden;
     background:#f7f7f7;
@@ -349,7 +350,7 @@ export const MiddleListWrapper = styled.div`
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     }
     &.middleListWrapper-active{
-        padding-bottom:75px;
+        padding-bottom:76px;
     }
 `;
 
@@ -505,6 +506,9 @@ export const RightHeaderWrapper = styled.div`
         width:0;
     }
     padding-right:30px;
+    .iconfont{
+        margin-right:20px;
+    }
 `;
 
 export const RightWrapper = styled.div`
@@ -676,8 +680,9 @@ export const TotransferItem = styled.div`
     clear:both;
     padding:15px 40px;
     border-bottom:1px solid #f7f7f7;
+    background:#f7f7f7;
     &.active{
-        background:#f7f7f7;
+        background:#fff;
     }
     cursor:default;
 `;
@@ -748,5 +753,4 @@ export const SearchMoreCodition = styled.div`
 
 
 
-
-// SearchMoreCodition
+// Tooltip

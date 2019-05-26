@@ -83,20 +83,20 @@ class AddNewCus extends Component{
                 <AddContent>
                     <Fragment>
                         <AddItem>
-                            <AddTitle><span>*</span>柜员号</AddTitle>
-                                <input
-                                    className="add-input"
-                                    placeholder="请输入柜员号"
-                                    ref = {(input) => {this.cusIdcardEl = input}}
-                                />
-                            <p></p>
-                        </AddItem>
-                        <AddItem>
                             <AddTitle><span>*</span>客户姓名</AddTitle>
                                 <input
                                     className="add-input"
                                     placeholder="请输入姓名"
                                     ref = {(input) => {this.cusNameEl = input}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        <AddItem>
+                            <AddTitle><span>*</span>身份证号</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入身份证号"
+                                    ref = {(input) => {this.cusIdcardEl = input}}
                                 />
                             <p></p>
                         </AddItem>
@@ -278,19 +278,23 @@ class AddNewCus extends Component{
     handleSaveData(cusNameEl, cusIdcardEl, cusMobileEl, cusAddressEl, cusConEl, cusCompanyEl, value, kindSelected, cusMoneyEl, fileList, attachFile) {
         let params = {}
         let attachs = []
-        fileList.concat(attachFile).map((item, index) => {
+        let arr = fileList.concat(attachFile);
+        arr.map((item, index) => {
             return (
-                attachs.push({
-                    attachId:item.uid
-                })
+                attachs.push(
+                    {
+                        attachId: item.uid
+                    }
+                )
             )
             
         })
+        // console.log(attachs)
         // test
-        cusNameEl.value = '小菜'
-        cusIdcardEl.value = 142603199303283737
-        cusMobileEl.value = 18334794858
-        cusAddressEl.value = '象牙公寓'
+        // cusNameEl.value = '小菜d'
+        // cusIdcardEl.value = 142603199303283737
+        // cusMobileEl.value = 18334794858
+        // cusAddressEl.value = '象牙公寓'
 
         if(!cusNameEl.value) {
             message.error('请输入客户姓名')
@@ -316,7 +320,7 @@ class AddNewCus extends Component{
             params.liabilities = cusMoneyEl.value     // 负债（万元）
             params.attachs = attachs
             
-            console.log(params)
+            // console.log(params)
             // return
             addCustom(params).then((res) => {
                 let data = res.data;
@@ -468,8 +472,8 @@ const mapDispatch = (dispatch) => ({
     },
 
     //  保存
-    handleAddStatus() {
-        let action = actionCreators.changeAddStatus(true)
+    handleAddStatus(bool) {
+        let action = actionCreators.changeAddStatus(bool)
         dispatch(action)
     }
     

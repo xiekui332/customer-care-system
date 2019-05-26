@@ -322,6 +322,10 @@ export const UserListWapper = styled.div`
     &.padding-active{
         padding-bottom:75px;
     }
+    .spin{
+        display:block;
+        margin:50px auto;
+    }
 `;
 
 export const UserOprate = styled.div`

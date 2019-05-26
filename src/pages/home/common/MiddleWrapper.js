@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { actionCreators } from '../store'
 import { Tooltip, Modal, message, Select  } from 'antd';
 import "antd/dist/antd.css";
-import { handlecustomDelete, getCustomerList, getCustomerDetail } from '../../../api'
+import { handlecustomDelete, getCustomerList, getCustomerDetail, toTransfer, sureToTransfer } from '../../../api'
 import { 
     Customer,
     MiddleHeader,
@@ -30,7 +30,7 @@ import {
 
 } from '../style'
 
-class MiddleWrapper extends PureComponent{
+class MiddleWrapper extends Component{
     constructor(props) {
         super(props)
         this.state = {
@@ -55,25 +55,14 @@ class MiddleWrapper extends PureComponent{
             pageSize:10,
             customerId:'',
             changeData:this.props.changeAddStatus,
-            totransfer:[
-                {
-                    id:1,
-                    name:'小菜',
-                    mobile:18334974858,
-                    idCard:142603199303283737
-                }
-
-            ]
+            totransfer:[]
         }
 
         this.handleCancelSearch = this.handleCancelSearch.bind(this)
     }
 
     render () {
-        const { 
-                isAddAction
-
-        } = this.props;
+        const { isAddAction } = this.props;
         const Option = Select.Option;
         let homeList = []
         if(this.props.homeList) {
@@ -81,7 +70,7 @@ class MiddleWrapper extends PureComponent{
         }
         const { isAdd, search, edit, totransfer, yearlyTurnoverSymbol, propertySymbol, liabilitiesSymbol, demandAmountSymbol } = this.state;
         const user = JSON.parse(sessionStorage.getItem("user"))
-        // console.log(homeList)
+        // console.log(totransfer)
         const confirm = Modal.confirm;
         
         return (
@@ -95,7 +84,7 @@ class MiddleWrapper extends PureComponent{
                         <Tooltip title="搜索" onClick={() => {this.handleSearchCustomer(search)}}>
                             <span className="iconfont">&#xe7c0;</span>
                         </Tooltip>
-                        <Tooltip title="编辑" onClick={() => {this.handleEditCustomer(edit, homeList, this.editWrapperEl, this.middleListWrapperEl)}}>
+                        <Tooltip title="管理" onClick={() => {this.handleEditCustomer(edit, homeList, this.editWrapperEl, this.middleListWrapperEl)}}>
                             <span className="iconfont">&#xe693;</span>
                         </Tooltip>
                     </OperateWrapper>
@@ -294,14 +283,16 @@ class MiddleWrapper extends PureComponent{
                         <div className="top-wrapper" onClick={() => {this.hideTotransfer(this.transferWrapEl)}}></div>
                         <Tolist className="editSrollBar">
                             {
-                                totransfer.map((item, index) => (
-                                    <TotransferItem className='active' key={item.id}>
+                                totransfer && totransfer.map((item, index) => (
+                                    <TotransferItem className={item.active?"active":""} key={item.cabinetNo}
+                                        onClick={() => {this.handleTransfer(item, totransfer)}}
+                                    >
                                         <ToTraItem>
                                             <span className="title">{item.name}</span>
-                                            <span className="mobile">{item.mobile}</span>
+                                            <span className="mobile">{item.cabinetNo}</span>
                                         </ToTraItem>
                                         <ToTraItem>
-                                            <span className="idCard">{item.idCard}</span>
+                                            {/* <span className="idCard"></span> */}
                                         </ToTraItem>
                                     </TotransferItem>
                                 ))
@@ -309,7 +300,7 @@ class MiddleWrapper extends PureComponent{
                            
                         </Tolist>
                         <div className="botton-wrapper">
-                            <TotransferButton>确认移交</TotransferButton>
+                            <TotransferButton onClick={() => {this.sureTransfer(totransfer, homeList, this.transferWrapEl)}}>确认移交</TotransferButton>
                         </div>
                     </PositionWrapper>
                     
@@ -320,16 +311,16 @@ class MiddleWrapper extends PureComponent{
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.changeAddStatus === true) {
-            this.getListData()
+            this.setState({
+                load:true
+            }, () => {
+                this.getListData()
+            })
+            
         }
         
     }
 
-    componentDidUpdate() {
-        if(this.state.changeData) {
-            this.getListData()
-        }
-    }
 
 
     componentDidMount() {
@@ -422,15 +413,13 @@ class MiddleWrapper extends PureComponent{
 
     // 获取list
     getListData(condition) {
-        // console.log(this.state.changeData)
-        // console.log(this.state.load)
         if(this.state.load) {
-
             let data = this.state.user;
             let { name, mobilePhone, companyName, yearlyTurnoverSymbol, yearlyTurnover, propertySymbol, property, liabilitiesSymbol, liabilities, demandAmountSymbol, 
                 demandAmount, pageNum, pageSize
             } = this.state;
             let urlType = data.userType
+            
             let params = {}
             if(urlType === 2) {
                 // 客户经理
@@ -477,40 +466,43 @@ class MiddleWrapper extends PureComponent{
                     pageSize:pageSize
                 }
             }
-            getCustomerList(params, urlType).then((res) => {
-                let data = res.data;
-                if(data.code === 1 && data.msg === 'success') {
-                    this.setState({
-                        search:false
-                    })
-                    if(data.data && data.data.list) {
-                        data.data.list.map((item, index) => (
-                            item.active = false
-                        ))
-                        let newhomeList = this.props.homeList
-                        // 滚动加载的数据
-                        if(condition === 'concatList') {
-                            // console.log(newhomeList.concat(data.data.list))
-                            this.props.disCusList(newhomeList.concat(data.data.list))
-                        }else{
-                            // console.log(data.data.list)
-                            this.props.disCusList(data.data.list)
+            this.setState({
+                load:false
+            }, () => {
+                getCustomerList(params, urlType).then((res) => {
+                    let data = res.data;
+                    
+                    if(data.code === 1 && data.msg === 'success') {
+                        this.setState({
+                            search:false
+                        })
+                        if(data.data && data.data.list) {
+                            data.data.list.map((item, index) => (
+                                item.active = false
+                            ))
+                            let newhomeList = this.props.homeList
+                            // 滚动加载的数据
+                            if(condition === 'concatList') {
+                                this.props.disCusList(newhomeList.concat(data.data.list))
+                            }else{
+                                this.props.disCusList(data.data.list)
+                            }
+                            if(data.data.hasNextPage) {
+                                this.setState({
+                                    load:true
+                                })
+                            }else {
+                                this.setState({
+                                    load:false
+                                })
+                            }
                         }
-                        this.props.handleChangeStatus()
-                        if(data.data.hasNextPage) {
-                            this.setState({
-                                load:true
-                            })
-                        }else {
-                            this.setState({
-                                load:false
-                            })
-                        }
+                    }else{
+                        message.error(data.msg);
                     }
-                }else{
-                    message.error(data.msg);
-                }
+                })
             })
+            
 
         }
     }
@@ -586,7 +578,7 @@ class MiddleWrapper extends PureComponent{
                     let data = res.data
                     if(data.code === 1 && data.msg === 'success') {
                         if(data.data) {
-                            console.log(data)
+                            // console.log(data)
                             this.props.disCusDetail(data.data)
                             this.props.disSpin(false)
                         }
@@ -595,27 +587,46 @@ class MiddleWrapper extends PureComponent{
                 
             }
         }else {
-            if(active) {
-                
+            homeList[index].active = !homeList[index].active
+            this.props.disCusList(homeList)
+            let arr = []
+            homeList.map((item, index) => (
+                item.active?arr.push(item.customerId):""
+            ))
+            if(arr.length) {
+                this.props.disShowDetail(true)  
             }else{
-                homeList[index].active = !homeList[index].active
-                this.props.disCusList(homeList)
-                this.props.disShowDetail(true)
-                this.props.disSpin(true)
-                let params = {
+                this.props.disShowDetail(false) 
+            }
+
+            let params = {}
+            if(active) {
+                if(arr.length) {
+                    params = {
+                        id:arr[arr.length - 1]
+                    }
+                }else {
+                    return
+                }
+                
+            }else {
+                params = {
                     id:customerId
                 }
-                getCustomerDetail(params).then((res) => {
-                    let data = res.data
-                    if(data.code === 1 && data.msg === 'success') {
-                        if(data.data) {
-                            console.log(data)
-                            this.props.disCusDetail(data.data)
-                            this.props.disSpin(false)
-                        }
-                    }
-                })
             }
+            this.props.disSpin(true)
+            this.props.disShowDetail(true)
+            getCustomerDetail(params).then((res) => {
+                let data = res.data
+                if(data.code === 1 && data.msg === 'success') {
+                    if(data.data) {
+                        // console.log(data)
+                        this.props.disCusDetail(data.data)
+                        this.props.disSpin(false)
+                    }
+                }
+            })
+            
         }
     }
 
@@ -627,9 +638,10 @@ class MiddleWrapper extends PureComponent{
             item.active?deleArr.push(item.customerId):""
         ))
         let params = {
-            id:JSON.stringify(deleArr)
+            customerIds:deleArr.join(',')
         }
         if(!deleArr.length) {
+            message.info('请先选择客户')
             return
         }
         confirm({
@@ -646,6 +658,7 @@ class MiddleWrapper extends PureComponent{
                             pageNum:1,
                             pageSize:10
                         }, () => {
+                            that.props.disShowDetail(false)
                             that.getListData()
                         })
                     }else{
@@ -673,12 +686,42 @@ class MiddleWrapper extends PureComponent{
     }
 
 
+    // 要移交的客户经理列表handle
+    handleTransfer(item, totransfer) {
+        
+        let newtotransfer = totransfer
+        newtotransfer.map((item) => (
+            item.active = false
+        ))
+        item.active = true
+        this.setState({
+            totransfer:newtotransfer
+        }, () => {
+            // console.log(this.state.totransfer)
+        })
+    }
+
     // 点击移交
     handleToTransfer(transferWrapEl, homeList) {
         let data = []
         homeList.map((item, index) => (
             item.active === true?data.push(item):''
         ))
+
+        toTransfer().then((res) => {
+            let data = res.data
+            console.log(data)
+            if(data.data) {
+                data.data.map((item, index) => (
+                    item.active = false
+                ))
+                this.setState({
+                    totransfer:data.data
+                })
+            }else {
+                message.error(data.msg)
+            }
+        })
         if(data.length) {
             transferWrapEl.classList.add('active')
         }else{
@@ -693,6 +736,40 @@ class MiddleWrapper extends PureComponent{
     }
 
 
+    // 确认移交
+    sureTransfer(totransfer, homeList, transferWrapEl) {
+        let customerIds = []
+        let newUserId = ''
+        homeList.map((item) => {
+            return (
+                item.active?customerIds.push(item.customerId):""
+            )
+        })
+        totransfer.map((item) => {
+            return (
+                item.active?newUserId = item.userId:""
+            )
+        })
+
+        let params = {
+            customerIds:customerIds.join(','),
+            newUserId:newUserId
+        }
+        if(!newUserId) {
+            message.info('请选择一个客户经理')
+            return
+        }
+        sureToTransfer(params).then((res) => {
+            let data = res.data;
+            console.log(data)
+            if(data.code === 1 && data.msg === 'success') {
+                message.success('移交成功')
+                transferWrapEl.classList.remove('active')
+            }else{
+                message.error(data.msg)
+            }
+        })
+    }
 
   
 }
@@ -705,8 +782,6 @@ const mapDispatch = (dispatch) => ({
         let action = actionCreators.getMiddleList(data)
         dispatch(action)
 
-        let action_two = actionCreators.changeAddStatus(false)
-        dispatch(action_two)
 
     },
 
@@ -744,8 +819,8 @@ const mapDispatch = (dispatch) => ({
     },
 
     //  改变新增客户后的状态
-    handleChangeStatus() {
-        let action = actionCreators.changeAddStatus(false)
+    handleChangeStatus(bool) {
+        let action = actionCreators.changeAddStatus(bool)
         dispatch(action)
     }
 

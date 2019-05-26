@@ -78,7 +78,7 @@ export const createUser = (params) => {
 // 获取用户列表
 export const userList = (params) => {
     return new Promise((resolve, reject) => {
-        service.post('/user/list', params)
+        service.post('/user/list', QS.stringify(params))
         .then((res) => {
             resolve(res)
         })
@@ -105,7 +105,7 @@ export const userDetail = (params) => {
 // 删除用户
 export const userDelete = (params) => {
     return new Promise((resolve, reject) => {
-        service.post('/user/del', params)
+        service.post('/user/del', QS.stringify(params))
         .then((res) => {
             resolve(res)
         })
@@ -157,7 +157,7 @@ export const getCustomerList = (params, urlType) => {
 // 
 export const handlecustomDelete = (params) => {
     return new Promise((resolve, reject) => {
-        service.post('/customer/del', params)
+        service.post('/customer/del', QS.stringify(params))
         .then((res) => {
             resolve(res)
         })
@@ -200,6 +200,7 @@ export const getsystemData = () => {
 export const addCustom = (params) => {
     return new Promise((resolve, reject) => {
         service.post('/customer/add', QS.stringify(params))
+        // service.post('/customer/add', params)
         .then((res) => {
             resolve(res)
         })
@@ -227,3 +228,31 @@ export const getCustomerDetail = (params) => {
     })
 }
 
+
+
+// 客户经理列表
+export const toTransfer = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post('/user/customermanagers', QS.stringify(params))
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
+
+
+// 客户移交
+export const sureToTransfer = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post('/customer/transfer', QS.stringify(params))
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}

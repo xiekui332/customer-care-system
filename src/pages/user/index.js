@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import LeftCon from '../home/common/LeftWrapper'
 import { sessionGetItem, checkmobile, createUser, userList, userDetail, userDelete } from '../../api'
-import { Tooltip, Input, Select, message, Empty, Modal } from 'antd';
+import { Tooltip, Input, Select, message, Empty, Modal, Spin  } from 'antd';
 
 import {
     UserWrapper,
@@ -49,6 +49,7 @@ class User extends Component {
             nodata:true,
             search:false,
             edit:false,
+            spin:true,
             userName:'',
             mobilePhone:'',
             userId:'',
@@ -61,7 +62,7 @@ class User extends Component {
     }
 
     render () {
-        const { login, userList, add, edit, userId, nodata, userDetail } = this.state;
+        const { login, userList, add, edit, userId, nodata, userDetail, spin } = this.state;
         // console.log(userDetail)
         const Option = Select.Option;
         const confirm = Modal.confirm;
@@ -116,7 +117,7 @@ class User extends Component {
 
                                     <AddButtonWrapper>
                                         <AddCusButton className="add-cancel" onClick={() => {this.handleCancel(this.searchEl)}}>取消</AddCusButton>
-                                        <AddCusButton className="add-save" onClick={() => {this.handleSave(this.searchNameEl, this.searchMobileEl)}}>确定</AddCusButton>
+                                        <AddCusButton className="add-save" onClick={() => {this.handleSave(this.searchNameEl, this.searchMobileEl, this.searchEl)}}>确定</AddCusButton>
                                     </AddButtonWrapper>
                                 </SearchWrapper> 
 
@@ -155,6 +156,12 @@ class User extends Component {
                                             )
                                         })
                                         :""
+                                    }
+
+                                    {   
+                                        spin?
+                                        <Spin size="large" className="spin" />
+                                        :''
                                     }
 
                                     
@@ -199,6 +206,7 @@ class User extends Component {
                                                     placeholder="请输入柜员号"
                                                     ref = {(input) => {this.idCard = input}}
                                                     value={userDetail.cabinetNo}
+                                                    onChange={() => {this.handleChange(this.idCard, 1)}}
                                                 />
                                             <p></p>
                                         </AddItem>
@@ -210,6 +218,7 @@ class User extends Component {
                                                     placeholder="请输入姓名"
                                                     ref = {(input) => {this.name = input}}
                                                     value={userDetail.name}
+                                                    onChange={() => {this.handleChange(this.name, 2)}}
                                                 />
                                             <p></p>
                                         </AddItem>
@@ -221,6 +230,7 @@ class User extends Component {
                                                     placeholder="请输入手机号码"
                                                     ref = {(input) => {this.mobile = input}}
                                                     value={userDetail.mobilePhone}
+                                                    onChange={() => {this.handleChange(this.mobile, 3)}}
                                                 />
                                             <p></p>
                                         </AddItem>
@@ -253,6 +263,7 @@ class User extends Component {
                                                     placeholder="请输入机构号"
                                                     ref = {(input) => {this.organNum = input}}
                                                     value={userDetail.orgNo}
+                                                    onChange={() => {this.handleChange(this.organNum, 4)}}
                                                 />
                                             <p></p>
                                         </AddItem>
@@ -264,6 +275,7 @@ class User extends Component {
                                                     placeholder="请输入机构名称"
                                                     ref = {(input) => {this.organName = input}}
                                                     value={userDetail.orgName}
+                                                    onChange={() => {this.handleChange(this.organName, 5)}}
                                                 />
                                             <p></p>
                                         </AddItem>
@@ -317,7 +329,7 @@ class User extends Component {
     }
 
     // getList methods
-    getData() {
+    getData(searchEl) {
         if(this.state.load) {
             let params = {
                 userName:this.state.userName,
@@ -325,6 +337,14 @@ class User extends Component {
                 pageNum:this.state.pageNum,
                 pageSize:this.state.pageSize
             }
+
+            // 收起搜索
+            if(searchEl) {
+                searchEl.classList.remove('searchel-show')
+            }
+            this.setState({
+                spin:true
+            })
             userList(params).then((res) => {
                 let data = res.data;
                 data.data.list.map((item, index) => (
@@ -332,15 +352,21 @@ class User extends Component {
                 ))
                 
                 if(data.code === 1 && data.msg === 'success') {
-                    this.setState({
-                        userList:this.state.userList.concat(data.data.list)
-                    }, () => {
-                        if(data.data.list.length < this.state.pageSize || !data.data.list.length) {
-                            this.setState({
-                                load:false
-                            })
-                        }
-                    })
+                    if(data.data && data.data.list) {
+                        this.setState({
+                            userList:this.state.userList.concat(data.data.list),
+                            spin:false
+                        }, () => {
+                            if(!data.data.hasNextPage) {
+                                this.setState({
+                                    load:false
+                                })
+                            }
+                            
+
+                        })
+                    }
+                    
                 }
 
             })
@@ -354,11 +380,23 @@ class User extends Component {
 
     // 点击新建用户
     handleAdd() {
+        let params = {
+            cabinetNo: "",
+            createTime: "",
+            mobilePhone: "",
+            name: "",
+            orgName: "",
+            orgNo: "",
+            remark: "",
+            userId:'',
+            userType: ''
+        }
         this.setState({
             add:true,
             search:false,
             userId:"",
-            nodata:false
+            nodata:false,
+            userDetail:params
         },() => {
            
         })
@@ -391,7 +429,7 @@ class User extends Component {
     }
 
     // 确定
-    handleSave(searchNameEl, searchMobileEl) {
+    handleSave(searchNameEl, searchMobileEl, searchEl) {
         this.setState({
             userName:searchNameEl.value,
             mobilePhone:searchMobileEl.value,
@@ -400,7 +438,7 @@ class User extends Component {
             load:true,
             userList:[]
         }, () => {
-            this.getData()
+            this.getData(searchEl)
         })
         
 
@@ -492,7 +530,8 @@ class User extends Component {
     // 取消保存用户
     handleAddCancel() {
         this.setState({
-            add:false
+            add:false,
+            nodata:true
         })
     }
 
@@ -610,7 +649,7 @@ class User extends Component {
             item.active?deleArr.push(item.userId):""
         ))
         let params = {
-            userId:JSON.stringify(deleArr)
+            userIds:deleArr.join(',')
         }
         if(!deleArr.length) {
             return
@@ -642,6 +681,27 @@ class User extends Component {
             },
           });
         
+    }
+
+    // input onchange
+    handleChange(el, type) {
+        let userDetail = this.state.userDetail
+
+        if(type === 1) {
+            userDetail.cabinetNo = el.input.value
+        }else if(type === 2) {
+            userDetail.name = el.input.value
+        }else if(type === 3) {
+            userDetail.mobilePhone = el.input.value
+        }else if(type === 4) {
+            userDetail.orgNo = el.input.value
+        }else if(type === 5) {
+            userDetail.orgName = el.input.value
+        }
+
+        this.setState({
+            userDetail:userDetail
+        })
     }
 
 }

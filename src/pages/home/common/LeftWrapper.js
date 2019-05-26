@@ -103,7 +103,8 @@ class LeftCon extends PureComponent {
                         :""
                     }
 
-                    <LeftItemLi className="nowork"
+                    <LeftItemLi 
+                        // className="nowork"
                         ref={(li) => {this.liMess = li}}
                         >
                         {
