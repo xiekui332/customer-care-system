@@ -249,6 +249,10 @@ export const AddItem = styled.div`
     .ant-select-focused{
         box-shadow:none;
     }
+    .add-input-cabinetNo input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
 `;
 
 export const AddTitle = styled.div`

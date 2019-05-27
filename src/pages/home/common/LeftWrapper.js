@@ -103,23 +103,28 @@ class LeftCon extends PureComponent {
                         :""
                     }
 
-                    <LeftItemLi 
+                    {
+                        user.userType === 1?
+                        <LeftItemLi 
                         // className="nowork"
-                        ref={(li) => {this.liMess = li}}
-                        >
-                        {
-                            changepwd?
-                            <div>
-                                <img src={message} alt="" />
-                                <span>短信管理</span>
-                            </div>
-                            :
-                            <NavLink to={"/message"} replace activeClassName="handleActice">
+                            ref={(li) => {this.liMess = li}}
+                            >
+                            {
+                                changepwd?
+                                <div>
                                     <img src={message} alt="" />
-                                    <span>短信管理</span>
-                            </NavLink>
-                        }
-                    </LeftItemLi>
+                                    <span>营销短信</span>
+                                </div>
+                                :
+                                <NavLink to={"/message"} replace activeClassName="handleActice">
+                                        <img src={message} alt="" />
+                                        <span>营销短信</span>
+                                </NavLink>
+                            }
+                        </LeftItemLi>
+                        :""
+                    }
+                    
                     <LeftItemLi
                         ref={(li) => {this.liMine = li}}
                         >

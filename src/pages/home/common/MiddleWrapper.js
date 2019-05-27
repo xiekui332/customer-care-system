@@ -54,7 +54,6 @@ class MiddleWrapper extends Component{
             pageNum:1,  
             pageSize:10,
             customerId:'',
-            changeData:this.props.changeAddStatus,
             totransfer:[]
         }
 
@@ -277,7 +276,7 @@ class MiddleWrapper extends Component{
                 </EditWrapper>
                 
 
-                {/* 点击移交出现 */}
+                {/* 点击底部移交出现 */}
                 <TransferWrapper ref={(transferWrap) => {this.transferWrapEl = transferWrap}}>
                     <PositionWrapper>
                         <div className="top-wrapper" onClick={() => {this.hideTotransfer(this.transferWrapEl)}}></div>
@@ -309,16 +308,28 @@ class MiddleWrapper extends Component{
         )
     }
 
-    componentWillReceiveProps(nextProps) {
-        if(nextProps.changeAddStatus === true) {
+    // componentWillReceiveProps(nextProps) {
+    //     if(nextProps.changeAddStatus === true) {
+    //         this.setState({
+    //             load:true
+    //         }, () => {
+    //             this.getListData()
+    //         })
+            
+    //     }
+        
+    // }
+
+    componentDidUpdate() {
+        if(this.props.changeAddStatus) {
             this.setState({
-                load:true
+                load:true,
+                pageNum:1
             }, () => {
                 this.getListData()
+                return
             })
-            
         }
-        
     }
 
 
@@ -405,7 +416,8 @@ class MiddleWrapper extends Component{
             yearlyTurnover:yearlyTurnoverEl.value,
             property:propertyEl.value,
             liabilities:liabilitiesEl.value,
-            demandAmount:demandAmountEl.value
+            demandAmount:demandAmountEl.value,
+            load:true
         }, () => {
             this.getListData()
         })
@@ -413,6 +425,7 @@ class MiddleWrapper extends Component{
 
     // 获取list
     getListData(condition) {
+        this.props.handleChangeStatus(false)
         if(this.state.load) {
             let data = this.state.user;
             let { name, mobilePhone, companyName, yearlyTurnoverSymbol, yearlyTurnover, propertySymbol, property, liabilitiesSymbol, liabilities, demandAmountSymbol, 
@@ -476,6 +489,7 @@ class MiddleWrapper extends Component{
                         this.setState({
                             search:false
                         })
+                        
                         if(data.data && data.data.list) {
                             data.data.list.map((item, index) => (
                                 item.active = false
@@ -487,6 +501,7 @@ class MiddleWrapper extends Component{
                             }else{
                                 this.props.disCusList(data.data.list)
                             }
+                            
                             if(data.data.hasNextPage) {
                                 this.setState({
                                     load:true
@@ -682,6 +697,7 @@ class MiddleWrapper extends Component{
             }
             isAddAction(params)
             this.props.disShowDetail(false)
+            this.props.handleCusEdit(false)
         })
     }
 
@@ -821,6 +837,13 @@ const mapDispatch = (dispatch) => ({
     //  改变新增客户后的状态
     handleChangeStatus(bool) {
         let action = actionCreators.changeAddStatus(bool)
+        dispatch(action)
+    },
+
+
+    // 编辑客户
+    handleCusEdit(bool) {
+        let action = actionCreators.changeCusEdit(bool)
         dispatch(action)
     }
 

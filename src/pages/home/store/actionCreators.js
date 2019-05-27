@@ -88,5 +88,17 @@ export const changeMineData = (data) => {
     }
 } 
 
+// 编辑客户状态 
 
-// changeMineData
+export const changeCusEdit = (bool) => {
+    return (dispatch) => {
+        let action = {
+            type:constants.CHANGE_EDIT_STATUS,
+            bool
+        }
+        dispatch(action)
+    }
+} 
+
+
+// handleCusEdit

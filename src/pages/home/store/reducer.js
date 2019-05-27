@@ -22,7 +22,8 @@ const defaultState = fromJS({
     changeAddStatus:false,
     customerDetail:{},            // 客户详情
     showDetail:false,
-    mineData:[]
+    mineData:[],
+    cusEdit:false
 })
 
 //  点击MiddleList数据
@@ -89,6 +90,11 @@ export default ((state = defaultState, action) => {
         case constants.CHANGE_MINE_STATUS:
         return state.merge({
             mineData:fromJS(action.data)
+        });
+        
+        case constants.CHANGE_EDIT_STATUS:
+        return state.merge({
+            cusEdit:fromJS(action.bool)
         });
         default:
         return state;

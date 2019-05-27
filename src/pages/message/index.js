@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import LeftCon from '../home/common/LeftWrapper'
-import { Input } from 'antd';
-import { sessionGetItem } from '../../api'
+import { Input, message, Empty } from 'antd';
+import { sessionGetItem, changeSendMsg } from '../../api'
 
 import {
     MessagePage,
@@ -11,8 +11,8 @@ import {
     MessageMiddle,
     MessageTitle,
     MessageLargeBtn,
-    MessageItem,
-    MessageContent,
+    // MessageItem,
+    // MessageContent,
     MessageRightDetail,
     MegRightTitle,
     MegRightBtn,
@@ -21,8 +21,7 @@ import {
     MsgContent,
     MsgTextWrapper,
     MsgSelect,
-    MsgItem,
-    MsgText
+    PreviewMessage
 } from './style'
 
 class Message extends PureComponent {
@@ -33,7 +32,9 @@ class Message extends PureComponent {
             timeText:"请选择",
             isEdit:false,
             msgTextarea:"",
-            login:sessionGetItem('token')
+            login:sessionGetItem('token'),
+            msgTitle:'',
+            prewStatus:false
         })
 
         this.handleTimeSelect = this.handleTimeSelect.bind(this)
@@ -42,7 +43,7 @@ class Message extends PureComponent {
     }
 
     render() {
-        const { login, timeShow, timeText, isEdit, msgTextarea } = this.state;
+        const { login, isEdit, msgTextarea, msgTitle, prewStatus } = this.state;
         const { TextArea } = Input;
         if(login){
             return(
@@ -51,42 +52,36 @@ class Message extends PureComponent {
                     <MessageWrapper>
                         <MessageMiddle className="editSrollBar">
                             <MessageTitle>短信管理</MessageTitle>
-                            <MessageLargeBtn onClick={() => {this.handleMessageItem(true)}}>添加定时发送条件</MessageLargeBtn>
-                            <MessageItem onClick={() => {this.handleMessageItem(false)}}>
+                            <MessageLargeBtn onClick={() => {this.handleMessageItem(true)}}>正在新建营销短信</MessageLargeBtn>
+                            {/* <MessageItem onClick={() => {this.handleMessageItem(false)}}>
                                 <p>端午节祝福</p>
                                 <MessageContent>
                                     客户姓名 你好，今天是端午节，祝您端午 节快乐祝您端午节快乐
                                 </MessageContent>
-                            </MessageItem>
-                            <MessageItem>
-                                <p>端午节祝福</p>
-                                <MessageContent>
-                                    客户姓名 你好，今天是端午节，祝您端午 节快乐祝您端午节快乐
-                                </MessageContent>
-                            </MessageItem>
-                            <MessageItem>
-                                <p>端午节祝福</p>
-                                <MessageContent>
-                                    客户姓名 你好，今天是端午节，祝您端午 节快乐祝您端午节快乐
-                                </MessageContent>
-                            </MessageItem>
-                            <MessageItem>
-                                <p>端午节祝福</p>
-                                <MessageContent>
-                                    客户姓名 你好，今天是端午节，祝您端午 节快乐祝您端午节快乐
-                                </MessageContent>
-                            </MessageItem>
+                                <div>
+                                    <span>已发送</span>
+                                    <span>2019-05-23</span>
+                                </div>
+                            </MessageItem> */}
+                            <Empty size='' description='暂无' />
                         </MessageMiddle>
 
 
-                        <MessageRightDetail>
+                        <MessageRightDetail className='msg-right-wrapper'>
                             <MsgHead className={isEdit?"isHide":"isShow"}>
                                 <MegRightTitle>
-                                    添加定时发送条件
+                                新建营销短信
                                 </MegRightTitle>
                                 <MegRightBtn>
-                                    <MsgBtn className="msgCancel">取消</MsgBtn>
-                                    <MsgBtn className="msgSave">保存</MsgBtn>
+                                    <MsgBtn className="msgCancel"
+                                        onClick={() => {this.handleCancel()}}
+                                    >取消</MsgBtn>
+                                    <MsgBtn className="msgCancel"
+                                        onClick={() => {this.handlePrew(this.prewEl, prewStatus, msgTitle, msgTextarea)}}
+                                    >预览</MsgBtn>
+                                    <MsgBtn className="msgSave"
+                                        onClick={() => {this.handleSend(msgTitle, msgTextarea)}}
+                                    >发送</MsgBtn>
                                 </MegRightBtn>
                             </MsgHead>
 
@@ -102,9 +97,9 @@ class Message extends PureComponent {
 
                             <MsgContent>
                                 <MsgTextWrapper>
-                                    <p>短信发送时间</p>
+                                    <p>活动名称</p>
                                     <MsgSelect>
-                                        <MsgText onClick={this.handleTimeSelect} className={timeText === "请选择"?"isgray":""}>{timeText}</MsgText>
+                                        {/* <MsgText onClick={this.handleTimeSelect} className={timeText === "请选择"?"isgray":""}>{timeText}</MsgText>
                                         <span className="iconfont" onClick={this.handleTimeSelect}>&#xe601;</span>
                                         <MsgItem className={timeShow?"isShow":"isHide"}>
                                             <li 
@@ -119,14 +114,32 @@ class Message extends PureComponent {
                                                 onClick={() => {this.handleTimeSelectLi(this.li)}}
                                                 ref={(li) => this.li = li}
                                             >3</li>
-                                        </MsgItem>
+                                        </MsgItem> */}
+
+                                        <Input placeholder="请输入活动名称"
+                                            ref={(input) => {this.msgTitleEl = input}}
+                                            onChange={() => {this.handleInput(this.msgTitleEl, 1, msgTitle, msgTextarea)}}
+                                            value={msgTitle}
+                                        />
                                     </MsgSelect>
 
                                     <p>自定义短信内容</p>
-                                    <TextArea rows={10} value={msgTextarea} className="msg-textarea" />
+                                    <TextArea rows={10} value={msgTextarea} className="msg-textarea"
+                                        ref={(input) => {this.msgContentEl = input}}
+                                        onChange={() => {this.handleInput(this.msgContentEl, 2, msgTitle, msgTextarea)}}
+                                    />
                                 </MsgTextWrapper>
                             </MsgContent>
+                            
 
+
+                                        {/* 预览短信 */}
+                            <PreviewMessage ref={(el) => {this.prewEl = el}} className={prewStatus?"active":""}>
+                                        <p>短信预览</p>
+                                        <div>
+                                            尊敬的客户， 大竹农商银行将开展 {msgTitle} 活动， 内容如下 {msgTextarea} ， 热情希望您能参与， 我们竭诚为您为你提供更好更多的金融服务
+                                        </div>
+                            </PreviewMessage>
                         </MessageRightDetail>
                     </MessageWrapper>
                 </MessagePage>
@@ -164,6 +177,65 @@ class Message extends PureComponent {
         }
         
         
+    }
+
+    // 点击预览
+    handlePrew(prewEl, prewStatus, msgTitle, msgTextarea) {
+        // active
+        if(msgTitle && msgTextarea) {
+            let h = document.getElementsByClassName('msg-right-wrapper')[0].clientHeight
+            prewEl.style.height = (h - 60) + 'px'
+            this.setState({
+                prewStatus:!prewStatus
+            }) 
+        }else{
+            message.info('请填写完整活动信息');
+        }
+    }
+
+
+    // input change
+    handleInput(el, type, msgTitle, msgTextarea) {
+        if(type === 1) {
+            msgTitle = el.input.value
+        }else if(type === 2) {
+            msgTextarea = el.textAreaRef.value
+        }
+        this.setState({
+            msgTitle:msgTitle,
+            msgTextarea:msgTextarea
+        })
+    }
+
+
+    // 发送营销短息
+    handleSend(msgTitle, msgTextarea) {
+        if(msgTitle && msgTextarea) {
+            let params = {
+                name:msgTitle,
+                content:msgTextarea
+            }
+            changeSendMsg(params).then((res) => {
+                console.log(res)
+                let data = res.data
+                if(data.code === 1 && data.msg === 'success') {
+                    message.success('发送成功')
+                }else{
+                    message.error(data.msg)
+                }
+            })
+        }else{
+            message.info('请填写完整活动信息');
+        }
+    }
+
+
+    // 取消
+    handleCancel() {
+        this.setState({
+            msgTitle:'',
+            msgTextarea:''
+        })
     }
 
 }

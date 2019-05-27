@@ -157,6 +157,7 @@ export const DetailWrapper = styled.div`
     flex:2;
     background:#fff;
     overflow-y:auto;
+    position:relative;
     &::-webkit-scrollbar-track-piece { 
         background-color:#f7f7f7;
     }
@@ -201,7 +202,7 @@ export const SearchWrapper = styled.div`
     top: 60px;
     height:0;
     z-index: 1;
-    box-shadow:0 1px 0px #eee;
+    box-shadow: 0px 10px 5px -3px #eee;
     overflow:hidden;
     background:#f7f7f7;
     input{
@@ -685,6 +686,22 @@ export const TotransferItem = styled.div`
         background:#fff;
     }
     cursor:default;
+    .no-avetor{
+        font-size:30px;
+        color:#ddd;
+        float:left;
+        margin:0;
+    }
+    &.trans-box{
+        padding:10px 20px;
+        background:#fff;
+    }
+    &.trans-box:hover{
+        background:#f7f7f7;
+    }
+    &.trans-box-active{
+        background:#f3f3f3;
+    }
 `;
 
 export const ToTraItem = styled.div`
@@ -702,6 +719,21 @@ export const ToTraItem = styled.div`
         font-size:14px;
         color:#999;
     }
+    &.trans-item{
+        display:inline-block;
+        margin-top:-3px;
+    }
+    .trans-title{
+        float:left;
+        margin-left:20px;
+        padding-bottom:0px;
+    }
+    .trans-mobile{
+        line-height:25px;
+    }
+    .trans-idCard{
+        padding-left:20px;
+    }
 `;
 
 export const TotransferButton = styled.div`
@@ -715,6 +747,9 @@ export const TotransferButton = styled.div`
     border-radius:5px;
     margin:30px auto 0;
     cursor:pointer;
+    .trans-send{
+        width:260px!important;
+    }
 `;
 
 export const SearchMoreCodition = styled.div`
@@ -752,5 +787,53 @@ export const SearchMoreCodition = styled.div`
 
 
 
+// 右边弹出
+export const RightBlock = styled.div`
+    position:absolute;
+    right:0;
+    top:60px;
+    width:0px;
+    overflow: hidden;
+    background:#fff;
+    z-index:1;
+    box-shadow: -4px 0 5px -3px #eee;
+    transition:all ease-in .2s;
+    &.active{
+        width:300px;
+    }
+    .chat-textarea{
+        width:240px;
+        margin:20px auto;
+        display: block;
+        background: #f7f7f7;
+    }
+    .chat-title{
+        padding:20px 0 10px 30px;
+    }
+    >div{
+        position:relative;
+        height:100%;
+    }
+    .chat-send{
+        width:250px;
+        height:35px;
+        color:#fff;
+        background:#55a12f;
+        text-align:center;
+        line-height:35px;
+        border-radius:5px;
+        position:absolute;
+        left:50%;
+        margin-left:-125px;
+        bottom:50px;
+        cursor:pointer;
+    }
+`;
 
-// Tooltip
+export const Totranslist = styled.div`
+    height:80%;
+    background:#fff;
+`;
+
+
+// Totranslist

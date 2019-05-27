@@ -211,6 +211,21 @@ export const addCustom = (params) => {
 }
 
 
+// 编辑客户
+export const editCustom = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post('/customer/edit', QS.stringify(params))
+        // service.post('/customer/add', params)
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })  
+}
+
+
 
 
 
@@ -248,6 +263,34 @@ export const toTransfer = (params) => {
 export const sureToTransfer = (params) => {
     return new Promise((resolve, reject) => {
         service.post('/customer/transfer', QS.stringify(params))
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
+
+
+// 发送营销短信
+export const changeSendMsg = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post('/sms/send/market', QS.stringify(params))
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
+
+
+// 修改手机号
+export const changeMobile = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post('/user/updatemobilephone', QS.stringify(params))
         .then((res) => {
             resolve(res)
         })

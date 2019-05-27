@@ -64,6 +64,28 @@ export const MessageItem = styled.div`
         color:#333;
         margin-bottom:10px;
         font-weight:500;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+    >div{
+        padding-bottom:20px;
+        span{
+            display:block;
+            line-height:30px;
+        }
+        span:nth-child(1) {
+            float:left;
+            color:#55a12f;
+            font-size:16px;
+        }
+        span:nth-child(2) {
+            float:right;
+            color:#999;
+            font-size:12px;
+        }
     }
 `;
 
@@ -83,6 +105,7 @@ export const MsgHead = styled.div`
 
 export const MessageRightDetail = styled.div`
     flex:2;
+    position:relative;
 `;
 
 export const MegRightTitle = styled.div`
@@ -119,7 +142,6 @@ export const MsgBtn = styled.div`
     }
     &.msgCancel{
         color:#333;
-        margin-right:20px;
     }
 `;
 
@@ -136,6 +158,11 @@ export const MsgTextWrapper = styled.div`
 
     .msg-textarea{
         width:400px;
+        background:#f7f7f7;
+    }
+    .msg-textarea:focus{
+        border:1px solid #55a12f;
+        box-shadow:none;
     }
     .msg-textarea:hover{
         border:1px solid #55a12f;
@@ -144,9 +171,6 @@ export const MsgTextWrapper = styled.div`
 
 export const MsgSelect = styled.div`
     width:400px;
-    height:40px;
-    background:#f7f7f7;
-    border:1px solid #dcdcdc;
     position:relative;
     &>.iconfont{
         font-size:20px;
@@ -154,6 +178,16 @@ export const MsgSelect = styled.div`
         right:10px;
         top:5px;
         cursor:pointer;
+    }
+    input{
+        background:#f7f7f7;
+    }
+    input:focus{
+        border:1px solid #55a12f;
+        box-shadow:none;
+    }
+    input:hover{
+        border:1px solid #55a12f;
     }
 `;
 
@@ -207,3 +241,33 @@ export const MsgItem = styled.ul`
         transition:all ease-in .1s;
     }
 `;
+
+
+export const PreviewMessage = styled.div`
+    width:300px;
+    background:#fff;
+    position:absolute;
+    right:-300px;
+    top:60px;
+    transition:all ease-in .2s;
+    box-shadow: -4px 0 5px -3px #eee;  
+    &.active{
+        right:0px;
+    }
+    >p{
+        padding:20px; 
+        font-size:14px;
+        color:#333;
+    }
+    >div{
+        width:250px;
+        margin:5px auto;
+        border:1px solid #e5e5e5;
+        padding:20px 10px;
+        border-radius:3px;
+        font-size: 13px;
+    }
+`;
+
+
+// PreviewMessage

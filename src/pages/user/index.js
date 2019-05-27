@@ -83,7 +83,7 @@ class User extends Component {
                                     <Tooltip title="搜索" onClick={() => {this.handleSearch(this.searchEl, this.addmustorEl)}}>
                                         <span className="iconfont">&#xe7c0;</span>
                                     </Tooltip>
-                                    <Tooltip title="编辑" onClick={() => {this.handleUserDelete(this.useroparateel, this.userlistwrapper)}}>
+                                    <Tooltip title="编辑" onClick={() => {this.handleUserEdit(this.useroparateel, this.userlistwrapper)}}>
                                         <span className="iconfont">&#xe693;</span>
                                     </Tooltip>
                                 </OperateWrapper>
@@ -202,10 +202,11 @@ class User extends Component {
                                         <AddItem>
                                             <AddTitle><span>*</span>柜员号</AddTitle>
                                                 <Input 
-                                                    className="add-input"
+                                                    className="add-input add-input-cabinetNo"
                                                     placeholder="请输入柜员号"
                                                     ref = {(input) => {this.idCard = input}}
                                                     value={userDetail.cabinetNo}
+                                                    type='number'
                                                     onChange={() => {this.handleChange(this.idCard, 1)}}
                                                 />
                                             <p></p>
@@ -244,7 +245,7 @@ class User extends Component {
                                                 placeholder="请选择用户类别"
                                                 optionFilterProp="children"
                                                 onChange={(value) => {this.userkind(value)}}
-                                                value={this.state.userType}
+                                                value={userDetail.userType}
                                                 filterOption={(input, option) =>
                                                     option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                                 }
@@ -502,8 +503,12 @@ class User extends Component {
             .then((res) => {
                 let data = res.data;
                 if(data.code === 1 && data.msg === 'success') {
-                   
-                    message.success('新建成功')
+                   if(userId) {
+                        message.success('编辑成功')
+                   }else{
+                        message.success('新建成功, 初始密码是空')
+                   }
+                    
                     nameel.input.value = ''
                     idCardel.input.value = ''
                     mobileel.input.value = ''
@@ -609,7 +614,7 @@ class User extends Component {
 
 
     // 编辑用户
-    handleUserDelete(useroparateel, userlistwrapper) {
+    handleUserEdit(useroparateel, userlistwrapper) {
         this.setState({
             edit:!this.state.edit
         }, () => {
@@ -655,7 +660,7 @@ class User extends Component {
             return
         }
         confirm({
-            title: '确认删除?',
+            title: '删除操作后不可以恢复, 确认删除?',
             okText:"确定",
             cancelText:"取消",
             onOk() {
