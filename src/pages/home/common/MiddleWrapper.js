@@ -83,15 +83,25 @@ class MiddleWrapper extends Component{
                         <Fragment>
                             <span>客户管理</span>
                             <OperateWrapper>
-                                <Tooltip title="新建客户" onClick={() => {this.addCustomer(isAdd)}}>
-                                    <span className="iconfont">&#xe64c;</span>
-                                </Tooltip>
-                                <Tooltip title="搜索" onClick={() => {this.handleSearchCustomer(search)}}>
-                                    <span className="iconfont">&#xe7c0;</span>
-                                </Tooltip>
-                                <Tooltip title="管理" onClick={() => {this.handleEditCustomer(edit, homeList, this.editWrapperEl, this.middleListWrapperEl)}}>
-                                    <span className="iconfont">&#xe693;</span>
-                                </Tooltip>
+                                {
+                                    user.userType === 4?
+                                    <Tooltip title="搜索" onClick={() => {this.handleSearchCustomer(search)}}>
+                                        <span className="iconfont">&#xe7c0;</span>
+                                    </Tooltip>
+                                    :
+                                    <Fragment>
+                                        <Tooltip title="新建客户" onClick={() => {this.addCustomer(isAdd)}}>
+                                            <span className="iconfont">&#xe64c;</span>
+                                        </Tooltip>
+                                        <Tooltip title="搜索" onClick={() => {this.handleSearchCustomer(search)}}>
+                                            <span className="iconfont">&#xe7c0;</span>
+                                        </Tooltip>
+                                        <Tooltip title="管理" onClick={() => {this.handleEditCustomer(edit, homeList, this.editWrapperEl, this.middleListWrapperEl)}}>
+                                            <span className="iconfont">&#xe693;</span>
+                                        </Tooltip>
+                                    </Fragment>
+                                }
+                                
                             </OperateWrapper>
                         </Fragment>
                     }
@@ -358,7 +368,7 @@ class MiddleWrapper extends Component{
             // }
 
             if(this.scrollTop() + this.windowHeight() >= (this.documentHeight() - 50/*滚动响应区域高度取50px*/)) {
-                console.log('bottom')
+                // console.log('bottom')
                 this.getListData('concatList')
             }
         })
@@ -446,7 +456,7 @@ class MiddleWrapper extends Component{
         })
     }
 
-    // 搜索保存
+    // 搜索查询数据
     handleSaveSearch(cusName, cusCompanyName, yearlyTurnoverEl, propertyEl, liabilitiesEl, demandAmountEl) {
         this.setState({
             name:cusName.value,
@@ -455,7 +465,8 @@ class MiddleWrapper extends Component{
             property:propertyEl.value,
             liabilities:liabilitiesEl.value,
             demandAmount:demandAmountEl.value,
-            load:true
+            load:true,
+            pageNum:1
         }, () => {
             this.getListData()
         })

@@ -323,6 +323,7 @@ class MiddleWrapper extends PureComponent{
     }
     // 编辑
     handleTipEdit(customerDetail, confirm, homeList) {
+        console.log(customerDetail)
         let params = {
             isAdd:true
         }

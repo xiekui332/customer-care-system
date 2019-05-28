@@ -33,7 +33,7 @@ class AddNewCus extends Component{
             loading:false,
             attachFile:[],
             systemData:{},
-            kindSelected:'',
+            kindSelected:undefined,
             customerDetail:{}
         }
 
@@ -44,17 +44,25 @@ class AddNewCus extends Component{
             isAdd, addClickLi, handlecusCancel, cusEdit
         } = this.props;
         
+        const { 
+            previewVisible, previewImage, fileList, attachFile, systemData
+        } = this.state;
+        
         let customerDetail = {};
         let customerId = ''
+        let kindSelected = undefined
         if(cusEdit) {
             customerDetail = this.props.customerDetail
             customerId = customerDetail.customerId
+            if(!customerDetail.industryClass) {
+                kindSelected = undefined
+            }else{
+                kindSelected = customerDetail.industryClass
+            }
             
         }
-        // console.log(cusEdit)
-        const { 
-            previewVisible, previewImage, fileList, attachFile, systemData, kindSelected
-        } = this.state;
+        
+        console.log(customerDetail)
 
         const RadioGroup = Radio.Group;
         const Option = Select.Option;
@@ -325,10 +333,10 @@ class AddNewCus extends Component{
         })
         // console.log(attachs)
         // test
-        cusNameEl.value = '小菜d'
-        cusIdcardEl.value = 142603199303283737
-        cusMobileEl.value = 18334794858
-        cusAddressEl.value = '象牙公寓'
+        // cusNameEl.value = '小菜d'
+        // cusIdcardEl.value = 142603199303283737
+        // cusMobileEl.value = 18334794858
+        // cusAddressEl.value = '象牙公寓'
 
         if(!cusNameEl.value) {
             message.error('请输入客户姓名')
