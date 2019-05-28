@@ -299,3 +299,17 @@ export const changeMobile = (params) => {
         })
     })
 }
+
+
+// 审核拒绝
+export const changeCarefull = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post('/customer/audit', QS.stringify(params))
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}

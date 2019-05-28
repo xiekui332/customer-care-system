@@ -59,7 +59,7 @@ class LeftCon extends PureComponent {
                 <LeftItemUl
                     ref={(ul) => {this.ul = ul}}>
                     {
-                        user.userType === 2?
+                        user.userType === 2 || user.userType === 3?
                         <LeftItemLi
                             ref={(li) => {this.liCust = li}}
                             >

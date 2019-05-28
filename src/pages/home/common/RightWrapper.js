@@ -1,11 +1,11 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Tooltip, Empty, Spin, Modal, message } from 'antd';
+import { Tooltip, Empty, Spin, Modal, message, Input } from 'antd';
 import "antd/dist/antd.css";
 import Swiper from 'swiper/dist/js/swiper.js'
 import 'swiper/dist/css/swiper.min.css'
 import AddNewCus from '../../../common/AddNewCus'
-import { handlecustomDelete, toTransfer, sureToTransfer } from '../../../api'
+import { handlecustomDelete, toTransfer, sureToTransfer, changeCarefull } from '../../../api'
 import { actionCreators } from '../store'
 
 import { 
@@ -19,7 +19,11 @@ import {
     RightBlock,
     Totranslist,
     TotransferItem,
-    ToTraItem
+    ToTraItem,
+    CareHeader,
+    CareTitle,
+    CareButton,
+    CareReason
 } from '../style'
 
 class MiddleWrapper extends PureComponent{
@@ -29,15 +33,18 @@ class MiddleWrapper extends PureComponent{
             chatStatus:false,
             transStatus:false,
             totransfer:[],
-            newUserId:''
+            newUserId:'',
+            careStatus:false,
+            carefullReason:''
         }
         
     }
     render () {
         const { fileList, customerDetail, spin, isAdd, showDetail } = this.props;
-        const { transStatus, totransfer, newUserId } = this.state;
+        const { transStatus, totransfer, newUserId, careStatus, carefullReason } = this.state;
         const user = JSON.parse(sessionStorage.getItem("user"))
         const confirm = Modal.confirm;
+        const TextArea = Input.TextArea
         let homeList = []
         if(this.props.homeList) {
             homeList = this.props.homeList.toJS()
@@ -72,6 +79,22 @@ class MiddleWrapper extends PureComponent{
                                 <Tooltip title="" onClick={() => {this.handleTipTran(customerDetail, confirm, homeList, transStatus)}}>
                                     <span className="iconfont">&#xe60c;</span>
                                 </Tooltip>
+                            </Fragment>
+                            :""
+                        }
+                        {
+                            user.userType === 3?
+                            <Fragment>
+                                <CareHeader>
+                                    <CareTitle>
+                                        {customerDetail.name}
+                                    </CareTitle>
+
+                                    <CareButton>
+                                        <button onClick={() => {this.handlerefuse(this.carefulrea, careStatus)}}>拒绝</button>
+                                        <button onClick={() => {this.handlepass(customerDetail.customerId)}}>通过</button>
+                                    </CareButton>
+                                </CareHeader>
                             </Fragment>
                             :""
                         }
@@ -213,6 +236,25 @@ class MiddleWrapper extends PureComponent{
                         
                         
                     </RightBlock>
+                
+                    {/* 审核原因 */}
+                    <CareReason 
+                        ref={(block) => this.carefulrea = block}
+                        className={careStatus?"active":""}
+                    >
+                        <p className="care-title">拒绝理由</p>
+                        <TextArea className="care-textarea" rows={6} placeholder="输入拒绝理由" 
+                            ref={(text) => this.textArea = text}
+                            onChange={() => {this.carefullReaTxt(this.textArea)}}
+                            value={carefullReason}
+                        />
+
+                        <div className="care-send"
+                            onClick={() => {this.handleCareful(carefullReason, customerDetail.customerId, careStatus)}}
+                        >
+                            拒绝
+                        </div>
+                    </CareReason>
                 </div>
 
                 {
@@ -241,8 +283,10 @@ class MiddleWrapper extends PureComponent{
             },
           })
         
-          let height = document.getElementsByClassName('detailWrapper')[0].clientHeight
-              this.blockEl.style.height = (height - 60) + 'px' 
+            let height = document.getElementsByClassName('detailWrapper')[0].clientHeight
+            this.blockEl.style.height = (height - 60) + 'px' 
+            let h = document.getElementsByClassName('detailWrapper')[0].clientHeight;
+            this.carefulrea.style.height = (h - 60) + 'px'
         
     }
 
@@ -351,6 +395,69 @@ class MiddleWrapper extends PureComponent{
                 message.error(data.msg)
             }
         })
+    }
+
+
+    // 点击拒绝
+    handlerefuse(carefulrea, careStatus) {
+        
+        this.setState({
+            careStatus:!careStatus
+        })
+    }
+
+    // 审核拒绝
+    handleCareful(value, id, careStatus) {
+        if(!value) {
+            message.error('请输入理由')
+            return
+        }
+        let params = {
+            id:id,
+            status:2,
+            auditReason:value
+        }
+        changeCarefull(params).then((res) => {
+            let data = res.data
+            if(data.code === 1 && data.msg === 'success') {
+                message.success('操作成功')
+                this.props.handleChangeStatus(true)
+                this.props.disShowDetail(false)
+                this.setState({
+                    careStatus:!careStatus
+                })
+            }else{
+                message.success(data.msg)
+            }
+        })
+    }
+
+    // text输入
+    carefullReaTxt(el) {
+        let value = el.textAreaRef.value
+        this.setState({
+            carefullReason:value
+        })
+    }
+
+
+    // 通过
+    handlepass(id) {
+        let params = {
+            id:id,
+            status:1
+        }
+        changeCarefull(params).then((res) => {
+            let data = res.data
+            if(data.code === 1 && data.msg === 'success') {
+                message.success('操作成功')
+                this.props.handleChangeStatus(true)
+                this.props.disShowDetail(false)
+            }else{
+                message.success(data.msg)
+            }
+        })
+
     }
 
 }

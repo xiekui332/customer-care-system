@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { actionCreators } from '../store'
 import { Tooltip, Modal, message, Select  } from 'antd';
+// import InfiniteScroll from 'react-infinite-scroller';
 import "antd/dist/antd.css";
 import { handlecustomDelete, getCustomerList, getCustomerDetail, toTransfer, sureToTransfer } from '../../../api'
 import { 
@@ -75,18 +76,26 @@ class MiddleWrapper extends Component{
         return (
             <Customer className="customer" ref={(middleWrapper) => {this.modalWrapper = middleWrapper}}>
                 <MiddleHeader>
-                    <span>客户管理</span>
-                    <OperateWrapper>
-                        <Tooltip title="新建客户" onClick={() => {this.addCustomer(isAdd)}}>
-                            <span className="iconfont">&#xe64c;</span>
-                        </Tooltip>
-                        <Tooltip title="搜索" onClick={() => {this.handleSearchCustomer(search)}}>
-                            <span className="iconfont">&#xe7c0;</span>
-                        </Tooltip>
-                        <Tooltip title="管理" onClick={() => {this.handleEditCustomer(edit, homeList, this.editWrapperEl, this.middleListWrapperEl)}}>
-                            <span className="iconfont">&#xe693;</span>
-                        </Tooltip>
-                    </OperateWrapper>
+                    {
+                        user.userType === 3?
+                        <span>客户审核</span>
+                        :
+                        <Fragment>
+                            <span>客户管理</span>
+                            <OperateWrapper>
+                                <Tooltip title="新建客户" onClick={() => {this.addCustomer(isAdd)}}>
+                                    <span className="iconfont">&#xe64c;</span>
+                                </Tooltip>
+                                <Tooltip title="搜索" onClick={() => {this.handleSearchCustomer(search)}}>
+                                    <span className="iconfont">&#xe7c0;</span>
+                                </Tooltip>
+                                <Tooltip title="管理" onClick={() => {this.handleEditCustomer(edit, homeList, this.editWrapperEl, this.middleListWrapperEl)}}>
+                                    <span className="iconfont">&#xe693;</span>
+                                </Tooltip>
+                            </OperateWrapper>
+                        </Fragment>
+                    }
+                    
                 </MiddleHeader>
                    
 
@@ -222,7 +231,7 @@ class MiddleWrapper extends Component{
                             >取消</AddCusButton>
                             <AddCusButton className="add-save"
                                 onClick={() => {this.handleSaveSearch(this.cusName, this.cusCompanyName, this.yearlyTurnoverEl, this.propertyEl, this.liabilitiesEl, this.demandAmountEl)}}
-                            >保存</AddCusButton>
+                            >查询</AddCusButton>
                         </AddButtonWrapper>
                     </SearchWrapper> 
 
@@ -340,15 +349,44 @@ class MiddleWrapper extends Component{
         
         let el = this.middleListWrapperEl;
         el.addEventListener('scroll', () => {
-            if(el.scrollTop + el.clientHeight === el.scrollHeight) {
-                this.setState({
-                    pageNum: this.state.pageNum + 1
-                }, () => {
-                    this.getListData('concatList')
-                })
+            // if(el.scrollTop + el.clientHeight === el.scrollHeight) {
+            //     this.setState({
+            //         pageNum: this.state.pageNum + 1
+            //     }, () => {
+            //         this.getListData('concatList')
+            //     })
+            // }
+
+            if(this.scrollTop() + this.windowHeight() >= (this.documentHeight() - 50/*滚动响应区域高度取50px*/)) {
+                console.log('bottom')
+                this.getListData('concatList')
             }
         })
 
+    }
+
+    // 获取页面顶部被卷起来的高度函数
+    scrollTop(){
+        let el = this.middleListWrapperEl;
+        return Math.max(
+         //chrome
+         el.scrollTop);
+    }
+    
+    // 获取页面文档的总高度
+    documentHeight(){
+        let el = this.middleListWrapperEl;
+        //现代浏览器（IE9+和其他浏览器）和IE8的document.body.scrollHeight和document.documentElement.scrollHeight都可以
+        return Math.max(el.scrollHeight);
+    }
+
+    // 获取页面浏览器视口的高度
+    windowHeight(){
+        let el = this.middleListWrapperEl;
+        //document.compatMode有两个取值。BackCompat：标准兼容模式关闭。CSS1Compat：标准兼容模式开启。
+        return (el.compatMode === "CSS1Compat")?
+        el.clientHeight:
+        el.clientHeight;
     }
 
     
@@ -504,7 +542,8 @@ class MiddleWrapper extends Component{
                             
                             if(data.data.hasNextPage) {
                                 this.setState({
-                                    load:true
+                                    load:true,
+                                    pageNum:data.data.pageNum + 1
                                 })
                             }else {
                                 this.setState({

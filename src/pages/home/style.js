@@ -158,6 +158,7 @@ export const DetailWrapper = styled.div`
     background:#fff;
     overflow-y:auto;
     position:relative;
+    overflow:hidden;
     &::-webkit-scrollbar-track-piece { 
         background-color:#f7f7f7;
     }
@@ -836,4 +837,83 @@ export const Totranslist = styled.div`
 `;
 
 
-// Totranslist
+export const CareHeader = styled.div`
+    height:100%;
+    width:100%;
+`;
+
+
+export const CareTitle = styled.div`
+    height:100%;
+    line-height:60px;
+    padding-left:30px;
+    float:left;
+`;
+
+
+export const CareButton = styled.div`
+    height:100%;
+    float:right;
+    diisplay:flex;
+    justify-content: flex-end;
+    button{
+        height:30px;
+        outline:none;
+        margin: 0;
+        padding: 0;
+        border: 1px solid transparent;
+        outline: none;   
+        padding:2px 20px; 
+        color:#fff;
+        margin-top:15px;
+        border-radius:2px;
+    }
+    button:nth-child(1) {
+        background:red;
+        margin-right:30px;
+    }
+    button:nth-child(2) {
+        background:#55a12f;
+    }
+`;
+
+
+export const CareReason = styled.div`
+    position:absolute;
+    top:60px;
+    right:-300px;
+    width:300px;
+    height:0px;
+    transition:all ease-in .2s;
+    z-index:1;
+    overflow: hidden;
+    &.active{
+        box-shadow: -4px 0 5px -3px #eee;
+        background:#fff;
+        right:0px;
+    }
+    .care-textarea{
+        width:240px;
+        margin:20px auto;
+        display: block;
+        background: #f7f7f7;
+    }
+    .care-title{
+        padding:20px 0 10px 30px;
+    }
+    .care-send{
+        width:250px;
+        height:35px;
+        color:#fff;
+        background:#55a12f;
+        text-align:center;
+        line-height:35px;
+        border-radius:5px;
+        cursor:pointer;
+        margin:80% auto 5%;
+    }
+`;
+
+// 审核员
+
+// CareReason
