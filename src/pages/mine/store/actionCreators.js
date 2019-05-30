@@ -30,3 +30,16 @@ export const changeMobile = (type, value) => {
         dispatch(action)
     }
 }
+
+
+
+// 改变我的代办数据
+export const changeMineStatus = (bool) => {
+    return (dispatch) => {
+        let action = {
+            type:constants.CHANGE_MINE_INDEX,
+            bool
+        }
+        dispatch(action)
+    }
+}

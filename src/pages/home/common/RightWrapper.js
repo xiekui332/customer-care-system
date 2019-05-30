@@ -58,7 +58,7 @@ class MiddleWrapper extends PureComponent{
                 <AddNewCus></AddNewCus>
 
                 {/* 客户详情内容 */}
-                <div className={showDetail?"isShow":"isHide"}>
+                <div className={showDetail?"isShow newheight":"isHide newheight"}>
                     <RightHeaderWrapper className={spin || !customerDetail?"isOpacity":"" }>
                         {
                             user.userType === 2?
@@ -283,10 +283,9 @@ class MiddleWrapper extends PureComponent{
             },
           })
         
-            let height = document.getElementsByClassName('detailWrapper')[0].clientHeight
-            this.blockEl.style.height = (height - 60) + 'px' 
             let h = document.getElementsByClassName('detailWrapper')[0].clientHeight;
             this.carefulrea.style.height = (h - 60) + 'px'
+            this.blockEl.style.height = (h - 60) + 'px' 
         
     }
 

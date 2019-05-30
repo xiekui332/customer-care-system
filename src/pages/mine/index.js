@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import LeftCon from '../home/common/LeftWrapper'
 import { Empty, Tabs, Button, Input, message  } from 'antd';
-import { sessionGetItem, alterPassword, sessionSetItem, checkmobile, changeMobile } from '../../api'
+import { sessionGetItem, alterPassword, sessionSetItem, checkmobile, changeMobile, changeTodilist } from '../../api'
 import { actionCreators } from './store'
 
 import { 
@@ -29,7 +29,8 @@ class Mine extends PureComponent {
         this.state = {
             login:sessionGetItem('token'),
             panelType:1,
-            data:[]
+            data:[],
+            mineData:[]
         }
     }
 
@@ -48,11 +49,12 @@ class Mine extends PureComponent {
         }else if(user.userType === 4) {
             part = "业务管理员"
         }
-        let mineData = []
+        let mineData = this.state.mineData
         if(this.props.mineData && this.props.mineData.length) {
             mineData = this.props.mineData
         }
-        // console.log(mineData)
+        console.log(mineData)
+        console.log(this.props.mineData)
         const operations = <Button onClick={() => {this.props.handleSave(panelType, this.oldPwd, this.newPwd, this.aginNewPwd, this.changeOldPwd, this.changeNewTel, user, changeOldPwd, changeNewTel)}}>保存</Button>;
         
 
@@ -82,7 +84,12 @@ class Mine extends PureComponent {
                                     return (
                                         <ToDealtItem key={item.todoId}>
                                             {item.content}
-                                            <span className="iconfont">×</span>
+                                            <span className="iconfont" onClick={() => {this.updateTodolist(item.todoId, index, mineData)}}>×</span>
+                                            <div>
+                                                <div className="todoTime">{item.createTime}</div>
+                                                <div className="todoSource">来自<span>{item.sourceName}</span></div>
+                                                <div className="clear"></div>
+                                            </div>
                                         </ToDealtItem>
                                     )
                                 }):<Empty description="暂无事项" className="empty" />
@@ -148,6 +155,34 @@ class Mine extends PureComponent {
     handelChange(type, el) {
         this.props.dishandleMbile(type, el.input.value)
         
+    }
+
+    // 更新待办事项
+    updateTodolist(id, index, mineData) {
+        let params = {
+            todoId:id
+        }
+        changeTodilist(params).then((res) => {
+            let data = res.data
+            if(data.code === 1 && data.msg === 'success') {
+                message.success('消息已关闭')
+                mineData.splice(index, 1)
+                // console.log(mineData)
+                this.setState({
+                    mineData:mineData
+                }, () => {
+                    if(mineData.length) {
+                        this.props.handleMineStatus(true)
+                    }else{
+                        this.props.handleMineStatus(false)
+                    }
+                    
+                })
+                
+            } else{
+                message.success(data.msg)
+            }
+        })
     }
 
 
@@ -266,6 +301,12 @@ const mapDispatch = (dispatch) => ({
     // 派发修改手机号
     dishandleMbile(type, value) {
         let action = actionCreators.changeMobile(type, value)
+        dispatch(action)
+    },
+
+    // 派发我的状态
+    handleMineStatus(bool) {
+        const action = actionCreators.changeMineStatus(bool)
         dispatch(action)
     }
 })

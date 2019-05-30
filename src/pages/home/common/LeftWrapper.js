@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
 import customer from '../../../statics/images/nav_icon_guanli.png'
@@ -16,7 +16,7 @@ import {
 } from '../style'
 
 
-class LeftCon extends PureComponent {
+class LeftCon extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -182,7 +182,17 @@ class LeftCon extends PureComponent {
             let data = res.data;
             // console.log(data)
             if(data.code === 1 && data.msg === 'success') {
+                // data.data = [
+                //     {
+                //         "todoId": 2,
+                //         "userId": 1,
+                //         "bizId": 1,
+                //         "content": "客户张三3天后生日",
+                //         "createTime": "2019-05-01 18:09:30"
+                //     }
+                // ]
                 if(data.data) {
+                    
                     this.setState({
                         msg:true
                     }, () => {
@@ -193,7 +203,6 @@ class LeftCon extends PureComponent {
                     this.setState({
                         msg:false
                     })
-                    // message.info('暂无消息');
                 }
             }
         })
@@ -201,7 +210,10 @@ class LeftCon extends PureComponent {
 
     handleLogout() {
         sessionStorage.clear()
+        
     }
+
+
 
     
 }
@@ -220,7 +232,7 @@ const mapDispatch = (dispatch) => ({
 
     // 派发我的状态
     handleMineDate(data) {
-        const action = actionCreators.changeMineData()
+        const action = actionCreators.changeMineData(data)
         dispatch(action)
     }
 })

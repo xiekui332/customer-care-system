@@ -5,7 +5,8 @@ import { sessionGetItem } from '../../../api'
 const defaultState = fromJS({
     changepwd: sessionGetItem('changepwd'),
     changeOldPwd:'',
-    changeNewTel:''
+    changeNewTel:'',
+    newMineStatus:false
 })
 
 export default ((state = defaultState, action) => {
@@ -21,6 +22,11 @@ export default ((state = defaultState, action) => {
         case constants.CHANFE_MOBILE:
         return state.merge({
             changeNewTel:fromJS(action.changeNewTel)
+        })
+        
+        case constants.CHANGE_MINE_INDEX:
+        return state.merge({
+            newMineStatus:fromJS(action.bool)
         })
 
         default:

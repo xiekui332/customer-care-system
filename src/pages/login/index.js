@@ -336,8 +336,7 @@ const mapDispatch = (dispatch) => ({
     handleLogin(userName, passWord) {
         
         
-    },
-
+    }
 
     
 });

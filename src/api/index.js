@@ -185,6 +185,7 @@ export const handleUpload = (fileUrl, params) => {
 export const getsystemData = () => {
     return new Promise((resolve, reject) => {
         service.post('/sys/params')
+        
         .then((res) => {
             resolve(res)
         })
@@ -214,8 +215,8 @@ export const addCustom = (params) => {
 // 编辑客户
 export const editCustom = (params) => {
     return new Promise((resolve, reject) => {
-        service.post('/customer/edit', QS.stringify(params))
-        // service.post('/customer/add', params)
+        // service.post('/customer/edit', QS.stringify(params))
+        service.post('/customer/add', params)
         .then((res) => {
             resolve(res)
         })
@@ -305,6 +306,20 @@ export const changeMobile = (params) => {
 export const changeCarefull = (params) => {
     return new Promise((resolve, reject) => {
         service.post('/customer/audit', QS.stringify(params))
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
+
+
+// 更新代办
+export const changeTodilist = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post('/todo/updatereaded', QS.stringify(params))
         .then((res) => {
             resolve(res)
         })

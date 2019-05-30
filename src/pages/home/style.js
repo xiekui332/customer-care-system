@@ -158,7 +158,6 @@ export const DetailWrapper = styled.div`
     background:#fff;
     overflow-y:auto;
     position:relative;
-    overflow:hidden;
     &::-webkit-scrollbar-track-piece { 
         background-color:#f7f7f7;
     }
@@ -881,16 +880,15 @@ export const CareButton = styled.div`
 export const CareReason = styled.div`
     position:absolute;
     top:60px;
-    right:-300px;
-    width:300px;
-    height:0px;
+    right:0px;
+    width:0px;
     transition:all ease-in .2s;
     z-index:1;
     overflow: hidden;
     &.active{
-        box-shadow: -4px 0 5px -3px #eee;
+        box-shadow: -4px 5px 5px -3px #eee;
         background:#fff;
-        right:0px;
+        width:300px;
     }
     .care-textarea{
         width:240px;
@@ -910,7 +908,7 @@ export const CareReason = styled.div`
         line-height:35px;
         border-radius:5px;
         cursor:pointer;
-        margin:80% auto 5%;
+        margin:20% auto 5%;
     }
 `;
 

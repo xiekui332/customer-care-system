@@ -5,6 +5,7 @@ import LeftCon from './common/LeftWrapper'
 import MiddleWrapper from './common/MiddleWrapper'
 import RightWrapper from './common/RightWrapper'
 import { sessionGetItem } from '../../api'
+import { actionCreators } from './store'
 import { 
     ConWrapper,
     RightCon
@@ -41,6 +42,13 @@ class Home extends PureComponent {
         
     }
 
+
+    componentDidMount() {
+        let params = {
+            isAdd:false
+        }
+        this.props.handleaddSatus(params)
+    }
     
 }
 
@@ -49,7 +57,12 @@ const mapState = (state) => ({
 })
 
 const mapDispatch = (dispatch) => ({
-    
+    // 清除状态
+    handleaddSatus(data) {
+        
+        const action = actionCreators.changeIsAdd(data)
+        dispatch(action)
+    }
 })
 
 export default connect(mapState, mapDispatch)(Home) 

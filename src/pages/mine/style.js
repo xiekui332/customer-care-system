@@ -44,7 +44,7 @@ export const MineMiddle = styled.div`
 export const MineMessage = styled.div`
     width:340px;
     margin:0 auto;
-    padding:30px;
+    padding:20px 30px 5px;
     background:#fff;
     border-radius:5px;
     box-shadow: 0 3px 5px 0px #dcdcdc;
@@ -88,7 +88,7 @@ export const ToDealt = styled.div`
 export const ToDealtItem = styled.div`
     width:340px;
     margin:0 auto;
-    padding:30px;
+    padding:20px 30px 5px;
     background:#fff;
     border-radius:5px;
     position:relative;
@@ -110,6 +110,29 @@ export const ToDealtItem = styled.div`
         right:-10px;
         top:-10px;
         cursor:default;
+    }
+
+    .todoTime,.todoSource{
+        line-height:20px;
+        padding:10px 0;
+        margin-top:20px;
+    }
+    .todoTime{
+        float:left;
+        font-size:12px;
+        color:#999;
+    }
+    .todoSource{
+        float:right;
+        font-size:12px;
+        color:#999;
+        span{
+            font-size:14px;
+            color:#333;
+        }
+    }
+    .clear{
+        clear:both;
     }
 `;
 

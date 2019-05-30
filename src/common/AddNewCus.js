@@ -31,7 +31,14 @@ class AddNewCus extends Component{
             previewImage: '',
             fileList: [],
             loading:false,
-            attachFile:[],
+            attachFile:[
+                {
+                    uid: '-1',
+                    name: 'xxx.png',
+                    status: 'done',
+                    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+                }
+            ],
             systemData:{},
             kindSelected:undefined,
             customerDetail:{}
@@ -62,7 +69,7 @@ class AddNewCus extends Component{
             
         }
         
-        console.log(customerDetail)
+        // console.log(customerDetail)
 
         const RadioGroup = Radio.Group;
         const Option = Select.Option;
@@ -75,7 +82,7 @@ class AddNewCus extends Component{
         );
 
         return(
-            <AddWrapper className={isAdd?"isShow":"isHide"}>
+            <AddWrapper className={isAdd?"isShow overflow":"isHide overflow"}>
                 <AddCusHeadWrapper>
                     <AddCusHeadText>新建客户</AddCusHeadText>
                     <AddButtonWrapper>
@@ -261,6 +268,7 @@ class AddNewCus extends Component{
                             
                         }
                         <AddUploadWrapper>
+                            {/* <form encType="multipart/form-data"> */}
                             <div className="clearfix clearfix-two">
                                 <Upload 
                                     accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -273,6 +281,7 @@ class AddNewCus extends Component{
                                 </Button>
                                 </Upload>
                             </div>
+                            {/* </form> */}
                         </AddUploadWrapper>
                     </AddFileWrapper>
                 </AddContent>
@@ -319,24 +328,31 @@ class AddNewCus extends Component{
     // 新建客户保存
     handleSaveData(cusNameEl, cusIdcardEl, cusMobileEl, cusAddressEl, cusConEl, cusCompanyEl, value, kindSelected, cusMoneyEl, fileList, attachFile, customerId) {
         let params = {}
-        let attachs = []
+        let attachs = [{'attachId':''}]
         let arr = fileList.concat(attachFile);
-        arr.map((item, index) => {
-            return (
-                attachs.push(
-                    {
-                        attachId: item.uid
-                    }
-                )
-            )
+        // arr.map((item, index) => {
+        //     return (
+        //         attachs.push(
+        //             {
+        //                 attachId: item.uid
+        //             }
+        //         )
+        //         attachs.append({attachId: item.uid})
+        //     )
             
-        })
+        // })
+
+        for(let i = 0; i < arr.length; i ++) {
+            attachs[i].attachId = arr[i].uid
+        }
+        
+
         // console.log(attachs)
         // test
-        // cusNameEl.value = '小菜d'
-        // cusIdcardEl.value = 142603199303283737
-        // cusMobileEl.value = 18334794858
-        // cusAddressEl.value = '象牙公寓'
+        cusNameEl.value = '小菜d'
+        cusIdcardEl.value = 142603199303283737
+        cusMobileEl.value = 18334794858
+        cusAddressEl.value = '象牙公寓'
 
         if(!cusNameEl.value) {
             message.error('请输入客户姓名')
@@ -361,7 +377,8 @@ class AddNewCus extends Component{
             params.liabilities = cusMoneyEl.value     // 负债（万元）
             params.attachs = attachs
             
-            // console.log(params)
+            
+            console.log(params)
             // return
             if(customerId) {
                 params.customerId = customerId
