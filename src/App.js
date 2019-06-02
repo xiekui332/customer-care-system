@@ -9,6 +9,7 @@ import Login from './pages/login'
 import UserManage from './pages/user'
 import { Globalstyle } from './style'
 
+
 function App() {
   // class App extends PureComponent{
     // render() {

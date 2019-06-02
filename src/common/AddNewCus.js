@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Upload, Icon, Modal, Radio, Select, message, Button } from 'antd';
 import "antd/dist/antd.css";
 import { actionCreators } from '../pages/home/store'
-import { handleUpload, getsystemData, addCustom, checkidCard, checkmobile, editCustom } from '../api'
+import { handleUpload, getsystemData, addCustom, checkidCard, checkmobile, editCustom, changeattachDel } from '../api'
 import {
     AddWrapper,
     AddCusHeadWrapper,
@@ -30,45 +30,102 @@ class AddNewCus extends Component{
             previewVisible: false,
             previewImage: '',
             fileList: [],
+            attachFile:[],
             loading:false,
-            attachFile:[
-                {
-                    uid: '-1',
-                    name: 'xxx.png',
-                    status: 'done',
-                    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-                }
-            ],
             systemData:{},
             kindSelected:undefined,
-            customerDetail:{}
+            customerDetail:{},
+            noupdate1:false,
+            noupdate2:false
         }
 
     }
  
     render() {
         const { 
-            isAdd, addClickLi, handlecusCancel, cusEdit
+            isAdd, addClickLi, handlecusCancel, cusEdit, homeList
         } = this.props;
         
         const { 
-            previewVisible, previewImage, fileList, attachFile, systemData
+            previewVisible, previewImage, 
+            // fileList, 
+            // attachFile, 
+            systemData,
+            
         } = this.state;
         
         let customerDetail = {};
         let customerId = ''
-        let kindSelected = undefined
+        let kindSelected = this.state.kindSelected
+        
+        const PICTURE_EXPRESSION = /\.(png|jpe?g|gif|svg)(\?.*)?$/
+        let fileList = this.state.fileList
+        let attachFile = this.state.attachFile
+        let changefileList = []
+        let changeattachFile = []
+        let changeNewattachFile = []
+        if(isAdd && !cusEdit) {
+            fileList = []
+            attachFile = []
+        }
         if(cusEdit) {
             customerDetail = this.props.customerDetail
             customerId = customerDetail.customerId
-            if(!customerDetail.industryClass) {
-                kindSelected = undefined
-            }else{
-                kindSelected = customerDetail.industryClass
-            }
+            fileList = []
+            attachFile = []
             
+            if(customerDetail.attachs.length) {
+                for(let i = 0; i < customerDetail.attachs.length; i ++) {
+                    let obj = {}
+                    obj.origName = customerDetail.attachs[i].origName
+                    obj.attachPath =customerDetail.attachs[i].attachPath
+                    obj.attachId = customerDetail.attachs[i].attachId
+                    obj.uid = customerDetail.attachs[i].attachId
+                    obj.name = customerDetail.attachs[i].origName
+                    obj.status = 'done'
+                    obj.attachSuffix = customerDetail.attachs[i].attachSuffix
+                    obj.url = customerDetail.attachHost + customerDetail.attachs[i].attachPath
+                    changeNewattachFile.push(obj)
+
+                }
+
+                for(let i = 0; i < changeNewattachFile.length; i ++) {
+                    if(PICTURE_EXPRESSION.test(changeNewattachFile[i].attachSuffix)) {
+                        changefileList.push(changeNewattachFile[i])
+                    }else{
+                        changeattachFile.push(changeNewattachFile[i])
+                    }
+                }
+                
+                if(this.state.noupdate1) {
+                    // console.log(1)
+                    fileList = this.state.fileList
+                }else{
+                    fileList = changefileList.concat(this.state.fileList)
+                }
+                if(this.state.noupdate2) {
+                    attachFile = this.state.attachFile
+                }else{
+                    attachFile = changeattachFile.concat(this.state.attachFile)
+                }
+                
+                
+
+            }else{
+                fileList = this.state.fileList
+                attachFile = this.state.attachFile
+            }
+
+            
+            
+        }else{
+            customerDetail = this.state.customerDetail
+            kindSelected = this.state.kindSelected
+            fileList = this.state.fileList
+            attachFile = this.state.attachFile
         }
         
+        // console.log(kindSelected)
         // console.log(customerDetail)
 
         const RadioGroup = Radio.Group;
@@ -82,12 +139,12 @@ class AddNewCus extends Component{
         );
 
         return(
-            <AddWrapper className={isAdd?"isShow overflow":"isHide overflow"}>
+            <AddWrapper className={isAdd || cusEdit?"isShow overflow":"isHide overflow"}>
                 <AddCusHeadWrapper>
                     <AddCusHeadText>新建客户</AddCusHeadText>
                     <AddButtonWrapper>
                         <AddCusButton className="add-cancel" onClick={() => {
-                            handlecusCancel()}}
+                            handlecusCancel(homeList)}}
                         >取消</AddCusButton>
                         <AddCusButton className="add-save" onClick={() => {
                             this.handleSaveData(
@@ -110,7 +167,7 @@ class AddNewCus extends Component{
 
                 <AddContent>
                     <Fragment>
-                        <AddItem>
+                        <AddItem className='clear-fix'>
                             <AddTitle><span>*</span>客户姓名</AddTitle>
                                 <input
                                     className="add-input"
@@ -121,7 +178,7 @@ class AddNewCus extends Component{
                                 />
                             <p></p>
                         </AddItem>
-                        <AddItem>
+                        <AddItem className='clear-fix'>
                             <AddTitle><span>*</span>身份证号</AddTitle>
                                 <input
                                     className="add-input"
@@ -132,7 +189,7 @@ class AddNewCus extends Component{
                                 />
                             <p></p>
                         </AddItem>
-                        <AddItem>
+                        <AddItem className='clear-fix'>
                             <AddTitle><span>*</span>手机号码</AddTitle>
                                 <input
                                     className="add-input"
@@ -143,7 +200,7 @@ class AddNewCus extends Component{
                                 />
                             <p></p>
                         </AddItem>
-                        <AddItem>
+                        <AddItem className='clear-fix'>
                             <AddTitle><span>*</span>常住地址</AddTitle>
                                 <input
                                     className="add-input"
@@ -154,7 +211,7 @@ class AddNewCus extends Component{
                                 />
                             <p></p>
                         </AddItem>
-                        <AddItem>
+                        <AddItem className='clear-fix'>
                             <AddTitle><span></span>经营内容</AddTitle>
                                 <input
                                     className="add-input"
@@ -165,7 +222,7 @@ class AddNewCus extends Component{
                                 />
                             <p></p>
                         </AddItem>
-                        <AddItem>
+                        <AddItem className='clear-fix'>
                             <AddTitle><span></span>公司名称</AddTitle>
                                 <input
                                     className="add-input"
@@ -176,7 +233,7 @@ class AddNewCus extends Component{
                                 />
                             <p></p>
                         </AddItem>
-                        <AddItem>
+                        <AddItem className='clear-fix'>
                             <AddTitle><span></span>是否有经营合伙人</AddTitle>
                             <RadioGroup 
                                     className="radio-group"
@@ -187,7 +244,7 @@ class AddNewCus extends Component{
                             </RadioGroup>
                             <p></p>
                         </AddItem>
-                        <AddItem>
+                        <AddItem className='clear-fix'>
                             <AddTitle><span></span>行业名称</AddTitle>
                             <Select
                                 showSearch
@@ -218,7 +275,7 @@ class AddNewCus extends Component{
                             </AddUl>
                         </AddItem>
 
-                        <AddItem>
+                        <AddItem className='clear-fix'>
                             <AddTitle><span></span>负债情况</AddTitle>
                                 <input
                                     className="add-input"
@@ -242,9 +299,10 @@ class AddNewCus extends Component{
                                 customRequest={(file) => {this.customRequest(file)}}
                                 listType="picture-card"
                                 fileList={fileList}
+                                multiple={true}
                                 onPreview={(file) => {this.handlePreview(file)}}
                                 onChange={(file, fileList, event) => {this.handleChange(file, fileList, event)}}
-                                onRemove={(file) => {this.handleonRemove(file)}}
+                                onRemove={(file) => {this.handleonRemove(file, customerDetail, fileList, 1 )}}
                                 >
                                 {fileList.length >= 9 ? null : uploadButton}
                             </Upload>
@@ -262,7 +320,7 @@ class AddNewCus extends Component{
                             attachFile.map((item, index) => (
                                 <AddFile key={item.uid}>
                                     <FileName>{item.name}</FileName>
-                                    <span className="iconfont" onClick={() => { this.handleAttachDel(item, attachFile) }}>&#xe619;</span>
+                                    <span className="iconfont" onClick={() => { this.handleonRemove(item, customerDetail,attachFile, 2 ) }}>&#xe619;</span>
                                 </AddFile>
                             ))
                             
@@ -274,7 +332,6 @@ class AddNewCus extends Component{
                                     accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                     customRequest={(file) => { this.attachRequest(file) }}
                                     fileList={attachFile}
-                                    
                                 >
                                 <Button className="uploadButton">
                                     <Icon type="upload" /> 附件上传
@@ -308,7 +365,22 @@ class AddNewCus extends Component{
                 kindSelected:this.props.customerDetail.industryClass?this.props.customerDetail.industryClass:""
             })
         }
+
+        if(this.props.customerDetail) {
+            let type = ''
+            if(!this.props.customerDetail.industryClass) {
+                type = undefined
+            }else{
+                type = this.props.customerDetail.industryClass
+            }
+            this.setState({
+                kindSelected:type
+            })
+        }
+        
     }
+
+    
 
 
     // 经营合伙人
@@ -327,32 +399,25 @@ class AddNewCus extends Component{
 
     // 新建客户保存
     handleSaveData(cusNameEl, cusIdcardEl, cusMobileEl, cusAddressEl, cusConEl, cusCompanyEl, value, kindSelected, cusMoneyEl, fileList, attachFile, customerId) {
-        let params = {}
-        let attachs = [{'attachId':''}]
-        let arr = fileList.concat(attachFile);
-        // arr.map((item, index) => {
-        //     return (
-        //         attachs.push(
-        //             {
-        //                 attachId: item.uid
-        //             }
-        //         )
-        //         attachs.append({attachId: item.uid})
-        //     )
-            
-        // })
+        let params = {
 
+        }
+        params.attachs = [{}]
+        let arr = fileList.concat(attachFile);
+        let val = ''
         for(let i = 0; i < arr.length; i ++) {
-            attachs[i].attachId = arr[i].uid
+            
+            val = arr[i].uid
+            
+            // so longer
+            params['attachs[' + i + '].attachId'] = val
+            
         }
         
+        
 
-        // console.log(attachs)
+        // console.log(params)
         // test
-        cusNameEl.value = '小菜d'
-        cusIdcardEl.value = 142603199303283737
-        cusMobileEl.value = 18334794858
-        cusAddressEl.value = '象牙公寓'
 
         if(!cusNameEl.value) {
             message.error('请输入客户姓名')
@@ -375,10 +440,9 @@ class AddNewCus extends Component{
             params.isBusinessPartner = value          // 是否有经营合伙人（0无 1有）
             params.industryClass = kindSelected       // 所属行业
             params.liabilities = cusMoneyEl.value     // 负债（万元）
-            params.attachs = attachs
             
             
-            console.log(params)
+            // console.log(params)
             // return
             if(customerId) {
                 params.customerId = customerId
@@ -427,17 +491,84 @@ class AddNewCus extends Component{
     };
 
     // onRemove  
-    handleonRemove(file) {
-        let fileList = this.state.fileList
-        fileList.map((item, index) => (
-            item === file?fileList.splice(index, 1):''
-        ))
-        this.setState({
-            fileList:fileList
-        }, () => {
+    handleonRemove(file, customerDetail, fileList, type) {
+        
+        let params = {
+            attachId:file.uid
+        }
+
+        if(customerDetail && customerDetail.attachs) {
+            for(let i = 0; i < customerDetail.attachs.length;i ++){
+                if(customerDetail.attachs[i].attachId === file.attachId) {
+                    customerDetail.attachs.splice(i, 1)
+                    this.props.disCusDetail(customerDetail)
+                }
+            }
+            // console.log(customerDetail)
+
+        }
+        if(customerDetail && customerDetail.customerId) {
+           
+            fileList.map((item, index) => (
+                item === file?fileList.splice(index, 1):''
+            ))
             
+            if(type === 1){
+                this.setState({
+                    fileList:fileList,
+                    noupdate1:true
+                }, () => {
+                   
+                })
+            }else if(type === 2) {
+                this.setState({
+                    attachFile:fileList,
+                    noupdate2:true
+                }, () => {
+                   
+                })
+            }
+        }
+       
+        if(!customerDetail || !customerDetail.customerId) {
+            fileList.map((item, index) => (
+                item === file?fileList.splice(index, 1):''
+            ))
+            if(type === 1){
+                this.setState({
+                    fileList:fileList
+                }, () => {
+                   
+                })
+            }else if(type === 2) {
+                this.setState({
+                    attachFile:fileList
+                }, () => {
+                    
+                })
+            }
+            
+        }
+        
+        
+        
+        
+        changeattachDel(params).then((res) => {
+            let data = res.data
+            if(data.code === 1 && data.msg === 'success') {
+                message.success('删除成功')
+                
+                this.props.disCusDetail(customerDetail)
+                
+            }else {
+                message.error(data.msg)
+            }
         })
+        
     }
+
+
+    
 
 
     // 自定义上传
@@ -447,20 +578,25 @@ class AddNewCus extends Component{
         let newFiles = []
         let obj = {}
         formData.append('file',option.file);
+        
         handleUpload(fileUrl, formData).then((res) => {
+            
             let data = res.data
             if(data.code === 1 && data.msg === 'success') {
                 message.success('上传成功')
-                obj.name = data.data.attach.origName
-                obj.uid =  data.data.attach.attachId 
-                obj.status = 'done'
-                obj.url = data.data.attachHost + data.data.attach.attachPath
-                newFiles.push(obj)
                 let newFile = this.state.fileList
+                obj.origName = data.data.list[0].origName
+                obj.attachPath = data.data.list[0].attachPath
+                obj.attachId = data.data.list[0].attachId
+                obj.uid = data.data.list[0].attachId
+                obj.name = data.data.list[0].origName
+                obj.status = 'done'
+                obj.url = data.data.attachHost + data.data.list[0].attachPath
+                newFiles.push(obj)
                 this.setState({
                     fileList: newFile.concat(newFiles)
                 }, () => {
-                    console.log(this.state.fileList)
+                    // console.log(this.state.fileList)
                 })
             }else{
                 message.success('上传失败')
@@ -483,12 +619,15 @@ class AddNewCus extends Component{
             let data = res.data
             if(data.code === 1 && data.msg === 'success') {
                 message.success('上传成功')
-                obj.name = data.data.attach.origName
-                obj.uid =  data.data.attach.attachId 
-                obj.status = 'done'
-                obj.url = data.data.attachHost + data.data.attach.attachPath
-                newFiles.push(obj)
                 let newFile = this.state.attachFile
+                obj.origName = data.data.list[0].origName
+                obj.attachPath = data.data.list[0].attachPath
+                obj.attachId = data.data.list[0].attachId
+                obj.uid = data.data.list[0].attachId
+                obj.name = data.data.list[0].origName
+                obj.status = 'done'
+                obj.url = data.data.attachHost + data.data.list[0].attachPath
+                newFiles.push(obj)
                 this.setState({
                     attachFile: newFile.concat(newFiles)
                 }, () => {
@@ -537,6 +676,8 @@ class AddNewCus extends Component{
 
         this.setState({
             customerDetail: customerDetail
+        }, () => {
+            // console.log(this.state.customerDetail)
         })
     }
 
@@ -555,7 +696,11 @@ const mapDispatch = (dispatch) => ({
     },
 
     // 取消
-    handlecusCancel() {
+    handlecusCancel(homeList) {
+        let list = homeList.toJS()
+        for(let i = 0; i < list.length; i ++ ) {
+            list[i].active = false
+        }
         
         let params = {
             isAdd:false
@@ -564,6 +709,8 @@ const mapDispatch = (dispatch) => ({
         dispatch(action_two)
         let action = actionCreators.changeIsAdd(params)
         dispatch(action)
+        let action_th = actionCreators.getMiddleList(list)
+        dispatch(action_th)
     },
 
 
@@ -577,14 +724,22 @@ const mapDispatch = (dispatch) => ({
     handleAddStatus(bool) {
         let action = actionCreators.changeAddStatus(bool)
         dispatch(action)
-    }
+    },
+
+    // 派发客户详情action
+    disCusDetail(data) {
+        // debugger
+        let action = actionCreators.changeCusDetail(data)
+        dispatch(action)
+    },
     
 })
 
 const mapState = (state) => ({
     isAdd:state.getIn(['left', 'isAdd']),
     customerDetail:state.getIn(['left', 'customerDetail']).toJS(),
-    cusEdit:state.getIn(['left', 'cusEdit'])
+    cusEdit:state.getIn(['left', 'cusEdit']),
+    homeList:state.getIn(['left', 'homeList'])
 })
 
 export default connect(mapState, mapDispatch)(AddNewCus)

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import LeftCon from '../home/common/LeftWrapper'
@@ -40,21 +40,24 @@ class Mine extends PureComponent {
         const { login, panelType } = this.state;
         const user = JSON.parse(sessionStorage.getItem("user"))
         let part = '';
-        if(user.userType === 1) {
-            part = "用户管理员"
-        }else if(user.userType === 2) {
-            part = "客户经理"
-        }else if(user.userType === 3) {
-            part = "审核员"
-        }else if(user.userType === 4) {
-            part = "业务管理员"
+        if(user) {
+            if(user.userType === 1) {
+                part = "用户管理员"
+            }else if(user.userType === 2) {
+                part = "客户经理"
+            }else if(user.userType === 3) {
+                part = "审核员"
+            }else if(user.userType === 4) {
+                part = "业务管理员"
+            }
         }
+        
         let mineData = this.state.mineData
         if(this.props.mineData && this.props.mineData.length) {
             mineData = this.props.mineData
         }
-        console.log(mineData)
-        console.log(this.props.mineData)
+        // console.log(mineData)
+        // console.log(this.props.mineData)
         const operations = <Button onClick={() => {this.props.handleSave(panelType, this.oldPwd, this.newPwd, this.aginNewPwd, this.changeOldPwd, this.changeNewTel, user, changeOldPwd, changeNewTel)}}>保存</Button>;
         
 
@@ -75,24 +78,31 @@ class Mine extends PureComponent {
                                     <UserNumIdcard>{user.idcard}</UserNumIdcard>
                                 </UserNumberWrapper>
                             </MineMessage>
+                            {
+                                part === '客户经理'?
+                                <Fragment>
+                                    <ToDealt>待办事项</ToDealt>
 
-                            <ToDealt>待办事项</ToDealt>
+                                    {   
+                                        mineData && mineData.length?
+                                        mineData.map((item, index) => {
+                                            return (
+                                                <ToDealtItem key={item.todoId}>
+                                                    {item.content}
+                                                    <span className="iconfont" onClick={() => {this.updateTodolist(item.todoId, index, mineData)}}>×</span>
+                                                    <div>
+                                                        {/* <div>理由: {}</div> */}
+                                                        <div className="todoTime">{item.createTime}</div>
+                                                        <div className="todoSource">来自<span>{item.sourceName}</span></div>
+                                                        <div className="clear"></div>
+                                                    </div>
+                                                </ToDealtItem>
+                                            )
+                                        }):<Empty description="暂无事项" className="empty" />
+                                    }
 
-                            {   
-                                mineData && mineData.length?
-                                mineData.map((item, index) => {
-                                    return (
-                                        <ToDealtItem key={item.todoId}>
-                                            {item.content}
-                                            <span className="iconfont" onClick={() => {this.updateTodolist(item.todoId, index, mineData)}}>×</span>
-                                            <div>
-                                                <div className="todoTime">{item.createTime}</div>
-                                                <div className="todoSource">来自<span>{item.sourceName}</span></div>
-                                                <div className="clear"></div>
-                                            </div>
-                                        </ToDealtItem>
-                                    )
-                                }):<Empty description="暂无事项" className="empty" />
+                                </Fragment>
+                                :""
                             }
                             
                         </MineMiddle>
@@ -121,7 +131,7 @@ class Mine extends PureComponent {
                                         />
                                     </ChangePanel>
                                 </TabPane>
-                                <TabPane tab="更换手机账号" key="2">
+                                <TabPane tab="更换手机号码" key="2">
                                     <ChangePanel>
                                         <ChangePwoTitle>
                                         密码    

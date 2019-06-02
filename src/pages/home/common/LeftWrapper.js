@@ -50,7 +50,7 @@ class LeftCon extends Component {
                 <LeftCustomer>
                     {
                         !user.logo?
-                        <span className="iconfont">&#xe61a;</span>:
+                        <span className="iconfont">&#xe633;</span>:
                         <img src={user.logo} alt="" />
                     }
                     <p>{user.name } /{ part}</p>

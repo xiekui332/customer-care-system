@@ -62,6 +62,7 @@ export const UserRole = styled.span`
 
 export const UserNumberWrapper = styled.div`
     margin-top:35px;
+    margin-bottom: 10px;
 `;
 
 export const UserNumPhone = styled.div`
@@ -115,7 +116,7 @@ export const ToDealtItem = styled.div`
     .todoTime,.todoSource{
         line-height:20px;
         padding:10px 0;
-        margin-top:20px;
+        margin-top:0px;
     }
     .todoTime{
         float:left;
@@ -178,6 +179,7 @@ export const ChangePwoTitle = styled.p`
     font-size:14px;
     color:#333;
     margin-top:10px;
+    margin-bottom:10px;
 `;
 
 export const ChangePanel = styled.div`

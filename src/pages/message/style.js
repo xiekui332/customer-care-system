@@ -154,6 +154,7 @@ export const MsgTextWrapper = styled.div`
         font-size:14px;
         color:#333;
         margin-top:30px;
+        margin-bottom:10px;
     }
 
     .msg-textarea{

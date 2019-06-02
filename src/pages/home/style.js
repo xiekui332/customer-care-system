@@ -179,7 +179,7 @@ export const DetailWrapper = styled.div`
         margin-left:20px;
     }
     .ant-empty{
-        margin-top:5%;
+        margin-top:30%;
     }
 `;
 
@@ -210,6 +210,7 @@ export const SearchWrapper = styled.div`
         border:1px solid #dcdcdc;
         border-radius:5px;
         padding:0 10px;
+        margin-top: 5px;
     }
     input::placeholder{
         font-size:13px;
@@ -218,7 +219,7 @@ export const SearchWrapper = styled.div`
     margin-bottom:20px;
     transition:all ease-in .2s;
     &.searchWrapper{
-        height:270px;
+        height:300px;
     }
 `;
 
@@ -248,6 +249,9 @@ export const SearchCondition = styled.div`
     }
     .condition-select{
         padding:5px 20px;
+        >p{
+            margin-bottom:3px;
+        }
     }
 `;
 
@@ -333,6 +337,9 @@ export const OperateWrapper = styled.div`
     span:hover{
         color:#333;
     }
+    .iconfont-add{
+        font-size: 16px;
+    }
 `;
 
 export const MiddleListWrapper = styled.div`
@@ -397,7 +404,7 @@ export const MiddleList = styled.div`
         font-size:40px;
         color:#DDD;
         float:left;
-        margin:9px 15px 20px 25px;
+        margin:12px 15px 20px 25px;
     }
 `;
 
@@ -408,12 +415,12 @@ export const MiddleChceckBox = styled.div`
     border:1px solid #dcdcdc;
     background:#fff;
     float:left;
-    margin:30px -5px 0 15px;
+    margin:20px -5px 0 15px;
     position:relative;
     span{
         color:#55a12f;
         position:absolute;
-        top: -5px;
+        top: 0px;
         left: -1px;
         font-size: 19px;
     }
@@ -447,12 +454,12 @@ export const CustomerInfo = styled.div`
         margin-left:20px;
     }
     p:nth-child(1){
-        margin-top:15px;
+        margin-top:10px;
     }
     p:nth-child(2){
         font-size:14px;
         color:#999;
-        margin-top:-12px;
+        margin-top:15px;
         overflow:hidden;
         text-overflow:ellipsis;
         white-space:nowrap
@@ -490,6 +497,9 @@ export const EditItem = styled.div`
     &:hover{
         color:#666;
     }
+    p{
+        margin-top:10px;
+    }
 `;
 
 // RightWrapper details
@@ -522,6 +532,15 @@ export const RightWrapper = styled.div`
         font-size:30px;
         text-align: center;
         border-radius: 4px;
+    }
+    .ant-upload-list-item-actions i svg{
+        
+    }
+    .list-photo{
+        margin:5px 10px 10px 0;
+        .clear{
+            clear:both;
+        }
     }
 `;
 
@@ -702,6 +721,9 @@ export const TotransferItem = styled.div`
     &.trans-box-active{
         background:#f3f3f3;
     }
+    &:hover{
+        background:#fff;
+    }
 `;
 
 export const ToTraItem = styled.div`
@@ -727,9 +749,17 @@ export const ToTraItem = styled.div`
         float:left;
         margin-left:20px;
         padding-bottom:0px;
+        max-width:150px;
+        overflow:hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
     .trans-mobile{
         line-height:25px;
+        max-width:100px;
+        overflow:hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
     .trans-idCard{
         padding-left:20px;
@@ -758,6 +788,7 @@ export const SearchMoreCodition = styled.div`
     .condition-select{
         flex:1;
         padding:5px 20px;
+        margin-top: 5px;
         >p{
             float:left;
         }
@@ -799,7 +830,7 @@ export const RightBlock = styled.div`
     box-shadow: -4px 0 5px -3px #eee;
     transition:all ease-in .2s;
     &.active{
-        width:300px;
+        width:350px;
     }
     .chat-textarea{
         width:240px;
@@ -833,6 +864,20 @@ export const RightBlock = styled.div`
 export const Totranslist = styled.div`
     height:80%;
     background:#fff;
+    overflow-y:auto;
+    background:#f7f7f7;
+    &::-webkit-scrollbar-track-piece { 
+        background-color:#f7f7f7;
+    }
+    &.editSrollBar::-webkit-scrollbar{
+        width: 8px;
+    }
+    &.editSrollBar::-webkit-scrollbar-thumb
+    {
+        background-color:#f6f6f6;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    }
 `;
 
 

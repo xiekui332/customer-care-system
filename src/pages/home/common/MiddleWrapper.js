@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { actionCreators } from '../store'
 import { Tooltip, Modal, message, Select  } from 'antd';
-// import InfiniteScroll from 'react-infinite-scroller';
 import "antd/dist/antd.css";
 import { handlecustomDelete, getCustomerList, getCustomerDetail, toTransfer, sureToTransfer } from '../../../api'
 import { 
@@ -91,7 +90,7 @@ class MiddleWrapper extends Component{
                                     :
                                     <Fragment>
                                         <Tooltip title="新建客户" onClick={() => {this.addCustomer(isAdd)}}>
-                                            <span className="iconfont">&#xe64c;</span>
+                                            <span className="iconfont iconfont-add">&#xe64c;</span>
                                         </Tooltip>
                                         <Tooltip title="搜索" onClick={() => {this.handleSearchCustomer(search)}}>
                                             <span className="iconfont">&#xe7c0;</span>
@@ -114,7 +113,7 @@ class MiddleWrapper extends Component{
                     <AddCustomerWrapper 
                         className={isAdd?"addcustomer-show":""}
                         ref={(addcusEl) => { this.addcusEl = addcusEl}}
-                        onClick={() => {this.handleAdd(isAddAction)}}>
+                        onClick={() => {this.handleAdd(isAddAction, homeList)}}>
                         新建客户
                     </AddCustomerWrapper>
 
@@ -248,14 +247,14 @@ class MiddleWrapper extends Component{
                     {
                         homeList && homeList.map((item, index) => (
                             <MiddleList 
-                                className={item.active?"selected":""}
+                                className={item.active?"selected list":" list"}
                                 onClick={() => {this.handleList(homeList, item, index, item.customerId, item.active, edit)}}
                                 key={item.customerId}>
                                 <MiddleChceckBox className={edit?"middleChceckBox":" "}>
                                     <span className={edit && item.active?"iconfont isShow":"iconfont isHide"}>&#xe617;</span>
                                 </MiddleChceckBox>
                                 {
-                                    item.photo?<img src={item.photo} alt="" />:<span className="iconfont">&#xe61a;</span>
+                                    item.photo?<img src={item.photo} alt="" />:<span className="iconfont">&#xe633;</span>
                                 }
                                 <CustomerInfo >
                                     <p>
@@ -327,17 +326,6 @@ class MiddleWrapper extends Component{
         )
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //     if(nextProps.changeAddStatus === true) {
-    //         this.setState({
-    //             load:true
-    //         }, () => {
-    //             this.getListData()
-    //         })
-            
-    //     }
-        
-    // }
 
     componentDidUpdate() {
         if(this.props.changeAddStatus) {
@@ -359,19 +347,16 @@ class MiddleWrapper extends Component{
         
         let el = this.middleListWrapperEl;
         el.addEventListener('scroll', () => {
-            // if(el.scrollTop + el.clientHeight === el.scrollHeight) {
-            //     this.setState({
-            //         pageNum: this.state.pageNum + 1
-            //     }, () => {
-            //         this.getListData('concatList')
-            //     })
-            // }
 
             if(this.scrollTop() + this.windowHeight() >= (this.documentHeight() - 50/*滚动响应区域高度取50px*/)) {
                 // console.log('bottom')
                 this.getListData('concatList')
             }
         })
+        // let listEl = document.getElementsByClassName('list')
+        // let evn = new Event('click')
+        // console.log(listEl)
+        // listEl.dispatchEvent(evn)
 
     }
 
@@ -543,6 +528,7 @@ class MiddleWrapper extends Component{
                             data.data.list.map((item, index) => (
                                 item.active = false
                             ))
+                            
                             let newhomeList = this.props.homeList
                             // 滚动加载的数据
                             if(condition === 'concatList') {
@@ -646,7 +632,11 @@ class MiddleWrapper extends Component{
                             // console.log(data)
                             this.props.disCusDetail(data.data)
                             this.props.disSpin(false)
+                        }else{
+                            message.error('暂无数据')
                         }
+                    }else{
+                        message.error(data.msg)
                     }
                 })
                 
@@ -688,7 +678,11 @@ class MiddleWrapper extends Component{
                         // console.log(data)
                         this.props.disCusDetail(data.data)
                         this.props.disSpin(false)
+                    }else{
+                        message.error('暂无数据')
                     }
+                }else{
+                    message.error(data.msg)
                 }
             })
             
@@ -738,7 +732,12 @@ class MiddleWrapper extends Component{
     }
 
      // 点击新建用户
-     handleAdd(isAddAction) {
+     handleAdd(isAddAction, homeList) {
+        homeList.map((item, index) => (
+            item.active = false
+        ))
+        this.props.disCusList(homeList)
+        
         this.setState({
             customerId:""
         },() => {
@@ -746,8 +745,10 @@ class MiddleWrapper extends Component{
                 isAdd:true
             }
             isAddAction(params)
+            let obj = {}
             this.props.disShowDetail(false)
             this.props.handleCusEdit(false)
+            this.props.disCusDetail(obj)
         })
     }
 

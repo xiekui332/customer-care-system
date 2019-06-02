@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+
 const service = axios.create({
     baseURL: process.env.BASE_API, // api的base_url
     timeout: 10000, // 请求超时时间
@@ -11,6 +12,7 @@ const service = axios.create({
 service.interceptors.request.use(
     config => {
         if(sessionStorage.getItem("token")) {
+            // console.log(JSON.parse(sessionStorage.getItem("token")))
             config.headers = {
                 "Authorization":"Bearer " + JSON.parse(sessionStorage.getItem("token")),
                 'Content-Type':'application/x-www-form-urlencoded'

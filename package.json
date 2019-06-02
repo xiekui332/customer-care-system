@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "antd": "^3.16.6",
+    "antd": "^3.19.2",
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-react-app": "^8.0.0",
+    "compression": "^1.7.4",
     "immutable": "^4.0.0-rc.12",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -30,7 +32,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "proxy": "http://148.70.204.30",
+  "proxy": "http://148.70.204.30/api",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -42,5 +44,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {
+    "css-split-webpack-plugin": "^0.2.6"
+  },
+  "main": "index.js",
+  "repository": "https://github.com/xiekui332/customer-care-system.git",
+  "license": "MIT"
 }

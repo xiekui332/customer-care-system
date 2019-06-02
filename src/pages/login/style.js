@@ -29,6 +29,8 @@ export const LoginInputWrapper = styled.div`
     >p{
         font-size:14px;
         color:#333;
+        lien-height:25px;
+        margin: 5px 0px 10px;
     }
 `;
 
@@ -38,7 +40,7 @@ export const UserInput = styled.input`
     border:1px solid #dcdcdc;
     border-radius:2px;
     padding:0 0 0 10px;
-    margin-top:-4px;
+    margin-top:0px;
     &:hover{
         border:1px solid #55a12f;
     }

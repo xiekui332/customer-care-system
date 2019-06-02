@@ -51,6 +51,7 @@ class User extends Component {
             edit:false,
             spin:true,
             userName:'',
+            cabinetNo:'',
             mobilePhone:'',
             userId:'',
             userDetail:{}
@@ -62,7 +63,7 @@ class User extends Component {
     }
 
     render () {
-        const { login, userList, add, edit, userId, nodata, userDetail, spin } = this.state;
+        const { login, userList, add, edit, userId, nodata, userDetail, spin, userType } = this.state;
         // console.log(userDetail)
         const Option = Select.Option;
         const confirm = Modal.confirm;
@@ -103,11 +104,17 @@ class User extends Component {
                                     ref={(search) => {this.searchEl = search}}
                                 >
                                     <SearchCondition>
+                                        <span>柜员号</span>
+                                        <SearchInput placeholder="请输入柜员号" 
+                                            ref={(input) => {this.guiyuanEl = input}}
+                                        ></SearchInput>
+                                    </SearchCondition>
+                                    {/* <SearchCondition>
                                         <span>用户名</span>
                                         <SearchInput placeholder="请输入用户名" 
                                             ref={(input) => {this.searchNameEl = input}}
                                         ></SearchInput>
-                                    </SearchCondition>
+                                    </SearchCondition> */}
                                     <SearchCondition>
                                         <span>手机号</span>
                                         <SearchInput placeholder="请输入手机号"
@@ -117,7 +124,7 @@ class User extends Component {
 
                                     <AddButtonWrapper>
                                         <AddCusButton className="add-cancel" onClick={() => {this.handleCancel(this.searchEl)}}>取消</AddCusButton>
-                                        <AddCusButton className="add-save" onClick={() => {this.handleSave(this.searchNameEl, this.searchMobileEl, this.searchEl)}}>确定</AddCusButton>
+                                        <AddCusButton className="add-save" onClick={() => {this.handleSave(this.guiyuanEl, this.searchNameEl, this.searchMobileEl, this.searchEl)}}>搜索</AddCusButton>
                                     </AddButtonWrapper>
                                 </SearchWrapper> 
 
@@ -140,7 +147,7 @@ class User extends Component {
                                                     {
                                                         item.src?
                                                         <img src={src} alt="" />
-                                                        :<span className="iconfont">&#xe61a;</span>
+                                                        :<span className="iconfont">&#xe633;</span>
                                                     }
                                                     
                                                     <CustomerInfo >
@@ -157,7 +164,7 @@ class User extends Component {
                                         })
                                         :""
                                     }
-
+ 
                                     {   
                                         spin?
                                         <Spin size="large" className="spin" />
@@ -245,7 +252,7 @@ class User extends Component {
                                                 placeholder="请选择用户类别"
                                                 optionFilterProp="children"
                                                 onChange={(value) => {this.userkind(value)}}
-                                                value={userDetail.userType}
+                                                value={userType}
                                                 filterOption={(input, option) =>
                                                     option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                                 }
@@ -296,6 +303,30 @@ class User extends Component {
         }
     }
 
+    // 获取页面顶部被卷起来的高度函数
+    scrollTop(){
+        let el = this.listWrapper;
+        return Math.max(
+         //chrome
+         el.scrollTop);
+    }
+    
+    // 获取页面文档的总高度
+    documentHeight(){
+        let el = this.listWrapper;
+        //现代浏览器（IE9+和其他浏览器）和IE8的document.body.scrollHeight和document.documentElement.scrollHeight都可以
+        return Math.max(el.scrollHeight);
+    }
+
+    // 获取页面浏览器视口的高度
+    windowHeight(){
+        let el = this.listWrapper;
+        //document.compatMode有两个取值。BackCompat：标准兼容模式关闭。CSS1Compat：标准兼容模式开启。
+        return (el.compatMode === "CSS1Compat")?
+        el.clientHeight:
+        el.clientHeight;
+    }
+
     componentDidMount() {
         if(this.state.login) {
             this.resetHeight(this.listWrapper)
@@ -304,7 +335,7 @@ class User extends Component {
 
             // 滚动翻页
             el.addEventListener('scroll', () => {
-                if(el.scrollTop + el.clientHeight === el.scrollHeight) {
+                if(this.scrollTop() + this.windowHeight() >= (this.documentHeight() - 50/*滚动响应区域高度取50px*/)) {
                     this.setState({
                         pageNum: this.state.pageNum + 1
                     }, () => {
@@ -333,7 +364,7 @@ class User extends Component {
     getData(searchEl) {
         if(this.state.load) {
             let params = {
-                userName:this.state.userName,
+                cabinetNo:this.state.cabinetNo,
                 mobilePhone:this.state.mobilePhone,
                 pageNum:this.state.pageNum,
                 pageSize:this.state.pageSize
@@ -366,8 +397,15 @@ class User extends Component {
                             
 
                         })
+                    }else{
+                        message.error('暂无数据')
+                        this.setState({
+                            load:false
+                        })
                     }
                     
+                }else{
+                    message.error(data.msg)
                 }
 
             })
@@ -397,7 +435,8 @@ class User extends Component {
             search:false,
             userId:"",
             nodata:false,
-            userDetail:params
+            userDetail:params,
+            userType:undefined
         },() => {
            
         })
@@ -408,7 +447,11 @@ class User extends Component {
     
     // 新建用户
     handleAddMustor(addmustorEl, searchEl) {
-        addmustorEl.classList.add('add-customer-show')
+        if(addmustorEl.classList.contains('add-customer-show')) {
+            addmustorEl.classList.remove('add-customer-show')
+        }else{
+            addmustorEl.classList.add('add-customer-show')
+        }
         searchEl.classList.remove('searchel-show')
     }
 
@@ -420,7 +463,12 @@ class User extends Component {
 
     // 搜索
     handleSearch(searchEl, addmustorEl) {
-        searchEl.classList.add('searchel-show')
+        if(searchEl.classList.contains('searchel-show')) {
+            searchEl.classList.remove('searchel-show')
+        }else{
+            searchEl.classList.add('searchel-show')
+        }
+        
         addmustorEl.classList.remove('add-customer-show')
     }
 
@@ -430,9 +478,10 @@ class User extends Component {
     }
 
     // 确定
-    handleSave(searchNameEl, searchMobileEl, searchEl) {
+    handleSave(guiyuanEl, searchNameEl, searchMobileEl, searchEl) {
         this.setState({
-            userName:searchNameEl.value,
+            // userName:searchNameEl.value,
+            cabinetNo:guiyuanEl.value,
             mobilePhone:searchMobileEl.value,
             pageNum:1,
             pageSize:10,
@@ -456,7 +505,7 @@ class User extends Component {
                 mobilePhone:'',
                 userType:'',
                 remark:'',
-                relationship:'',
+                // relationship:'',
                 orgNo:'',
                 orgName:''
             }
@@ -467,7 +516,7 @@ class User extends Component {
                 mobilePhone:'',
                 userType:'',
                 remark:'',
-                relationship:'',
+                // relationship:'',
                 orgNo:'',
                 orgName:''
             }
@@ -487,15 +536,30 @@ class User extends Component {
             message.error('请填写机构名称')
         }
         else {
+            let part = '';
+            
+
             if(userId) {
                 params.userId = userId
+                if( this.state.userType === '用户管理员') {
+                    part = "1"
+                }else if( this.state.userType === '客户经理') {
+                    part = "2"
+                }else if( this.state.userType === '审核员') {
+                    part = "3"
+                }else if( this.state.userType === '业务管理员') {
+                    part = "4"
+                }
+                
+            }else{
+                part = this.state.userType
             }
             params.name = nameel.input.value
             params.cabinetNo = idCardel.input.value
             params.mobilePhone = mobileel.input.value
-            params.userType = this.state.userType
+            params.userType = part
             params.remark = ''
-            params.relationship = ''
+            // params.relationship = ''
             params.orgNo = organNum.input.value
             params.orgName = organName.input.value
            
@@ -506,7 +570,7 @@ class User extends Component {
                    if(userId) {
                         message.success('编辑成功')
                    }else{
-                        message.success('新建成功, 初始密码是空')
+                        message.success('新建成功')
                    }
                     
                     nameel.input.value = ''
@@ -517,8 +581,7 @@ class User extends Component {
                         userList:[],
                         load:true,
                         pageNum:1,
-                        pageSize:10,
-                        userType:''
+                        pageSize:10
                     }, () => {
                         this.getData() 
                     })
@@ -585,11 +648,22 @@ class User extends Component {
             if(data.code === 1 && data.msg === 'success') {
                 if(data.data) {
                     this.userkind(data.data.userType.toString())
+                    let part = '';
+                    if(data.data.userType === 1) {
+                        part = "用户管理员"
+                    }else if(data.data.userType === 2) {
+                        part = "客户经理"
+                    }else if(data.data.userType === 3) {
+                        part = "审核员"
+                    }else if(data.data.userType === 4) {
+                        part = "业务管理员"
+                    }
                     this.setState({
                         add:true,
                         userId:id,
                         nodata:false,
-                        userDetail:data.data
+                        userDetail:data.data,
+                        userType:part
                     }, () => {
                         
                     })
@@ -672,7 +746,9 @@ class User extends Component {
                             userList:[],
                             load:true,
                             pageNum:1,
-                            pageSize:10
+                            pageSize:10,
+                            add:false,
+                            nodata:true
                         }, () => {
                             that.getData() 
                         })

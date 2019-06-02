@@ -72,6 +72,10 @@ export const AddItem = styled.div`
     &>.active{
         border:1px solid red!important;
     }
+    &.clear-fix{
+        clear:both;
+        margin-bottom: 10px;
+    }
     
     &>.add-input{
         width: 60%;

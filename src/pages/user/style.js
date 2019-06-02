@@ -153,12 +153,13 @@ export const CustomerInfo = styled.div`
         margin-left:20px;
     }
     p:nth-child(1){
-        margin-top:15px;
+        margin-top:10px;
+        margin-bottom: 0;
     }
     p:nth-child(2){
         font-size:14px;
         color:#999;
-        margin-top:-12px;
+        margin-top:10px;
         overflow:hidden;
         text-overflow:ellipsis;
         white-space:nowrap
@@ -371,14 +372,14 @@ export const MiddleChceckBoxSmall = styled.div`
     border:1px solid #dcdcdc;
     background:#fff;
     float:left;
-    margin:30px -5px 0 15px;
+    margin:25px -5px 0 15px;
     position:relative;
     >span.iconfont{
         color:#55a12f;
         position:absolute;
-        top: -5px;
+        top: -6px;
         left: 0px;
-        font-size: 19px;
+        font-size: 20px;
     }
     &.middle-check-box-show{
         width:20px;

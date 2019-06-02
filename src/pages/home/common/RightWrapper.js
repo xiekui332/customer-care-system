@@ -1,18 +1,19 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Tooltip, Empty, Spin, Modal, message, Input } from 'antd';
+import { Upload, Tooltip, Empty, Spin, Modal, message, Input } from 'antd';
 import "antd/dist/antd.css";
 import Swiper from 'swiper/dist/js/swiper.js'
 import 'swiper/dist/css/swiper.min.css'
 import AddNewCus from '../../../common/AddNewCus'
 import { handlecustomDelete, toTransfer, sureToTransfer, changeCarefull } from '../../../api'
 import { actionCreators } from '../store'
+// import { baseUrl_down } from '../../../config'
 
 import { 
     DetailWrapper,
     RightHeaderWrapper,
     RightContentWrapper,
-    RightCarousel,
+    // RightCarousel,
     RightWrapper,
     FileWrapper,
     FileItem,
@@ -35,21 +36,61 @@ class MiddleWrapper extends PureComponent{
             totransfer:[],
             newUserId:'',
             careStatus:false,
-            carefullReason:''
+            carefullReason:'',
+            previewVisible: false,
+            previewImage: ''
         }
         
     }
     render () {
-        const { fileList, customerDetail, spin, isAdd, showDetail } = this.props;
-        const { transStatus, totransfer, newUserId, careStatus, carefullReason } = this.state;
+        const { customerDetail, spin, isAdd, showDetail } = this.props;
+        const { transStatus, totransfer, newUserId, careStatus, carefullReason, previewImage, previewVisible } = this.state;
         const user = JSON.parse(sessionStorage.getItem("user"))
         const confirm = Modal.confirm;
         const TextArea = Input.TextArea
         let homeList = []
+        let fileList = []
+        let attachFile = []
+        let changeNewattachFile = []
+        const PICTURE_EXPRESSION = /\.(png|jpe?g|gif|svg)(\?.*)?$/
         if(this.props.homeList) {
             homeList = this.props.homeList.toJS()
         }
         // console.log(isAdd)
+        if(customerDetail && customerDetail.customerId) {
+            // test
+            // customerDetail.attachs = []
+
+            if(customerDetail.attachs&&customerDetail.attachs.length) {
+                for(let i = 0; i < customerDetail.attachs.length; i ++) {
+                    let obj = {}
+                    obj.origName = customerDetail.attachs[i].origName
+                    obj.attachPath =customerDetail.attachs[i].attachPath
+                    obj.attachId = customerDetail.attachs[i].attachId
+                    obj.uid = customerDetail.attachs[i].attachId
+                    obj.name = customerDetail.attachs[i].origName
+                    obj.status = 'done'
+                    obj.attachSuffix = customerDetail.attachs[i].attachSuffix
+                    obj.url = customerDetail.attachHost + customerDetail.attachs[i].attachPath
+                    changeNewattachFile.push(obj)
+
+                    
+                   
+                }
+
+                for(let i = 0; i < changeNewattachFile.length; i ++) {
+                    if(PICTURE_EXPRESSION.test(changeNewattachFile[i].attachSuffix)) {
+                        fileList.push(changeNewattachFile[i])
+                    }else{
+                        attachFile.push(changeNewattachFile[i])
+                    }
+                }
+            }   
+
+        }
+
+        
+        // console.log(customerDetail)
         return (
             <DetailWrapper
             className="detailWrapper"
@@ -140,20 +181,36 @@ class MiddleWrapper extends PureComponent{
                             </RightContentWrapper>
                             
                             {
-                                
                                 customerDetail.attachs && customerDetail.attachs.length?
-                                <RightCarousel className="swiper-container">
-                                        <span className="iconfont swiper-button-prev">&#xe663;</span>
-                                        <span className="iconfont swiper-button-next">&#xe6a8;</span>
-                                        <div className="swiper-wrapper">
-                                            <div className="swiper-slide">Slide 1</div>
-                                            <div className="swiper-slide">Slide 2</div>
-                                            <div className="swiper-slide">Slide 3</div>
-                                            <div className="swiper-slide">Slide 4</div>
-                                            <div className="swiper-slide">Slide 5</div>
-                                        </div>
-                                        <div className='swiper-pagination'></div>
-                                </RightCarousel>
+                                // <RightCarousel className="swiper-container">
+                                //         <span className="iconfont swiper-button-prev">&#xe663;</span>
+                                //         <span className="iconfont swiper-button-next">&#xe6a8;</span>
+                                //         <div className="swiper-wrapper">
+                                //             <div className="swiper-slide">Slide 1</div>
+                                //         </div>
+                                //         <div className='swiper-pagination'></div>
+                                // </RightCarousel>
+                                <Fragment>
+                                    {
+                                        // console.log(fileList)
+                                    }
+                                    <div className="list-photo">
+                                        <Upload 
+                                            
+                                            accept=".jpg, .jpeg, .png"
+                                            listType="picture-card"
+                                            fileList={fileList}
+                                            onPreview={(file) => {this.handlePreview(file)}}
+                                            >
+                                            {fileList.length >= 9 ? null : ''}
+                                        </Upload>
+
+                                        <Modal visible={previewVisible} footer={null} onCancel={(file) => {this.handleCancel(file)}}>
+                                            <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                                        </Modal>
+                                        <p className="clear"></p>
+                                    </div>
+                                </Fragment>
                                 :""
                             }
                             
@@ -161,12 +218,16 @@ class MiddleWrapper extends PureComponent{
 
                             <FileWrapper>
                                 {
-                                    fileList.map((item, index) => (
-                                        <FileItem key={item.id}>
+                                    attachFile && attachFile.length? 
+                                    attachFile.map((item, index) => (
+                                        <FileItem key={item.customerId}
+                                            onClick={() => {this.handleAttachDownload(item, attachFile)}}
+                                        >
                                             <span className="iconfont">&#xe600;</span>
                                             {item.name}
                                         </FileItem>
                                     ))
+                                    :''
                                 }
                                 
                             </FileWrapper>
@@ -206,12 +267,12 @@ class MiddleWrapper extends PureComponent{
                                             onClick={() => {this.handleTransfer(item, totransfer, customerDetail, transStatus)}}
                                         >
                                             {
-                                                item.photo?<img src={item.photo} alt="" />:<span className="iconfont no-avetor">&#xe61a;</span>
+                                                item.photo?<img src={item.photo} alt="" />:<span className="iconfont no-avetor">&#xe633;</span>
                                             }
                                             <ToTraItem className="trans-item">
                                                 <div>
                                                 <span className="title trans-title">{item.name}</span>
-                                                <span className="mobile trans-mobile">{item.mobilePhone}222</span>
+                                                <span className="mobile trans-mobile">{item.mobilePhone}</span>
                                                 </div>
                                                 <div className="idCard trans-idCard">
                                                     {item.cabinetNo}
@@ -289,9 +350,30 @@ class MiddleWrapper extends PureComponent{
         
     }
 
+    // 预览图片
+    handlePreview = file => {
+        this.setState({
+            previewImage: file.url || file.thumbUrl,
+            previewVisible: true,
+        });
+    }
+
+    handleCancel = (file) => {
+        this.setState({ previewVisible: false })
+    }
+
+    // 下载附件
+    handleAttachDownload(file, attachFile) {
+        // console.log(file)
+        // console.log(baseUrl_down + '/attach/download?attachId=' + file.uid)
+        window.open(file.url)
+    }
 
     // 删除
     handleTipDel(detail, confirm, homeList) {
+        this.setState({
+            transStatus:false
+        })
         let that = this;
         confirm({
             title: '确认删除?',
@@ -322,7 +404,10 @@ class MiddleWrapper extends PureComponent{
     }
     // 编辑
     handleTipEdit(customerDetail, confirm, homeList) {
-        console.log(customerDetail)
+        // console.log(customerDetail)
+        this.setState({
+            transStatus:false
+        })
         let params = {
             isAdd:true
         }
