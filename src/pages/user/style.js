@@ -153,13 +153,13 @@ export const CustomerInfo = styled.div`
         margin-left:20px;
     }
     p:nth-child(1){
-        margin-top:10px;
+        margin-top:15px;
         margin-bottom: 0;
     }
     p:nth-child(2){
         font-size:14px;
         color:#999;
-        margin-top:10px;
+        margin-top:3px;
         overflow:hidden;
         text-overflow:ellipsis;
         white-space:nowrap

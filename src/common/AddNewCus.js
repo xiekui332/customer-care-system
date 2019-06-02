@@ -71,6 +71,13 @@ class AddNewCus extends Component{
         if(cusEdit) {
             customerDetail = this.props.customerDetail
             customerId = customerDetail.customerId
+            if(!kindSelected) {
+                if(customerDetail.industryClass) {
+                    kindSelected = customerDetail.industryClass
+                }else{
+                    kindSelected = undefined
+                }
+            }
             fileList = []
             attachFile = []
             
@@ -103,6 +110,7 @@ class AddNewCus extends Component{
                 }else{
                     fileList = changefileList.concat(this.state.fileList)
                 }
+
                 if(this.state.noupdate2) {
                     attachFile = this.state.attachFile
                 }else{
@@ -246,6 +254,7 @@ class AddNewCus extends Component{
                         </AddItem>
                         <AddItem className='clear-fix'>
                             <AddTitle><span></span>行业名称</AddTitle>
+                            
                             <Select
                                 showSearch
                                 style={{ width: '60%', marginBottom:20 }}
@@ -292,7 +301,7 @@ class AddNewCus extends Component{
                     <AddUpload>
                         <AddTitle><span></span>图片上传</AddTitle>
                         <AddUploadWrapper>
-
+                        
                         <div className="clearfix">
                             <Upload
                                 accept=".jpg, .jpeg, .png"
@@ -450,9 +459,10 @@ class AddNewCus extends Component{
                     let data = res.data;
                     if(data.code === 1 && data.msg === 'success') {
                         message.success('编辑成功')
+                        // debugger
                         // console.log(data)
-                        this.props.handleCusEdit(false)
-                        this.props.handleAddStatus(true)
+                        // this.props.handleCusEdit(false)
+                        // this.props.handleAddStatus(true)
                     }else{
                         message.error(data.msg)
                     }

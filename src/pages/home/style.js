@@ -91,7 +91,7 @@ export const LeftItemLi = styled.li`
     }
     img{
         display:inline-block;
-        width:20px;
+        width:18px;
         margin:10px 10px 0 35px;
         float:left;
     }

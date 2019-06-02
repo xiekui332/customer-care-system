@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import LeftCon from '../home/common/LeftWrapper'
-import { sessionGetItem, checkmobile, createUser, userList, userDetail, userDelete } from '../../api'
+import { sessionGetItem, sessionSetItem, checkmobile, createUser, userList, userDetail, userDelete } from '../../api'
 import { Tooltip, Input, Select, message, Empty, Modal, Spin  } from 'antd';
 
 import {
@@ -54,7 +54,10 @@ class User extends Component {
             cabinetNo:'',
             mobilePhone:'',
             userId:'',
-            userDetail:{}
+            userDetail:{},
+            saveDetail:{},
+            isLook:false,
+            isbtn:false
         }
 
         this.resetHeight = this.resetHeight.bind(this)
@@ -63,8 +66,8 @@ class User extends Component {
     }
 
     render () {
-        const { login, userList, add, edit, userId, nodata, userDetail, spin, userType } = this.state;
-        // console.log(userDetail)
+        const { login, userList, add, edit, userId, nodata, userDetail, spin, userType, saveDetail, isbtn } = this.state;
+        // console.log(saveDetail)
         const Option = Select.Option;
         const confirm = Modal.confirm;
         let src = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556782759160&di=2e2df9eae570460adfc6bec7e2887d3c&imgtype=0&src=http%3A%2F%2Fwenwen.soso.com%2Fp%2F20120208%2F20120208165308-1774101526.jpg";
@@ -136,7 +139,7 @@ class User extends Component {
                                                 <MiddleList 
                                                     className={item.active?"selected":""}
                                                     key={item.userId}
-                                                    onClick={() => {this.handleList(this.userlistwrapper, index, item.userId, edit, item.active)}}
+                                                    onClick={() => {this.handleList(this.userlistwrapper, index, item.userId, edit, item.active, this.addmustorEl)}}
                                                 >
                                                     
                                                     <MiddleChceckBoxSmall className={edit?"middleChceckBox":" "}>
@@ -194,10 +197,23 @@ class User extends Component {
                                 className={add?"isShow":"isHide"}
                                 >
                                 <AddCusHeadWrapper>
-                                    <AddCusHeadText>新建用户</AddCusHeadText>
+                                    {
+                                        this.state.isLook?
+                                        <AddCusHeadText>编辑用户</AddCusHeadText>
+                                        :
+                                        <AddCusHeadText>新建用户</AddCusHeadText>
+                                    }
+                                    
                                     <AddButtonWrapper>
-                                        <AddCusButton className="add-cancel" onClick={() => {this.handleAddCancel()}}>取消</AddCusButton>
-                                        <AddCusButton className="add-save" onClick={() => {this.handleAddSave(this.name, this.idCard, this.mobile, userId, this.organNum, this.organName)}}>保存</AddCusButton>
+                                        {
+                                            isbtn?
+                                            <Fragment>
+                                            <AddCusButton className="add-cancel" onClick={() => {this.handleAddCancel(saveDetail, this.addmustorEl)}}>取消</AddCusButton>
+                                            <AddCusButton className="add-save" onClick={() => {this.handleAddSave(this.name, this.idCard, this.mobile, userId, this.organNum, this.organName)}}>保存</AddCusButton>
+                                            </Fragment>
+                                            :""
+                                        }
+                                        
                                     </AddButtonWrapper>
                                 </AddCusHeadWrapper>
                                 
@@ -251,7 +267,7 @@ class User extends Component {
                                                 style={{ width: 400 }}
                                                 placeholder="请选择用户类别"
                                                 optionFilterProp="children"
-                                                onChange={(value) => {this.userkind(value)}}
+                                                onChange={(value) => {this.userkind(value, 2)}}
                                                 value={userType}
                                                 filterOption={(input, option) =>
                                                     option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -436,7 +452,8 @@ class User extends Component {
             userId:"",
             nodata:false,
             userDetail:params,
-            userType:undefined
+            userType:undefined,
+            isLook:false
         },() => {
            
         })
@@ -453,6 +470,9 @@ class User extends Component {
             addmustorEl.classList.add('add-customer-show')
         }
         searchEl.classList.remove('searchel-show')
+        this.setState({
+            isbtn:true
+        })
     }
 
     // 重新计算高度
@@ -596,16 +616,32 @@ class User extends Component {
     }
 
     // 取消保存用户
-    handleAddCancel() {
-        this.setState({
-            add:false,
-            nodata:true
-        })
+    handleAddCancel(saveDetail, addmustorEl) {
+        addmustorEl.classList.remove('add-customer-show')
+
+        if(saveDetail.cabinetNo) {
+            
+            // 有详情
+            this.setState({
+                add:true,
+                nodata:false,
+                userDetail:sessionGetItem('saveDetail'),
+                isbtn:false
+            })
+        }else{
+            // 无详情
+            this.setState({
+                add:false,
+                nodata:true
+            })
+        }
+        
     }
 
     // 点击用户列表
-    handleList(boxel, index, id, edit, active) {
+    handleList(boxel, index, id, edit, active, addmustorEl) {
         let userdata = this.state.userList;
+        addmustorEl.classList.remove('add-customer-show')
         if(!edit) {
             if(active) {
                 return 
@@ -615,7 +651,9 @@ class User extends Component {
                 }
                 userdata[index].active = true;
                 this.setState({
-                    userList:userdata
+                    userList:userdata,
+                    isLook:true,
+                    isbtn:false
                 })
 
                 this.getUserDetail(id)
@@ -631,7 +669,9 @@ class User extends Component {
             
             userdata[index].active = !userdata[index].active
             this.setState({
-                userList:userdata
+                userList:userdata,
+                isLook:true,
+                isbtn:false
             })
             
         }
@@ -647,7 +687,7 @@ class User extends Component {
             
             if(data.code === 1 && data.msg === 'success') {
                 if(data.data) {
-                    this.userkind(data.data.userType.toString())
+                    this.userkind(data.data.userType.toString(), 1)
                     let part = '';
                     if(data.data.userType === 1) {
                         part = "用户管理员"
@@ -658,14 +698,16 @@ class User extends Component {
                     }else if(data.data.userType === 4) {
                         part = "业务管理员"
                     }
+                    sessionSetItem('saveDetail',data.data )
                     this.setState({
                         add:true,
                         userId:id,
                         nodata:false,
                         userDetail:data.data,
+                        saveDetail:data.data,
                         userType:part
                     }, () => {
-                        
+                        // console.log(this.state.saveDetail)
                     })
                     
                 }else{
@@ -680,7 +722,12 @@ class User extends Component {
     }
 
     // 用户类型
-    userkind(value) {
+    userkind(value, type) {
+        if(type === 2){
+            this.setState({
+                isbtn:true
+            })
+        }
         this.setState({
             userType:value
         })
@@ -779,9 +826,11 @@ class User extends Component {
         }else if(type === 5) {
             userDetail.orgName = el.input.value
         }
-
         this.setState({
-            userDetail:userDetail
+            userDetail:userDetail,
+            isbtn:true
+        }, () => {
+            // console.log(this.state.saveDetail)
         })
     }
 

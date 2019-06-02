@@ -10,6 +10,9 @@ export const MessageWrapper = styled.div`
     float:left;
     flex:2;
     display:flex;
+    .ant-empty{
+        margin:30% auto 0;
+    }
 `;
 
 export const MessageMiddle = styled.div`
@@ -267,6 +270,7 @@ export const PreviewMessage = styled.div`
         padding:20px 10px;
         border-radius:3px;
         font-size: 13px;
+        line-height: 18px;
     }
 `;
 

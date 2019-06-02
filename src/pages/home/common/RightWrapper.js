@@ -81,6 +81,11 @@ class MiddleWrapper extends PureComponent{
                 for(let i = 0; i < changeNewattachFile.length; i ++) {
                     if(PICTURE_EXPRESSION.test(changeNewattachFile[i].attachSuffix)) {
                         fileList.push(changeNewattachFile[i])
+                        
+                        fileList.map((item, index) => (
+                            item.uid = item.uid.toString()
+                        ))
+                        // console.log(fileList)
                     }else{
                         attachFile.push(changeNewattachFile[i])
                     }
@@ -191,13 +196,11 @@ class MiddleWrapper extends PureComponent{
                                 //         <div className='swiper-pagination'></div>
                                 // </RightCarousel>
                                 <Fragment>
-                                    {
-                                        // console.log(fileList)
-                                    }
+                                    
                                     <div className="list-photo">
                                         <Upload 
                                             
-                                            accept=".jpg, .jpeg, .png"
+                                            accept=".jpg, .jpeg, .png, svg, gif, .bmp"
                                             listType="picture-card"
                                             fileList={fileList}
                                             onPreview={(file) => {this.handlePreview(file)}}

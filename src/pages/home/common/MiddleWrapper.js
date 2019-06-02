@@ -739,7 +739,8 @@ class MiddleWrapper extends Component{
         this.props.disCusList(homeList)
         
         this.setState({
-            customerId:""
+            customerId:"",
+            isAdd:false
         },() => {
             let params = {
                 isAdd:true
