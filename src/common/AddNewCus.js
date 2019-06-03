@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Upload, Icon, Modal, Radio, Select, message, Button } from 'antd';
+import { Upload, Icon, Modal, Radio, Select, message, Button, Input } from 'antd';
 import "antd/dist/antd.css";
 import { actionCreators } from '../pages/home/store'
 import { handleUpload, getsystemData, addCustom, checkidCard, checkmobile, editCustom, changeattachDel } from '../api'
@@ -36,7 +36,10 @@ class AddNewCus extends Component{
             kindSelected:undefined,
             customerDetail:{},
             noupdate1:false,
-            noupdate2:false
+            noupdate2:false,
+            isdemand:'',
+            isbusitype:'',
+            isbeizhu:''
         }
 
     }
@@ -51,6 +54,9 @@ class AddNewCus extends Component{
             // fileList, 
             // attachFile, 
             systemData,
+            isdemand,
+            isbusitype,
+            isbeizhu
             
         } = this.state;
         
@@ -138,6 +144,7 @@ class AddNewCus extends Component{
 
         const RadioGroup = Radio.Group;
         const Option = Select.Option;
+        const { TextArea } = Input;
 
         const uploadButton = (
         <div>
@@ -167,7 +174,23 @@ class AddNewCus extends Component{
                                 this.cusMoneyEl,
                                 fileList,
                                 attachFile,
-                                customerId
+                                customerId,
+                                // 新增
+                                this.cusadddizhiEl,
+                                this.cusaddryEl,
+                                this.cusaddmjEl,
+                                this.cusaddyyEl,
+                                this.cusaddzcEl,
+                                this.cusaddxyEl,
+                                isdemand,
+                                this.cusaddxqEl,
+                                isbusitype,
+                                this.cusaddywEl,
+                                this.cusaddxmEl,
+                                this.cusaddsfzEl,
+                                this.cusaddgxEl,
+                                this.cusaddlxEl,
+                                this.cusaddbzEl
                                 )
                         }}>保存</AddCusButton>
                     </AddButtonWrapper>
@@ -179,7 +202,7 @@ class AddNewCus extends Component{
                             <AddTitle><span>*</span>客户姓名</AddTitle>
                                 <input
                                     className="add-input"
-                                    placeholder="请输入姓名"
+                                    placeholder="请输入"
                                     ref = {(input) => {this.cusNameEl = input}}
                                     value={customerDetail && customerDetail.name?customerDetail.name:""}
                                     onChange={() => {this.setValue(this.cusNameEl, 1)}}
@@ -190,7 +213,7 @@ class AddNewCus extends Component{
                             <AddTitle><span>*</span>身份证号</AddTitle>
                                 <input
                                     className="add-input"
-                                    placeholder="请输入身份证号"
+                                    placeholder="请输入"
                                     ref = {(input) => {this.cusIdcardEl = input}}
                                     value={customerDetail && customerDetail.idcard?customerDetail.idcard:""}
                                     onChange={() => {this.setValue(this.cusIdcardEl, 2)}}
@@ -201,7 +224,7 @@ class AddNewCus extends Component{
                             <AddTitle><span>*</span>手机号码</AddTitle>
                                 <input
                                     className="add-input"
-                                    placeholder="请输入手机号码"
+                                    placeholder="请输入"
                                     ref = {(input) => {this.cusMobileEl = input}}
                                     value={customerDetail && customerDetail.mobilePhone?customerDetail.mobilePhone:""}
                                     onChange={() => {this.setValue(this.cusMobileEl, 3)}}
@@ -212,7 +235,7 @@ class AddNewCus extends Component{
                             <AddTitle><span>*</span>常住地址</AddTitle>
                                 <input
                                     className="add-input"
-                                    placeholder="请输入常住地址"
+                                    placeholder="请输入"
                                     ref = {(input) => {this.cusAddressEl = input}}
                                     value={customerDetail && customerDetail.address?customerDetail.address:""}
                                     onChange={() => {this.setValue(this.cusAddressEl, 4)}}
@@ -223,7 +246,7 @@ class AddNewCus extends Component{
                             <AddTitle><span></span>经营内容</AddTitle>
                                 <input
                                     className="add-input"
-                                    placeholder="请输入经营内容"
+                                    placeholder="请输入"
                                     ref = {(input) => {this.cusConEl = input}}
                                     value={customerDetail && customerDetail.businessContent?customerDetail.businessContent:""}
                                     onChange={() => {this.setValue(this.cusConEl, 5)}}
@@ -234,13 +257,220 @@ class AddNewCus extends Component{
                             <AddTitle><span></span>公司名称</AddTitle>
                                 <input
                                     className="add-input"
-                                    placeholder="请输入公司名称"
+                                    placeholder="请输入"
                                     ref = {(input) => {this.cusCompanyEl = input}}
                                     value={customerDetail && customerDetail.companyName?customerDetail.companyName:""}
                                     onChange={() => {this.setValue(this.cusCompanyEl, 6)}}
                                 />
                             <p></p>
                         </AddItem>
+                        {/* 新增字段 */}
+                        
+                        <AddItem className='clear-fix'>
+                            <AddTitle><span></span>经营地址</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入"
+                                    ref = {(input) => {this.cusadddizhiEl = input}}
+                                    value={customerDetail && customerDetail.companyName?customerDetail.companyName:""}
+                                    onChange={() => {this.setValue(this.cusCompanyEl, 8)}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        
+                        <AddItem className='clear-fix'>
+                            <AddTitle><span></span>工作人员数量</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入"
+                                    ref = {(input) => {this.cusaddryEl = input}}
+                                    value={customerDetail && customerDetail.companyName?customerDetail.companyName:""}
+                                    onChange={() => {this.setValue(this.cusCompanyEl, 9)}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        
+                        <AddItem className='clear-fix'>
+                            <AddTitle><span></span>生产经营面积</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入"
+                                    ref = {(input) => {this.cusaddmjEl = input}}
+                                    value={customerDetail && customerDetail.companyName?customerDetail.companyName:""}
+                                    onChange={() => {this.setValue(this.cusCompanyEl, 10)}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        
+                        <AddItem className='clear-fix'>
+                            <AddTitle><span></span>年营业额</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入"
+                                    ref = {(input) => {this.cusaddyyEl = input}}
+                                    value={customerDetail && customerDetail.companyName?customerDetail.companyName:""}
+                                    onChange={() => {this.setValue(this.cusCompanyEl, 11)}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        
+                        <AddItem className='clear-fix'>
+                            <AddTitle><span></span>资产情况</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入"
+                                    ref = {(input) => {this.cusaddzcEl = input}}
+                                    value={customerDetail && customerDetail.companyName?customerDetail.companyName:""}
+                                    onChange={() => {this.setValue(this.cusCompanyEl, 12)}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        
+                        <AddItem className='clear-fix'>
+                            <AddTitle><span></span>信用情况</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入"
+                                    ref = {(input) => {this.cusaddxyEl = input}}
+                                    value={customerDetail && customerDetail.companyName?customerDetail.companyName:""}
+                                    onChange={() => {this.setValue(this.cusCompanyEl, 13)}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        
+                        <AddItem className='clear-fix'>
+                            <AddTitle><span></span>有无融资需求</AddTitle>
+                            
+                            <Select
+                                style={{ width: '60%', marginBottom:20 }}
+                                placeholder="请选择有无融资需求"
+                                optionFilterProp="children"
+                                onChange={(value) => {this.customkind(value)}}
+                                value={isdemand}
+                                filterOption={(input, option) =>
+                                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                            >
+                                <Option key={1}>有</Option>
+                                <Option key={0}>无</Option>
+                                
+                            </Select>
+                        </AddItem>
+                        
+                        <AddItem className='clear-fix'>
+                            <AddTitle><span></span>需求金额</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入"
+                                    ref = {(input) => {this.cusaddxqEl = input}}
+                                    value={customerDetail && customerDetail.companyName?customerDetail.companyName:""}
+                                    onChange={() => {this.setValue(this.cusCompanyEl, 14)}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        
+                        <AddItem className='clear-fix'>
+                            <AddTitle><span></span>已与我行发生业务种类</AddTitle>
+                            
+                            <Select
+                                style={{ width: '60%', marginBottom:20 }}
+                                placeholder="请选择有无融资需求"
+                                optionFilterProp="children"
+                                onChange={(value) => {this.customkind(value)}}
+                                value={isbusitype}
+                                filterOption={(input, option) =>
+                                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                            >
+                                {
+                                    // 要做容错处理
+                                    systemData.industryClass && systemData.industryClass.map((item, index) => {
+                                        return (
+                                            <Option key={item}>{item}</Option>
+                                        )
+                                        
+                                    })
+                                }
+                                
+                            </Select>
+                        </AddItem>
+                        
+                        <AddItem className='clear-fix'>
+                            <AddTitle><span></span>已发生业务金额</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入"
+                                    ref = {(input) => {this.cusaddywEl = input}}
+                                    value={customerDetail && customerDetail.companyName?customerDetail.companyName:""}
+                                    onChange={() => {this.setValue(this.cusCompanyEl, 15)}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        
+                        <AddItem className='clear-fix'>
+                            <AddTitle className="addnew-title"><span></span>关联人信息</AddTitle>
+                               
+                            <p></p>
+                        </AddItem>
+                        
+                        <AddItem className='clear-fix'>
+                            <AddTitle><span></span>姓名</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入"
+                                    ref = {(input) => {this.cusaddxmEl = input}}
+                                    value={customerDetail && customerDetail.companyName?customerDetail.companyName:""}
+                                    onChange={() => {this.setValue(this.cusCompanyEl, 16)}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        
+                        <AddItem className='clear-fix'>
+                            <AddTitle><span></span>身份证号码</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入"
+                                    ref = {(input) => {this.cusaddsfzEl = input}}
+                                    value={customerDetail && customerDetail.companyName?customerDetail.companyName:""}
+                                    onChange={() => {this.setValue(this.cusCompanyEl, 17)}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        
+                        <AddItem className='clear-fix'>
+                            <AddTitle><span></span>关系</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入"
+                                    ref = {(input) => {this.cusaddgxEl = input}}
+                                    value={customerDetail && customerDetail.companyName?customerDetail.companyName:""}
+                                    onChange={() => {this.setValue(this.cusCompanyEl, 18)}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        
+                        <AddItem className='clear-fix'>
+                            <AddTitle><span></span>联系电话</AddTitle>
+                                <input
+                                    className="add-input"
+                                    placeholder="请输入"
+                                    ref = {(input) => {this.cusaddlxEl = input}}
+                                    value={customerDetail && customerDetail.companyName?customerDetail.companyName:""}
+                                    onChange={() => {this.setValue(this.cusCompanyEl, 19)}}
+                                />
+                            <p></p>
+                        </AddItem>
+                        
+                        <AddItem className='clear-fix'>
+                            <AddTitle><span></span>备注</AddTitle>
+                            <TextArea rows={4} value={isbeizhu} className="msg-textarea"
+                                            ref={(input) => {this.cusaddbzEl = input}}
+                                            onChange={() => {}}
+                                        />
+                            <p></p>
+                        </AddItem>
+
+                        {/* 新增字段 */}
                         <AddItem className='clear-fix'>
                             <AddTitle><span></span>是否有经营合伙人</AddTitle>
                             <RadioGroup 
@@ -407,7 +637,24 @@ class AddNewCus extends Component{
     }
 
     // 新建客户保存
-    handleSaveData(cusNameEl, cusIdcardEl, cusMobileEl, cusAddressEl, cusConEl, cusCompanyEl, value, kindSelected, cusMoneyEl, fileList, attachFile, customerId) {
+    handleSaveData(
+        cusNameEl, cusIdcardEl, cusMobileEl, cusAddressEl, cusConEl, cusCompanyEl, value, kindSelected, cusMoneyEl, fileList, attachFile, 
+        customerId,  
+        cusadddizhiEl,
+        cusaddryEl,
+        cusaddmjEl,
+        cusaddyyEl,
+        cusaddzcEl,
+        cusaddxyEl,
+        isdemand,
+        cusaddxqEl,
+        isbusitype,
+        cusaddywEl,
+        cusaddxmEl,
+        cusaddsfzEl,
+        cusaddgxEl,
+        cusaddlxEl,
+        cusaddbzEl) {
         let params = {
 
         }
@@ -436,6 +683,10 @@ class AddNewCus extends Component{
             message.error('请输入正确电话号码')
         }else if(!cusAddressEl.value) {
             message.error('请输入常住地址')
+        }else if(!cusaddsfzEl.value || !!checkidCard.test(cusaddsfzEl.value)) {
+            message.error('请输入正确身份证号码')
+        }else if(!cusaddlxEl.value || !!checkmobile.test(cusaddlxEl.value)) {
+            message.error('请输入正确电话号码')
         }
         
         else{
@@ -449,7 +700,8 @@ class AddNewCus extends Component{
             params.isBusinessPartner = value          // 是否有经营合伙人（0无 1有）
             params.industryClass = kindSelected       // 所属行业
             params.liabilities = cusMoneyEl.value     // 负债（万元）
-            
+            // 新增
+            params.cusadddizhiEl = cusadddizhiEl.value
             
             // console.log(params)
             // return

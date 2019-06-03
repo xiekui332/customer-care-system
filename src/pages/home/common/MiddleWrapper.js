@@ -254,7 +254,10 @@ class MiddleWrapper extends Component{
                                     <span className={edit && item.active?"iconfont isShow":"iconfont isHide"}>&#xe617;</span>
                                 </MiddleChceckBox>
                                 {
-                                    item.photo?<img src={item.photo} alt="" />:<span className="iconfont">&#xe633;</span>
+                                    item.photo?<img src={item.photo} alt="" />
+                                    :
+                                    // <span className="iconfont">&#xe633;</span>
+                                    <div className="moren-img"></div>
                                 }
                                 <CustomerInfo >
                                     <p>

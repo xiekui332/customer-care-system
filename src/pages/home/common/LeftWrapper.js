@@ -28,6 +28,7 @@ class LeftCon extends Component {
     render () {
         const { changepwd } = this.props;
         const { msg } = this.state;
+        const url = '../../statics/images/jl.png'
         const user = JSON.parse(sessionStorage.getItem("user"))
 
         let part = '';
@@ -50,7 +51,9 @@ class LeftCon extends Component {
                 <LeftCustomer>
                     {
                         !user.logo?
-                        <span className="iconfont">&#xe633;</span>:
+                        // <span className="iconfont">&#xe633;</span> 
+                        <div className="moren-img"></div>
+                        :
                         <img src={user.logo} alt="" />
                     }
                     <p>{user.name } /{ part}</p>

@@ -61,8 +61,12 @@ export const AddTitle = styled.div`
         color:red;
         margin-right:5px;
     }
-    min-width:90px;
+    width:150px;
     text-align:right;
+    &.addnew-title{
+        color:#999;
+        margin-bottom:20px;
+    }
 `;
 
 export const AddItem = styled.div`
@@ -75,6 +79,9 @@ export const AddItem = styled.div`
     &.clear-fix{
         clear:both;
         margin-bottom: 10px;
+    }
+    .msg-textarea{
+        width: 360px;
     }
     
     &>.add-input{

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import imgurl from  '../../statics/images/jl.png'
 
 export const ConWrapper = styled.div`
     display:flex;
@@ -42,6 +43,15 @@ export const LeftCustomer = styled.div`
         width:60px;
         height:60px;
         margin:0 auto;
+    }
+    .moren-img{
+        display:block;
+        width:60px;
+        height:60px;
+        margin:0 auto;
+        background:url(${imgurl}) 100% 100% no-repeat;
+        background-size:cover;
+        margin:30px auto 10px;
     }
     span{
         display:block;
@@ -391,6 +401,17 @@ export const MiddleList = styled.div`
         border-radius:50%;
         float:left;
         margin:20px 15px 20px 25px;
+    }
+    .moren-img{
+        display:block;
+        width:40px;
+        height:40px;
+        border-radius:50%;
+        float:left;
+        margin:20px 15px 20px 25px;
+        overflow:hidden;
+        background:url(${imgurl}) 100% 100% no-repeat;
+        background-size:cover;
     }
     border-bottom:1px solid #f3f3f3;
     
