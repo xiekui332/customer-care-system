@@ -12,6 +12,8 @@ export const BackLogo = styled.div`
     height:100%;
     background:url(${backlogo}) 100% 100% no-repeat;
     float: left;
+    margin-top:0;
+    margin-left:0;
 `;
 
 export const RightWrapper = styled.div`

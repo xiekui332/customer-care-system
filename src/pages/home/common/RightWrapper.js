@@ -182,6 +182,67 @@ class MiddleWrapper extends PureComponent{
                                         <td>是否有经营合伙人</td>
                                         <td>{(customerDetail && customerDetail.isBusinessPartner === 0?'无':'有')}</td>
                                     </tr>
+                                    {/* 新增 */}
+                                    <tr>
+                                        <td>经营地址</td>
+                                        <td>{(customerDetail && customerDetail.businessAddress) || <span className="no-data">暂无</span>}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>工作人员数量</td>
+                                        <td>{(customerDetail && customerDetail.staffNum) || <span className="no-data">暂无</span>}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>生产经营面积</td>
+                                        <td>{(customerDetail && customerDetail.businessArea) || <span className="no-data">暂无</span>}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>年营业额(万元)</td>
+                                        <td>{(customerDetail && customerDetail.yearlyTurnover) || <span className="no-data">暂无</span>}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>资产情况(万元)</td>
+                                        <td>{(customerDetail && customerDetail.property) || <span className="no-data">暂无</span>}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>信用情况</td>
+                                        <td>{(customerDetail && customerDetail.creditInfo) || <span className="no-data">暂无</span>}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>有无融资需求</td>
+                                        <td>{(customerDetail && customerDetail.financialDemand == 1?'有':'无')}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>需求金额(万元)</td>
+                                        <td>{(customerDetail && customerDetail.demandAmount) || <span className="no-data">暂无</span>}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>已与我行发生业务种类</td>
+                                        <td>{(customerDetail && customerDetail.existingBusinessType) || <span className="no-data">暂无</span>}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>已发生业务金额(元)</td>
+                                        <td>{(customerDetail && customerDetail.existingBusinessAmount) || <span className="no-data">暂无</span>}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>关联人姓名</td>
+                                        <td>{(customerDetail && customerDetail.relatName) || <span className="no-data">暂无</span>}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>关联人身份证号码</td>
+                                        <td>{(customerDetail && customerDetail.relatIdcard) || <span className="no-data">暂无</span>}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>与关联人关系(合伙人、家庭成员)</td>
+                                        <td>{(customerDetail && customerDetail.relatRelationship) || <span className="no-data">暂无</span>}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>关联人联系电话</td>
+                                        <td>{(customerDetail && customerDetail.relatPhone) || <span className="no-data">暂无</span>}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>备注</td>
+                                        <td>{(customerDetail && customerDetail.relatRemark) || <span className="no-data">暂无</span>}</td>
+                                    </tr>
                                 </tbody>
                             </RightContentWrapper>
                             

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { actionCreators } from '../store'
-import { Tooltip, Modal, message, Select  } from 'antd';
+import { Tooltip, Modal, message, Select, Empty  } from 'antd';
 import "antd/dist/antd.css";
 import { handlecustomDelete, getCustomerList, getCustomerDetail, toTransfer, sureToTransfer } from '../../../api'
 import { 
@@ -245,14 +245,19 @@ class MiddleWrapper extends Component{
                     </SearchWrapper> 
 
                     {
-                        homeList && homeList.map((item, index) => (
+                        homeList && homeList.length?
+                        homeList.map((item, index) => (
                             <MiddleList 
                                 className={item.active?"selected list":" list"}
                                 onClick={() => {this.handleList(homeList, item, index, item.customerId, item.active, edit)}}
                                 key={item.customerId}>
-                                <MiddleChceckBox className={edit?"middleChceckBox":" "}>
+                                {/* <MiddleChceckBox className={edit?"middleChceckBox":" "}>
                                     <span className={edit && item.active?"iconfont isShow":"iconfont isHide"}>&#xe617;</span>
-                                </MiddleChceckBox>
+                                </MiddleChceckBox> */}
+                                <span className={edit && item.active?'iconfont same-active same-active2 click-active same-active3':'iconfont same-active same-active2'}>&#xe617;</span>
+                                <MiddleChceckBox className={edit?'same-active same-active1 click-active':'same-active same-active1'}></MiddleChceckBox>
+                                
+                                
                                 {
                                     item.photo?<img src={item.photo} alt="" />
                                     :
@@ -270,6 +275,8 @@ class MiddleWrapper extends Component{
                                 </CustomerInfo>
                             </MiddleList>
                         ))
+                        :
+                        <Empty className='' description={'暂无数据'} />
                     }
                     
                     
@@ -550,6 +557,8 @@ class MiddleWrapper extends Component{
                                     load:false
                                 })
                             }
+                        }else{
+                            this.props.disCusList([])
                         }
                     }else{
                         message.error(data.msg);
@@ -718,7 +727,17 @@ class MiddleWrapper extends Component{
                         that.setState({
                             load:true,
                             pageNum:1,
-                            pageSize:10
+                            pageSize:10,
+                            name:'',
+                            companyName:'',               // 公司名称
+                            yearlyTurnoverSymbol:'',      // 年营业额符号（><=）
+                            yearlyTurnover:'',           // 年营业额（万元）   
+                            propertySymbol:'',          // 资产情况符号（><=）
+                            property:'',                // 资产情况（万元）
+                            liabilitiesSymbol:'',       // 负债情况符号（><=）
+                            liabilities:'',             // 负债情况（万元）
+                            demandAmountSymbol:'',      // 需求金额符号（><=）
+                            demandAmount:''            // 需求金额（万元）
                         }, () => {
                             that.props.disShowDetail(false)
                             that.getListData()

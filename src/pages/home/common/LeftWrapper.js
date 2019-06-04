@@ -28,7 +28,6 @@ class LeftCon extends Component {
     render () {
         const { changepwd } = this.props;
         const { msg } = this.state;
-        const url = '../../statics/images/jl.png'
         const user = JSON.parse(sessionStorage.getItem("user"))
 
         let part = '';

@@ -370,6 +370,9 @@ export const MiddleListWrapper = styled.div`
     &.middleListWrapper-active{
         padding-bottom:76px;
     }
+    .ant-empty{
+        margin-top: 30%;
+    }
 `;
 
 // 新建客户部分
@@ -427,6 +430,33 @@ export const MiddleList = styled.div`
         float:left;
         margin:12px 15px 20px 25px;
     }
+    .same-active{
+        margin: 30px -5px 0 15px!important;
+        transition:all ease-in .15s;
+        float: left;
+    }
+    .same-active1{
+        width: 0px;
+        opacity:0;
+    }
+    .same-active2{
+        display: block;
+        width: 0px;
+        height: 20px;
+        font-size: 20px;
+        margin: 25px -15px 0 15px!important;
+        color:#55a12f;
+        opacity:0;
+    }
+    .click-active{
+        width: 20px!important;
+        opacity:1!important;
+        height: 20px!important;
+    }
+    .same-active3 + .same-active1{
+        width: 0px!important;
+        opacity:0!important;
+    }
 `;
 
 export const MiddleChceckBox = styled.div`
@@ -453,21 +483,21 @@ export const MiddleChceckBox = styled.div`
             display:block;
         }
     }
-    &.middleChceckBox{
-        display:block;
-        width:20px;
-        height:20px;
-        opacity:1;
-    }
     transition:all ease-in .2s;
 `;
 
 
 export const CustomerInfo = styled.div`
+    height:80px;
     float:left;
     p:nth-child(1) span:nth-child(1){
         font-size:16px;
         color:#333;
+        max-width: 100px;
+        display: inline-block;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap
     }
     p:nth-child(1) span:nth-child(2){
         font-size:16px;
@@ -475,12 +505,12 @@ export const CustomerInfo = styled.div`
         margin-left:20px;
     }
     p:nth-child(1){
-        margin-top:10px;
+        margin: 15px 0 0 0px;
     }
     p:nth-child(2){
         font-size:14px;
         color:#999;
-        margin-top:15px;
+        margin: 3px 0 0 0;
         overflow:hidden;
         text-overflow:ellipsis;
         white-space:nowrap

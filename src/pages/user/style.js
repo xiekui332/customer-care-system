@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import imgurl from  '../../statics/images/jl.png'
 
 export const Large = styled.div`
     
@@ -124,6 +125,18 @@ export const MiddleList = styled.div`
         float:left;
         margin:20px 15px 20px 25px;
     }
+    
+    .moren-img{
+        display:block;
+        width:40px;
+        height:40px;
+        border-radius:50%;
+        float:left;
+        overflow:hidden;
+        margin:20px 15px 20px 25px;
+        background:url(${imgurl}) 100% 100% no-repeat;
+        background-size:cover;
+    }
     border-bottom:1px solid #f3f3f3;
 
     &.selected{
@@ -138,6 +151,33 @@ export const MiddleList = styled.div`
         float:left;
         margin:9px 15px 20px 25px;
     }
+    .same-active{
+        margin: 30px -5px 0 15px!important;
+        transition:all ease-in .15s;
+        float: left;
+    }
+    .same-active1{
+        width: 0px;
+        opacity:0;
+    }
+    .same-active2{
+        display: block;
+        width: 0px;
+        height: 20px;
+        font-size: 20px;
+        margin: 25px -15px 0 15px!important;
+        color:#55a12f;
+        opacity:0;
+    }
+    .click-active{
+        width: 20px!important;
+        opacity:1!important;
+        height: 20px!important;
+    }
+    .same-active3 + .same-active1{
+        width: 0px!important;
+        opacity:0!important;
+    }
 `;
 
 
@@ -146,6 +186,11 @@ export const CustomerInfo = styled.div`
     p:nth-child(1) span:nth-child(1){
         font-size:16px;
         color:#333;
+        max-width: 100px;
+        display: inline-block;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap
     }
     p:nth-child(1) span:nth-child(2){
         font-size:16px;
@@ -153,13 +198,12 @@ export const CustomerInfo = styled.div`
         margin-left:20px;
     }
     p:nth-child(1){
-        margin-top:15px;
-        margin-bottom: 0;
+        margin: 15px 0 0 0px;
     }
     p:nth-child(2){
         font-size:14px;
         color:#999;
-        margin-top:3px;
+        margin: 3px 0 0 0;
         overflow:hidden;
         text-overflow:ellipsis;
         white-space:nowrap

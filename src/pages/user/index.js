@@ -99,7 +99,7 @@ class User extends Component {
                             >
                                 <AddCustomerWrapper 
                                     ref={(addmustorEl) => {this.addmustorEl = addmustorEl}}
-                                    onClick={() => {this.handleAdd()}}>
+                                    onClick={() => {this.handleAdd(this.addmustorEl)}}>
                                     新建用户
                                 </AddCustomerWrapper>
 
@@ -142,15 +142,19 @@ class User extends Component {
                                                     onClick={() => {this.handleList(this.userlistwrapper, index, item.userId, edit, item.active, this.addmustorEl)}}
                                                 >
                                                     
-                                                    <MiddleChceckBoxSmall className={edit?"middleChceckBox":" "}>
+                                                    {/* <MiddleChceckBoxSmall className={edit?"middleChceckBox":" "}>
                                                         <span className={edit && item.active?"iconfont isShow":"iconfont isHide"}>&#xe617;</span>
-                                                    </MiddleChceckBoxSmall>
+                                                    </MiddleChceckBoxSmall> */}
+                                                    <span className={edit && item.active?'iconfont same-active same-active2 click-active same-active3':'iconfont same-active same-active2'}>&#xe617;</span>
+                                                    <MiddleChceckBoxSmall className={edit?'same-active same-active1 click-active':'same-active same-active1'}></MiddleChceckBoxSmall>
                                                     
 
                                                     {
                                                         item.src?
                                                         <img src={src} alt="" />
-                                                        :<span className="iconfont">&#xe633;</span>
+                                                        :
+                                                        <div className="moren-img"></div>
+                                                        // <span className="iconfont">&#xe633;</span>
                                                     }
                                                     
                                                     <CustomerInfo >
@@ -378,6 +382,7 @@ class User extends Component {
 
     // getList methods
     getData(searchEl) {
+        console.log(this.state.load)
         if(this.state.load) {
             let params = {
                 cabinetNo:this.state.cabinetNo,
@@ -390,11 +395,11 @@ class User extends Component {
             if(searchEl) {
                 searchEl.classList.remove('searchel-show')
             }
-            this.setState({
-                spin:true
-            })
             userList(params).then((res) => {
                 let data = res.data;
+                this.setState({
+                    spin:true
+                })
                 data.data.list.map((item, index) => (
                     item.active = false
                 ))
@@ -434,7 +439,7 @@ class User extends Component {
 
 
     // 点击新建用户
-    handleAdd() {
+    handleAdd(addmustorEl) {
         let params = {
             cabinetNo: "",
             createTime: "",
@@ -457,6 +462,7 @@ class User extends Component {
         },() => {
            
         })
+        addmustorEl.classList.remove('add-customer-show')
     }
 
 
@@ -601,7 +607,9 @@ class User extends Component {
                         userList:[],
                         load:true,
                         pageNum:1,
-                        pageSize:10
+                        pageSize:10,
+                        cabinetNo:'',
+                        mobilePhone:''
                     }, () => {
                         this.getData() 
                     })
@@ -795,12 +803,14 @@ class User extends Component {
                             pageNum:1,
                             pageSize:10,
                             add:false,
-                            nodata:true
+                            nodata:true,
+                            cabinetNo:'',
+                            mobilePhone:''
                         }, () => {
                             that.getData() 
                         })
                     }else{
-                        message.error(data.msg)
+                        // message.error(data.msg)
                     }
                 })
             },

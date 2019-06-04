@@ -199,7 +199,7 @@ export const AddUpload = styled.div`
 export const AddUploadWrapper = styled.div`
     width:460px;
     min-height:100px;
-    margin-left: 110px;
+    margin-left: 170px;
     .uploadButton{
         margin-top:0px;
     }
