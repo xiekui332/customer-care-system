@@ -375,6 +375,9 @@ export const UserListWapper = styled.div`
         display:block;
         margin:50px auto;
     }
+    .empty{
+        margin-top:30%;
+    }
 `;
 
 export const UserOprate = styled.div`

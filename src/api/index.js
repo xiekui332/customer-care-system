@@ -202,7 +202,6 @@ export const getsystemData = () => {
 export const addCustom = (params) => {
     return new Promise((resolve, reject) => {
         service.post(baseUrl + '/customer/add', QS.stringify(params))
-        // service.post('/customer/add', JSON.stringify(params))
         .then((res) => {
             resolve(res)
         })
@@ -216,8 +215,7 @@ export const addCustom = (params) => {
 // 编辑客户
 export const editCustom = (params) => {
     return new Promise((resolve, reject) => {
-        service.post('/customer/edit', QS.stringify(params))
-        // service.post(baseUrl + '/customer/add', params)
+        service.post(baseUrl + '/customer/edit', QS.stringify(params))
         .then((res) => {
             resolve(res)
         })

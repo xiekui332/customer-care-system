@@ -96,10 +96,12 @@ export default ((state = defaultState, action) => {
         return state.merge({
             cusEdit:fromJS(action.bool)
         });
+        
+
         default:
         return state;
     }
 })
 
 
-// CHANGE_MINE_STATUS
+// CHANGE_ARR

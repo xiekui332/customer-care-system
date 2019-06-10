@@ -621,6 +621,7 @@ class MiddleWrapper extends Component{
             isAdd:false
         }
         this.props.isAddAction(params)
+        this.props.handleCusEdit(false)
         
         if(!edit) {
             if(active) {
@@ -920,7 +921,6 @@ const mapDispatch = (dispatch) => ({
         let action = actionCreators.changeCusEdit(bool)
         dispatch(action)
     }
-
    
    
 })

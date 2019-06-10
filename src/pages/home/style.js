@@ -167,6 +167,7 @@ export const DetailWrapper = styled.div`
     flex:2;
     background:#fff;
     overflow-y:auto;
+    overflow-x:hidden;
     position:relative;
     &::-webkit-scrollbar-track-piece { 
         background-color:#f7f7f7;
@@ -241,6 +242,10 @@ export const SearchInput = styled.input`
     margin-top:-5px;
     &:focus{
         border:1px solid #55a12f;
+    }
+    &::placeholder{
+        font-size:12px;
+        color:#999;
     }
 `;
 
@@ -495,7 +500,6 @@ export const CustomerInfo = styled.div`
         color:#333;
         max-width: 100px;
         display: inline-block;
-        overflow:hidden;
         text-overflow:ellipsis;
         white-space:nowrap
     }
@@ -505,12 +509,12 @@ export const CustomerInfo = styled.div`
         margin-left:20px;
     }
     p:nth-child(1){
-        margin: 15px 0 0 0px;
+        margin: 15px 0 0 0;
     }
     p:nth-child(2){
         font-size:14px;
         color:#999;
-        margin: 3px 0 0 0;
+        margin: 15px 0 0 0;
         overflow:hidden;
         text-overflow:ellipsis;
         white-space:nowrap
@@ -681,7 +685,7 @@ export const FileItem = styled.div`
         font-size:16px;
     }
     padding:0 20px;
-    margin:5px 10px;
+    margin:5px 10px 5px 0;
     border-radius:3px;
     border:1px solid #dcdcdc;
 `;

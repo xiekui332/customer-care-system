@@ -98,10 +98,12 @@ class Login extends PureComponent{
         
         return (
             <LoginWrapper>
-                <BackLogo></BackLogo>
+                <BackLogo>
+                    
+                </BackLogo>
                 <RightWrapper>
                     <LoginCondition className={this.state.loginCondition?"isShow":"isHide"}>
-                        <LoginTitle>大竹农商银行客户关怀系统</LoginTitle>
+                        <LoginTitle>大竹农商银行客户关系系统</LoginTitle>
                         <LoginInputWrapper>
                             <p>柜员号</p>
                             <UserInput placeholder="请输入柜员号" ref={(input) => this.userName = input} ></UserInput>
@@ -223,11 +225,12 @@ class Login extends PureComponent{
             this.setState({
                 findmsg:"请填写正确手机号"
             })
-        }else if(!/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(idel.value)){
-            this.setState({
-                findmsg:"请填写正确身份证号"
-            })
         }
+        // else if(!/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(idel.value)){
+        //     this.setState({
+        //         findmsg:"请填写正确身份证号"
+        //     })
+        // }
         
         else{
             this.setState({
@@ -239,6 +242,7 @@ class Login extends PureComponent{
                 code:msgel.value,
                 password:newPwoel.value
             }
+            
         }
         console.log(params)
     };
@@ -309,7 +313,13 @@ class Login extends PureComponent{
             })
 
             
-        }else if(!telel.value) {
+        }
+        else if(!idel.value) {
+            this.setState({
+                findmsg:"请输入柜员号"
+            })
+        }
+        else if(!telel.value) {
             this.setState({
                 findmsg:"请输入电话号码"
             })
@@ -317,15 +327,15 @@ class Login extends PureComponent{
             this.setState({
                 findmsg:"请输入正确电话号码"
             })
-        }else if(!idel.value) {
-            this.setState({
-                findmsg:"请输入身份证号码"
-            })
-        }else if(!/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(idel.value)) {
-            this.setState({
-                findmsg:"请输入正确身份证号码"
-            })
+        }else {
+            // 短信验证
         }
+        
+        // else if(!/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(idel.value)) {
+        //     this.setState({
+        //         findmsg:"请输入正确身份证号码"
+        //     })
+        // }
     }
 
 

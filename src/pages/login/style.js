@@ -8,17 +8,21 @@ export const LoginWrapper = styled.div`
 `;
 
 export const BackLogo = styled.div`
+    flex:3;
     width:825px;
     height:100%;
-    background:url(${backlogo}) 100% 100% no-repeat;
+    background:#f7f7f7;
+    background:url(${backlogo}) no-repeat;
+    background-size: cover;
     float: left;
-    margin-top:0;
+    margin-top:0px;
     margin-left:0;
 `;
 
 export const RightWrapper = styled.div`
     flex:2;
     height:100%;
+    overflow-y:auto;
 `;
 export const LoginTitle = styled.p`
     font-size:26px;
@@ -52,6 +56,11 @@ export const UserInput = styled.input`
     }
     &::placeholder{
         font-size:12px;
+        color:#999;
+    }
+    &:-ms-input-placeholder{
+        font-size:12px;
+        color:#999;
     }
 `;
 
@@ -108,8 +117,9 @@ export const FindWrapper = styled.div`
     width:270px;
     margin:75px auto 0;
     >p{
-        font-size:36px;
+        font-size:26px;
         color:#333;
+        margin-bottom:30px;
     }
 `;
 

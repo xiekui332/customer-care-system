@@ -45,7 +45,7 @@ export const AddCusButton = styled.div`
 `;
 
 export const AddContent = styled.div`
-width:600px;
+width:700px;
     margin:30px auto 50px;
 `;
 
@@ -61,11 +61,12 @@ export const AddTitle = styled.div`
         color:red;
         margin-right:5px;
     }
-    width:150px;
+    width:200px;
     text-align:right;
     &.addnew-title{
-        color:#999;
+        color:#666;
         margin-bottom:20px;
+        font-weight:600;
     }
 `;
 
@@ -79,6 +80,19 @@ export const AddItem = styled.div`
     &.clear-fix{
         clear:both;
         margin-bottom: 10px;
+        .ant-select-selection__placeholder, .dEozpO .ant-select-search__field__placeholder{
+            font-size:14px;
+        }
+    }
+    &.clear-fix-new{
+        margin-top: 20px;
+        .mid-line{
+            border-top:1px solid #ddd;
+            width: 100%;
+            margin-left: 220px;
+            margin-bottom: 50px;
+            margin-top: 30px;
+        }
     }
     .msg-textarea{
         width: 360px;
@@ -94,7 +108,8 @@ export const AddItem = styled.div`
         padding:0 10px;
     }
     &>.add-input::placeholder{
-        color:#999;
+        color:#bfbfbf;
+        font-size:14px;
     }
         
     &>.add-input:hover{
@@ -105,7 +120,7 @@ export const AddItem = styled.div`
     }
     transition:all ease-in .1s;
     >.add-input::placeholder{
-        font-size:12px;
+        font-size:14px;
     }
 
     .add-number{
@@ -205,9 +220,13 @@ export const AddUploadWrapper = styled.div`
     }
     .clearfix-two{
         width:350px;
+        margin-left: 50px;
         .ant-upload-list-text{
             display:none;
         }
+    }
+    .ant-upload.ant-upload-select-picture-card{
+        margin-left:50px;
     }
 `;
 
@@ -219,7 +238,8 @@ export const AddFileWrapper = styled.div`
 export const AddFile = styled.div`
     width:400px;
     overflow:hidden;
-    margin: 10px 0 10px 110px;
+    margin: 0px 0 10px 220px;
+    float: left;
     &:first-child{
         margin-top:-20px;
     }

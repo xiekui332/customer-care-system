@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import LeftCon from '../home/common/LeftWrapper'
 import { Empty, Tabs, Button, Input, message  } from 'antd';
-import { sessionGetItem, alterPassword, sessionSetItem, checkmobile, changeMobile, changeTodilist } from '../../api'
+import { sessionGetItem, alterPassword, sessionSetItem, checkmobile, changeMobile, changeTodilist, todoList } from '../../api'
 import { actionCreators } from './store'
 
 import { 
@@ -27,11 +27,13 @@ class Mine extends PureComponent {
     constructor(props){
         super(props)
         this.state = {
+            userId:JSON.parse(sessionStorage.getItem("user")).userId,
             login:sessionGetItem('token'),
             panelType:1,
             data:[],
             mineData:[]
         }
+        this.handleUptodo = this.handleUptodo.bind(this)
     }
 
     render() {
@@ -53,9 +55,7 @@ class Mine extends PureComponent {
         }
         
         let mineData = this.state.mineData
-        if(this.props.mineData && this.props.mineData.length) {
-            mineData = this.props.mineData
-        }
+        
         // console.log(mineData)
         // console.log(this.props.mineData)
         const operations = <Button onClick={() => {this.props.handleSave(panelType, this.oldPwd, this.newPwd, this.aginNewPwd, this.changeOldPwd, this.changeNewTel, user, changeOldPwd, changeNewTel)}}>保存</Button>;
@@ -115,18 +115,21 @@ class Mine extends PureComponent {
                                             旧密码
                                         </ChangePwoTitle>
                                         <Input className="change-pwo-input" placeholder="请输入旧密码"
+                                            type='password'
                                             ref={(input) => this.oldPwd = input}
                                         />
                                         <ChangePwoTitle>
                                             新密码
                                         </ChangePwoTitle>
                                         <Input className="change-pwo-input" placeholder="请输入新密码"
+                                            type='password'
                                             ref={(input) => this.newPwd = input}
                                         />
                                         <ChangePwoTitle>
                                             确认新密码
                                         </ChangePwoTitle>
                                         <Input className="change-pwo-input" placeholder="请再次输入新密码"
+                                            type='password'
                                             ref={(input) => this.aginNewPwd = input}
                                         />
                                     </ChangePanel>
@@ -138,16 +141,17 @@ class Mine extends PureComponent {
                                         </ChangePwoTitle>
                                         <Input className="change-pwo-input" placeholder="请输入登录密码"
                                             ref={(input) => this.changeOldPwd = input}
-                                            value={changeOldPwd}
-                                            onChange={() => {this.handelChange(1, this.changeOldPwd)}}
+                                            type='password'
+                                            // value={changeOldPwd}
+                                            // onChange={() => {this.handelChange(1, this.changeOldPwd)}}
                                         />
                                         <ChangePwoTitle>
                                         新手机号    
                                         </ChangePwoTitle>
                                         <Input className="change-pwo-input" placeholder="请输入新手机号码"
                                             ref={(input) => this.changeNewTel = input}
-                                            value={changeNewTel}
-                                            onChange={() => {this.handelChange(2, this.changeNewTel)}}
+                                            // value={changeNewTel}
+                                            // onChange={() => {this.handelChange(2, this.changeNewTel)}}
                                         />
                                     </ChangePanel>
                                 </TabPane>
@@ -159,6 +163,10 @@ class Mine extends PureComponent {
         }else{
             return <Redirect to="/login"></Redirect>
         }
+    }
+
+    componentDidMount() {
+        this.handleUptodo()
     }
 
 
@@ -176,21 +184,44 @@ class Mine extends PureComponent {
             let data = res.data
             if(data.code === 1 && data.msg === 'success') {
                 message.success('消息已关闭')
-                mineData.splice(index, 1)
-                // console.log(mineData)
-                this.setState({
-                    mineData:mineData
-                }, () => {
-                    if(mineData.length) {
-                        this.props.handleMineStatus(true)
-                    }else{
-                        this.props.handleMineStatus(false)
-                    }
+                this.handleUptodo()
+                // mineData.splice(index, 1)
+                // this.setState({
+                //     mineData:mineData
+                // }, () => {
+                //     if(mineData.length) {
+                //         this.props.handleMineStatus(true)
+                //     }else{
+                //         this.props.handleMineStatus(false)
+                //     }
                     
-                })
+                // })
                 
             } else{
                 message.success(data.msg)
+            }
+        })
+    }
+
+    handleUptodo() {
+        let params = {
+            userId:this.state.userId
+        }
+        todoList(params).then((res) => {
+            let data = res.data;
+            // console.log(data)
+            if(data.code === 1 && data.msg === 'success') {
+               
+                if(data.data) {
+                    this.setState({
+                        mineData:data.data
+                    })
+                    
+                }else{
+                    // this.setState({
+                    //     msg:false
+                    // })
+                }
             }
         })
     }
@@ -200,7 +231,7 @@ class Mine extends PureComponent {
 }
 
 const mapState = (state) => ({
-    mineData:state.getIn(['left', 'mineData']).toJS(),
+    // mineData:state.getIn(['left', 'mineData']).toJS(),
     changeOldPwd:state.getIn(['mine', 'changeOldPwd']),
     changeNewTel:state.getIn(['mine', 'changeNewTel'])
 })
@@ -277,11 +308,15 @@ const mapDispatch = (dispatch) => ({
             
         }else{
             let changepwd = sessionGetItem('changepwd')
-            if(!changepwd) {
-                if(!changeOldPwd.input.value) {
-                    message.error('请填写密码')
-                    return
-                }
+            // if(!changepwd) {
+            //     if(!changeOldPwd.input.value) {
+            //         message.error('请填写密码')
+            //         return
+            //     }
+            // }
+            if(!changeOldPwd.input.value) {
+                message.error('请填写密码')
+                return
             }
             if(!checkmobile.test(changeNewTel.input.value)) {
                 message.error('请输入正确的手机号')
@@ -293,10 +328,14 @@ const mapDispatch = (dispatch) => ({
                 password:changeOldPwd.input.value,
                 mobilePhone:changeNewTel.input.value
             }
+
+
             changeMobile(params).then((res) => {
                 let data = res.data
                 if(data.code === 1 && data.msg === 'success') {
                     message.success('修改成功')
+                    changeOldPwd.input.value = ''
+                    changeNewTel.input.value = ''
                     let action = actionCreators.changeMobile(1, '')
                     dispatch(action)
                     let action_two = actionCreators.changeMobile(2, '')

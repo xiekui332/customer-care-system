@@ -57,7 +57,8 @@ class User extends Component {
             userDetail:{},
             saveDetail:{},
             isLook:false,
-            isbtn:false
+            isbtn:false,
+            activeId:''
         }
 
         this.resetHeight = this.resetHeight.bind(this)
@@ -169,13 +170,13 @@ class User extends Component {
                                                 </MiddleList>
                                             )
                                         })
-                                        :""
+                                        :<Empty className='empty' description={'暂无数据'}/>
                                     }
  
                                     {   
-                                        spin?
-                                        <Spin size="large" className="spin" />
-                                        :''
+                                        // spin?
+                                        // <Spin size="large" className="spin" />
+                                        // :''
                                     }
 
                                     
@@ -356,11 +357,7 @@ class User extends Component {
             // 滚动翻页
             el.addEventListener('scroll', () => {
                 if(this.scrollTop() + this.windowHeight() >= (this.documentHeight() - 50/*滚动响应区域高度取50px*/)) {
-                    this.setState({
-                        pageNum: this.state.pageNum + 1
-                    }, () => {
-                        this.getData()
-                    })
+                    this.getData('concatList')
                 }
             })
         }
@@ -381,8 +378,8 @@ class User extends Component {
     }
 
     // getList methods
-    getData(searchEl) {
-        console.log(this.state.load)
+    getData(condition) {
+        // console.log(this.state.load)
         if(this.state.load) {
             let params = {
                 cabinetNo:this.state.cabinetNo,
@@ -390,49 +387,72 @@ class User extends Component {
                 pageNum:this.state.pageNum,
                 pageSize:this.state.pageSize
             }
-
-            // 收起搜索
-            if(searchEl) {
-                searchEl.classList.remove('searchel-show')
-            }
-            userList(params).then((res) => {
-                let data = res.data;
-                this.setState({
-                    spin:true
-                })
-                data.data.list.map((item, index) => (
-                    item.active = false
-                ))
-                
-                if(data.code === 1 && data.msg === 'success') {
-                    if(data.data && data.data.list) {
-                        this.setState({
-                            userList:this.state.userList.concat(data.data.list),
-                            spin:false
-                        }, () => {
-                            if(!data.data.hasNextPage) {
+            this.setState({
+                load:false
+            }, () => {
+                userList(params).then((res) => {
+                    let data = res.data;
+                    this.setState({
+                        spin:true
+                    })
+                    data.data.list.map((item, index) => (
+                        item.active = false
+                    ))
+                    if(this.state.activeId) {
+                        data.data.list.map((item, index) => (
+                            item.userId == this.state.activeId?item.active = true:''
+                        ))
+                    }
+                    
+                    if(data.code === 1 && data.msg === 'success') {
+                        if(data.data && data.data.list) {
+    
+                            let newhomeList = this.state.userList
+                            // 滚动加载的数据
+                            if(condition === 'concatList') {
+                                this.setState({
+                                    userList:newhomeList.concat(data.data.list),
+                                    spin:false
+                                })
+                            }else{
+                                this.setState({
+                                    userList:data.data.list,
+                                    spin:false
+                                })
+                            }
+    
+                            if(data.data.hasNextPage) {
+                                this.setState({
+                                    load:true,
+                                    pageNum:data.data.pageNum + 1
+                                })
+                            }else {
                                 this.setState({
                                     load:false
                                 })
                             }
-                            
-
-                        })
+    
+                        }else{
+                            message.error('暂无数据')
+                            this.setState({
+                                load:false
+                            })
+                        }
+                        
                     }else{
-                        message.error('暂无数据')
                         this.setState({
                             load:false
                         })
                     }
-                    
-                }else{
-                    message.error(data.msg)
-                }
-
+    
+                })
+                .catch((err) => {
+                    this.setState({
+                        load:false
+                    })
+                })
             })
-            .catch((err) => {
-                message.error(err.msg)
-            })
+            
         }
         
     }
@@ -458,7 +478,8 @@ class User extends Component {
             nodata:false,
             userDetail:params,
             userType:undefined,
-            isLook:false
+            isLook:false,
+            activeId:''
         },() => {
            
         })
@@ -514,7 +535,10 @@ class User extends Component {
             load:true,
             userList:[]
         }, () => {
-            this.getData(searchEl)
+            
+            // 收起搜索
+            searchEl.classList.remove('searchel-show')
+            this.getData()
         })
         
 
@@ -522,6 +546,7 @@ class User extends Component {
 
     // 保存用户
     handleAddSave(nameel, idCardel, mobileel, userId, organNum, organName) {
+        
         let params = {}
         if(userId) {
             params = {
@@ -562,39 +587,35 @@ class User extends Component {
             message.error('请填写机构名称')
         }
         else {
-            let part = '';
-            
 
             if(userId) {
+                // console.log(this.state.userType)
                 params.userId = userId
-                if( this.state.userType === '用户管理员') {
-                    part = "1"
-                }else if( this.state.userType === '客户经理') {
-                    part = "2"
-                }else if( this.state.userType === '审核员') {
-                    part = "3"
-                }else if( this.state.userType === '业务管理员') {
-                    part = "4"
-                }
+                params.userType = this.state.userType
+                
                 
             }else{
-                part = this.state.userType
+                
+                params.userType = this.state.userType
             }
             params.name = nameel.input.value
             params.cabinetNo = idCardel.input.value
             params.mobilePhone = mobileel.input.value
-            params.userType = part
+            
             params.remark = ''
             // params.relationship = ''
             params.orgNo = organNum.input.value
             params.orgName = organName.input.value
-           
+            
             createUser(params)
             .then((res) => {
                 let data = res.data;
                 if(data.code === 1 && data.msg === 'success') {
                    if(userId) {
                         message.success('编辑成功')
+                        this.setState({
+                            activeId:userId
+                        })
                    }else{
                         message.success('新建成功')
                    }
@@ -604,7 +625,6 @@ class User extends Component {
                     mobileel.input.value = ''
                     
                     this.setState({
-                        userList:[],
                         load:true,
                         pageNum:1,
                         pageSize:10,
@@ -627,22 +647,27 @@ class User extends Component {
     handleAddCancel(saveDetail, addmustorEl) {
         addmustorEl.classList.remove('add-customer-show')
 
-        if(saveDetail.cabinetNo) {
+        // if(saveDetail.cabinetNo) {
             
-            // 有详情
-            this.setState({
-                add:true,
-                nodata:false,
-                userDetail:sessionGetItem('saveDetail'),
-                isbtn:false
-            })
-        }else{
-            // 无详情
-            this.setState({
-                add:false,
-                nodata:true
-            })
-        }
+        //     // 有详情
+        //     this.setState({
+        //         add:true,
+        //         nodata:false,
+        //         userDetail:sessionGetItem('saveDetail'),
+        //         isbtn:false
+        //     })
+        // }else{
+        //     // 无详情
+        //     this.setState({
+        //         add:false,
+        //         nodata:true
+        //     })
+        // }
+         // 无详情
+         this.setState({
+            add:false,
+            nodata:true
+        })
         
     }
 
@@ -738,6 +763,8 @@ class User extends Component {
         }
         this.setState({
             userType:value
+        }, () => {
+            // console.log(value)
         })
     }
 

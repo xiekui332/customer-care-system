@@ -2,8 +2,6 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Upload, Tooltip, Empty, Spin, Modal, message, Input } from 'antd';
 import "antd/dist/antd.css";
-import Swiper from 'swiper/dist/js/swiper.js'
-import 'swiper/dist/css/swiper.min.css'
 import AddNewCus from '../../../common/AddNewCus'
 import { handlecustomDelete, toTransfer, sureToTransfer, changeCarefull } from '../../../api'
 import { actionCreators } from '../store'
@@ -171,18 +169,13 @@ class MiddleWrapper extends PureComponent{
                                         <td>{(customerDetail && customerDetail.industryClass) || <span className="no-data">暂无</span>}</td>
                                     </tr>
                                     <tr>
-                                        <td>公司名称</td>
+                                        <td>公司(店铺)名称</td>
                                         <td>{(customerDetail && customerDetail.companyName) || <span className="no-data">暂无</span>}</td>
                                     </tr>
                                     <tr>
                                         <td>经营内容</td>
                                         <td>{(customerDetail && customerDetail.businessContent) || <span className="no-data">暂无</span>}</td>
                                     </tr>
-                                    <tr>
-                                        <td>是否有经营合伙人</td>
-                                        <td>{(customerDetail && customerDetail.isBusinessPartner === 0?'无':'有')}</td>
-                                    </tr>
-                                    {/* 新增 */}
                                     <tr>
                                         <td>经营地址</td>
                                         <td>{(customerDetail && customerDetail.businessAddress) || <span className="no-data">暂无</span>}</td>
@@ -191,12 +184,15 @@ class MiddleWrapper extends PureComponent{
                                         <td>工作人员数量</td>
                                         <td>{(customerDetail && customerDetail.staffNum) || <span className="no-data">暂无</span>}</td>
                                     </tr>
+                                    
+                                    {/* {console.log(customerDetail)} */}
+                                    {/* 新增 */}
                                     <tr>
                                         <td>生产经营面积</td>
                                         <td>{(customerDetail && customerDetail.businessArea) || <span className="no-data">暂无</span>}</td>
                                     </tr>
                                     <tr>
-                                        <td>年营业额(万元)</td>
+                                        <td>年营业额(近三年平均)</td>
                                         <td>{(customerDetail && customerDetail.yearlyTurnover) || <span className="no-data">暂无</span>}</td>
                                     </tr>
                                     <tr>
@@ -204,7 +200,11 @@ class MiddleWrapper extends PureComponent{
                                         <td>{(customerDetail && customerDetail.property) || <span className="no-data">暂无</span>}</td>
                                     </tr>
                                     <tr>
-                                        <td>信用情况</td>
+                                        <td>负债情况(万元)</td>
+                                        <td>{(customerDetail && customerDetail.liabilities) || <span className="no-data">暂无</span>}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>信用情况(人品、口碑)</td>
                                         <td>{(customerDetail && customerDetail.creditInfo) || <span className="no-data">暂无</span>}</td>
                                     </tr>
                                     <tr>
@@ -220,8 +220,12 @@ class MiddleWrapper extends PureComponent{
                                         <td>{(customerDetail && customerDetail.existingBusinessType) || <span className="no-data">暂无</span>}</td>
                                     </tr>
                                     <tr>
-                                        <td>已发生业务金额(元)</td>
+                                        <td>已发生业务金额</td>
                                         <td>{(customerDetail && customerDetail.existingBusinessAmount) || <span className="no-data">暂无</span>}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>是否有经营合伙人</td>
+                                        <td>{(customerDetail && customerDetail.isBusinessPartner === 0?'无':'有')}</td>
                                     </tr>
                                     <tr>
                                         <td>关联人姓名</td>
@@ -232,15 +236,18 @@ class MiddleWrapper extends PureComponent{
                                         <td>{(customerDetail && customerDetail.relatIdcard) || <span className="no-data">暂无</span>}</td>
                                     </tr>
                                     <tr>
-                                        <td>与关联人关系(合伙人、家庭成员)</td>
+                                        <td>关联人关系</td>
                                         <td>{(customerDetail && customerDetail.relatRelationship) || <span className="no-data">暂无</span>}</td>
                                     </tr>
                                     <tr>
                                         <td>关联人联系电话</td>
                                         <td>{(customerDetail && customerDetail.relatPhone) || <span className="no-data">暂无</span>}</td>
                                     </tr>
+                                    {
+                                        // console.log(customerDetail)
+                                    }
                                     <tr>
-                                        <td>备注</td>
+                                        <td>关联人备注</td>
                                         <td>{(customerDetail && customerDetail.relatRemark) || <span className="no-data">暂无</span>}</td>
                                     </tr>
                                 </tbody>
@@ -248,14 +255,7 @@ class MiddleWrapper extends PureComponent{
                             
                             {
                                 customerDetail.attachs && customerDetail.attachs.length?
-                                // <RightCarousel className="swiper-container">
-                                //         <span className="iconfont swiper-button-prev">&#xe663;</span>
-                                //         <span className="iconfont swiper-button-next">&#xe6a8;</span>
-                                //         <div className="swiper-wrapper">
-                                //             <div className="swiper-slide">Slide 1</div>
-                                //         </div>
-                                //         <div className='swiper-pagination'></div>
-                                // </RightCarousel>
+                                
                                 <Fragment>
                                     
                                     <div className="list-photo">
@@ -392,21 +392,7 @@ class MiddleWrapper extends PureComponent{
     }
 
     componentDidMount() {
-        new Swiper('.swiper-container', {
-            autoplay: false,
-            loop: false,
-            slidesPerView: 4,
-            spaceBetween: 20,
-            pagination : {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            // 如果需要前进后退按钮
-            navigation: {
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev',
-            },
-          })
+        
         
             let h = document.getElementsByClassName('detailWrapper')[0].clientHeight;
             this.carefulrea.style.height = (h - 60) + 'px'
