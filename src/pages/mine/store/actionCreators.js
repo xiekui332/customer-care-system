@@ -43,3 +43,18 @@ export const changeMineStatus = (bool) => {
         dispatch(action)
     }
 }
+
+
+// 改变我的tel
+export const changeMinetel = (bool) => {
+    return (dispatch) => {
+        let action = {
+            type:constants.CHANGE_MINE_TEL,
+            bool
+        }
+        dispatch(action)
+    }
+}
+
+
+// changeMinetel

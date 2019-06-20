@@ -77,7 +77,14 @@ class MiddleWrapper extends Component{
                 <MiddleHeader>
                     {
                         user.userType === 3?
-                        <span>客户审核</span>
+                        <Fragment>
+                            <span>客户审核</span>
+                            <OperateWrapper>
+                            {/* <Tooltip title="搜索" onClick={() => {this.handleSearchCustomerNew(search)}}>
+                                <span className="iconfont">&#xe7c0;</span>
+                            </Tooltip> */}
+                            </OperateWrapper>
+                        </Fragment>
                         :
                         <Fragment>
                             <span>客户管理</span>
@@ -85,18 +92,22 @@ class MiddleWrapper extends Component{
                                 {
                                     user.userType === 4?
                                     <Tooltip title="搜索" onClick={() => {this.handleSearchCustomer(search)}}>
-                                        <span className="iconfont">&#xe7c0;</span>
+                                        {/* <span className="iconfont">&#xe7c0;</span> */}
+                                        <div className="reset-sousuo"></div>
                                     </Tooltip>
                                     :
                                     <Fragment>
                                         <Tooltip title="新建客户" onClick={() => {this.addCustomer(isAdd)}}>
-                                            <span className="iconfont iconfont-add">&#xe64c;</span>
+                                            {/* <span className="iconfont iconfont-add">&#xe64c;</span> */}
+                                            <div className="reset-jia"></div>
                                         </Tooltip>
                                         <Tooltip title="搜索" onClick={() => {this.handleSearchCustomer(search)}}>
-                                            <span className="iconfont">&#xe7c0;</span>
+                                            {/* <span className="iconfont">&#xe7c0;</span> */}
+                                            <div className="reset-sousuo"></div>
                                         </Tooltip>
                                         <Tooltip title="管理" onClick={() => {this.handleEditCustomer(edit, homeList, this.editWrapperEl, this.middleListWrapperEl)}}>
-                                            <span className="iconfont">&#xe693;</span>
+                                            {/* <span className="iconfont">&#xe693;</span> */}
+                                            <div className="reset-bianji"></div>
                                         </Tooltip>
                                     </Fragment>
                                 }
@@ -244,6 +255,59 @@ class MiddleWrapper extends Component{
                         </AddButtonWrapper>
                     </SearchWrapper> 
 
+
+                    {/* 审核员搜索 */}
+                    <SearchWrapper className={search?"searchWrapper":''}>
+                        {
+                            user.userType === 3?
+                            <Fragment>
+                                <SearchCondition>
+                                    <div className="condition-select">
+                                        <p>客户姓名</p>
+                                        <SearchInput 
+                                            placeholder="请输入客户姓名"
+                                            ref={(input) => {this.cusName = input}}
+                                        ></SearchInput>
+                                    </div>
+                                    
+                                    <div className="condition-select">
+                                        <p>公司名称</p>
+                                        <SearchInput 
+                                            placeholder="请输入公司名称"
+                                            ref={(input) => {this.cusCompanyName = input}}
+                                        ></SearchInput>
+                                    </div>
+                                </SearchCondition>
+                                <SearchCondition>
+                                    <div className="condition-select">
+                                        <p>手机号</p>
+                                        <SearchInput 
+                                            placeholder="请输入手机号"
+                                            ref={(input) => {this.cusTelName = input}}
+                                        ></SearchInput>
+                                    </div>
+                                    <div className="condition-select condition-select-opacity">
+                                        <p>手机号</p>
+                                        <SearchInput 
+                                            placeholder="请输入手机号"
+                                            readonly ="readonly"
+                                            disabled="disabled" 
+                                        ></SearchInput>
+                                    </div>
+                                </SearchCondition>
+                                <AddButtonWrapper>
+                                    <AddCusButton className="add-cancel" 
+                                        onClick={() => {this.handleCancelSearchNew(this.cusName, this.cusCompanyName, this.cusTelName)}}
+                                    >取消</AddCusButton>
+                                    <AddCusButton className="add-save"
+                                        onClick={() => {this.handleSaveSearchNew(this.cusName, this.cusCompanyName, this.cusTelName)}}
+                                    >查询</AddCusButton>
+                                </AddButtonWrapper>
+                            </Fragment>
+                            :""
+                        }
+                    </SearchWrapper>
+
                     {
                         homeList && homeList.length?
                         homeList.map((item, index) => (
@@ -254,7 +318,8 @@ class MiddleWrapper extends Component{
                                 {/* <MiddleChceckBox className={edit?"middleChceckBox":" "}>
                                     <span className={edit && item.active?"iconfont isShow":"iconfont isHide"}>&#xe617;</span>
                                 </MiddleChceckBox> */}
-                                <span className={edit && item.active?'iconfont same-active same-active2 click-active same-active3':'iconfont same-active same-active2'}>&#xe617;</span>
+                                <div className={edit && item.active?'iconfont same-active same-active2 click-active same-active3 reset-select':'iconfont same-active same-active2 reset-select'}></div>
+                                {/* <span className={edit && item.active?'iconfont same-active same-active2 click-active same-active3':'iconfont same-active same-active2'}>&#xe617;</span> */}
                                 <MiddleChceckBox className={edit?'same-active same-active1 click-active':'same-active same-active1'}></MiddleChceckBox>
                                 
                                 
@@ -287,14 +352,16 @@ class MiddleWrapper extends Component{
                     {
                         user.userType === 2?
                         <EditItem onClick={() => {this.handleToTransfer(this.transferWrapEl, homeList)}}>
-                            <span className="iconfont">&#xe60c;</span>
+                            {/* <span className="iconfont">&#xe60c;</span> */}
+                            <div className="reset-yijiao"></div>
                             <p>移交</p>
                         </EditItem>
                         :""
                     }
                     
                     <EditItem onClick={() => {this.handledelete(confirm, homeList)}}>
-                        <span className="iconfont">&#xe619;</span>
+                        {/* <span className="iconfont">&#xe619;</span> */}
+                        <div className="reset-shanchu"></div>
                         <p>删除</p>
                     </EditItem>
                     {/* <EditItem>
@@ -342,6 +409,25 @@ class MiddleWrapper extends Component{
             this.setState({
                 load:true,
                 pageNum:1
+            }, () => {
+                this.getListData()
+                return
+            })
+        }
+        if(this.props.trans) {
+            this.setState({
+                load:true,
+                pageNum:1,
+                name:'',
+                companyName:'',               // 公司名称
+                yearlyTurnoverSymbol:'',      // 年营业额符号（><=）
+                yearlyTurnover:'',           // 年营业额（万元）   
+                propertySymbol:'',          // 资产情况符号（><=）
+                property:'',                // 资产情况（万元）
+                liabilitiesSymbol:'',       // 负债情况符号（><=）
+                liabilities:'',             // 负债情况（万元）
+                demandAmountSymbol:'',      // 需求金额符号（><=）
+                demandAmount:''            // 需求金额（万元）
             }, () => {
                 this.getListData()
                 return
@@ -451,6 +537,16 @@ class MiddleWrapper extends Component{
         })
     }
 
+    handleCancelSearchNew(cusName, cusCompanyName, cusTelName) {
+        this.setState({
+            search:false
+        }, () => {
+            cusName.value = ''
+            cusCompanyName.value = ''
+            cusTelName.value = ''
+        })
+    }
+
     // 搜索查询数据
     handleSaveSearch(cusName, cusCompanyName, yearlyTurnoverEl, propertyEl, liabilitiesEl, demandAmountEl) {
         this.setState({
@@ -467,9 +563,22 @@ class MiddleWrapper extends Component{
         })
     }
 
+    handleSaveSearchNew(cusName, cusCompanyName, cusTelName) {
+        this.setState({
+            name:cusName.value,
+            companyName:cusCompanyName.value,
+            mobilePhone:cusTelName.value,
+            load:true,
+            pageNum:1
+        }, () => {
+            this.getListData()
+        })
+    }
+
     // 获取list
     getListData(condition) {
         this.props.handleChangeStatus(false)
+        this.props.handleChangeTrans(false)
         if(this.state.load) {
             let data = this.state.user;
             let { name, mobilePhone, companyName, yearlyTurnoverSymbol, yearlyTurnover, propertySymbol, property, liabilitiesSymbol, liabilities, demandAmountSymbol, 
@@ -588,6 +697,13 @@ class MiddleWrapper extends Component{
         })
     }
 
+    handleSearchCustomerNew() {
+        this.setState({
+            search:!this.state.search,
+            isAdd:false
+        })
+    }
+
      // 点击编辑
     handleEditCustomer(edit, homeList, editWrapperEl, middleListWrapperEl) {
         
@@ -700,6 +816,10 @@ class MiddleWrapper extends Component{
             })
             
         }
+
+
+        // 派发空数组
+        this.props.dishandlenone(true)
     }
 
     // 列表删除
@@ -852,9 +972,30 @@ class MiddleWrapper extends Component{
         }
         sureToTransfer(params).then((res) => {
             let data = res.data;
-            console.log(data)
+            // console.log(data)
             if(data.code === 1 && data.msg === 'success') {
                 message.success('移交成功')
+                this.setState({
+                    load:true,
+                    pageNum:1,
+                    name:'',
+                    companyName:'',               // 公司名称
+                    yearlyTurnoverSymbol:'',      // 年营业额符号（><=）
+                    yearlyTurnover:'',           // 年营业额（万元）   
+                    propertySymbol:'',          // 资产情况符号（><=）
+                    property:'',                // 资产情况（万元）
+                    liabilitiesSymbol:'',       // 负债情况符号（><=）
+                    liabilities:'',             // 负债情况（万元）
+                    demandAmountSymbol:'',      // 需求金额符号（><=）
+                    demandAmount:''            // 需求金额（万元）
+                }, () => {
+                    this.getListData()
+                    let params = {
+                        isAdd:false
+                    }
+                    this.props.isAddAction(params)
+                    this.props.disShowDetail(false)
+                })
                 transferWrapEl.classList.remove('active')
             }else{
                 message.error(data.msg)
@@ -920,6 +1061,17 @@ const mapDispatch = (dispatch) => ({
     handleCusEdit(bool) {
         let action = actionCreators.changeCusEdit(bool)
         dispatch(action)
+    },
+
+    dishandlenone(bool) {
+        let action = actionCreators.changenofileList(bool)
+        dispatch(action)
+    },
+
+    //  改变移交后的状态
+    handleChangeTrans(bool) {
+        let action = actionCreators.changeTransStatus(bool)
+        dispatch(action)
     }
    
    
@@ -929,7 +1081,8 @@ const mapState = (state) => ({
     isAdd:state.getIn(['left', 'isAdd']),
     isEdit:state.getIn(['left', 'isEdit']),
     homeList:state.getIn(['left', 'homeList']),
-    changeAddStatus:state.getIn(['left', 'changeAddStatus'])
+    changeAddStatus:state.getIn(['left', 'changeAddStatus']),
+    trans:state.getIn(['left', 'trans'])
 })
 
 export default connect(mapState, mapDispatch)(MiddleWrapper)

@@ -11,7 +11,7 @@ export const MessageWrapper = styled.div`
     flex:2;
     display:flex;
     .ant-empty{
-        margin:30% auto 0;
+        margin:15% auto 0;
     }
 `;
 
@@ -95,6 +95,7 @@ export const MessageItem = styled.div`
 export const MessageContent = styled.div`
     font-size:14px;
     color:#999;
+    line-height: 22px;
 `;
 
 

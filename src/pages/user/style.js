@@ -1,5 +1,9 @@
 import styled from 'styled-components'
 import imgurl from  '../../statics/images/jl.png'
+import sousuo from  '../../statics/images/reset-sousuo.png'
+import jia from  '../../statics/images/reset-jia.png'
+import bianji from  '../../statics/images/reset-bianji.png'
+import shanchu from  '../../statics/images/reset-shanchu.png'
 
 export const Large = styled.div`
     
@@ -71,6 +75,39 @@ export const OperateWrapper = styled.div`
     }
     span:hover{
         color:#333;
+    }
+    .reset-sousuo{
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        overflow: hidden;
+        background:url(${sousuo}) 100% 100% no-repeat;
+        background-size: cover;
+        margin: 20px 5px 0 5px;
+        float: left;
+    }
+    .reset-jia{
+        display: inline-block;
+        width: 19px;
+        height: 19px;
+        border-radius: 50%;
+        overflow: hidden;
+        background:url(${jia}) 100% 100% no-repeat;
+        background-size: cover;
+        margin: 20px 10px 0 5px;
+        float: left;
+    }
+    .reset-bianji{
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        overflow: hidden;
+        background:url(${bianji}) 100% 100% no-repeat;
+        background-size: cover;
+        margin: 20px 10px 0 10px;
+        float: left;
     }
 `;
 
@@ -198,12 +235,12 @@ export const CustomerInfo = styled.div`
         margin-left:20px;
     }
     p:nth-child(1){
-        margin: 15px 0 0 0px;
+        margin: 18px 0 0 0px;
     }
     p:nth-child(2){
         font-size:14px;
         color:#999;
-        margin: 3px 0 0 0;
+        margin: 12px 0 0 0;
         overflow:hidden;
         text-overflow:ellipsis;
         white-space:nowrap
@@ -320,6 +357,7 @@ export const SearchWrapper = styled.div`
     height:0;
     overflow:hidden;
     background:#f7f7f7;
+    padding:0 20px;
     input{
         outline:none;
         border:1px solid #dcdcdc;
@@ -335,14 +373,14 @@ export const SearchWrapper = styled.div`
     }
     transition:all ease-in .2s;
     &.searchel-show{
-        height:160px;
+        height:180px;
     }
 `;
 
 export const SearchCondition = styled.div`
     display:block;
-    width:340px;
-    margin:0px auto;
+    width:45%;
+    float:left;
     overflow:hidden;
     span{
         display:block;
@@ -350,17 +388,17 @@ export const SearchCondition = styled.div`
         font-size:13px;
         color:#666;
         line-height:30px;
-        margin-top:20px;
-        margin-right:10px;
+    }
+    &:nth-child(even){
+        float:right;
     }
 `;
 
 export const SearchInput = styled.input`
     display:block;
-    width:200px;
+    width:100%;
     height:30px;
     float:left;
-    margin-top:20px;
 `;
 
 export const StatusWrapper = styled.div`
@@ -409,6 +447,20 @@ export const EditItem = styled.div`
     }
     &:hover{
         color:#666;
+    }
+    >p{
+        margin-top:10px;
+    }
+    
+    .reset-shanchu{
+        display: block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        overflow: hidden;
+        background:url(${shanchu}) 100% 100% no-repeat;
+        background-size: cover;
+        margin: 5px auto;
     }
 `;
 

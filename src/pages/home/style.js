@@ -1,5 +1,14 @@
 import styled from 'styled-components';
 import imgurl from  '../../statics/images/jl.png'
+import tuichu from  '../../statics/images/reset-tuichu.png'
+import beifen from  '../../statics/images/reset-beifen.png'
+import jia from  '../../statics/images/reset-jia.png'
+import sousuo from  '../../statics/images/reset-sousuo.png'
+import bianji from  '../../statics/images/reset-bianji.png'
+import shanchu from  '../../statics/images/reset-shanchu.png'
+import yijiao from  '../../statics/images/reset-yijiao.png'
+import select from  '../../statics/images/reset-select.png'
+import fbj from  '../../statics/images/reset-fangbj.png'
 
 export const ConWrapper = styled.div`
     display:flex;
@@ -134,6 +143,7 @@ export const LeftButton = styled.div`
         font-size:14px;
         line-height:50px;
         text-align:center;
+        float: left;
     }
     div:nth-child(1) span:nth-child(1){
         margin:0 5px 0 20px;
@@ -147,6 +157,28 @@ export const LeftButton = styled.div`
     }
     a:hover{
         color:#666;
+    }
+    .reset-tuichu{
+        display:inline-block;
+        width: 18px;
+        height: 18px;
+        border-radius:50%;
+        overflow:hidden;
+        background:url(${tuichu}) 100% 100% no-repeat;
+        background-size:cover;
+        margin: 15px 5px 0 20px;
+        float: left;
+    }
+    .reset-beifen{
+        display:inline-block;
+        width: 18px;
+        height: 18px;
+        border-radius:50%;
+        overflow:hidden;
+        background:url(${beifen}) 100% 100% no-repeat;
+        background-size:cover;
+        margin: 15px 5px 0 10px;
+        float: left;
     }
 `;
 
@@ -268,6 +300,9 @@ export const SearchCondition = styled.div`
             margin-bottom:3px;
         }
     }
+    .condition-select-opacity{
+        opacity:0;
+    }
 `;
 
 export const AddButtonWrapper = styled.div`
@@ -355,6 +390,39 @@ export const OperateWrapper = styled.div`
     .iconfont-add{
         font-size: 16px;
     }
+    .reset-sousuo{
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        overflow: hidden;
+        background:url(${sousuo}) 100% 100% no-repeat;
+        background-size: cover;
+        margin: 20px 5px 0 5px;
+        float: left;
+    }
+    .reset-bianji{
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        overflow: hidden;
+        background:url(${bianji}) 100% 100% no-repeat;
+        background-size: cover;
+        margin: 20px 10px 0 10px;
+        float: left;
+    }
+    .reset-jia{
+        display: inline-block;
+        width: 19px;
+        height: 19px;
+        border-radius: 50%;
+        overflow: hidden;
+        background:url(${jia}) 100% 100% no-repeat;
+        background-size: cover;
+        margin: 20px 10px 0 5px;
+        float: left;
+    }
 `;
 
 export const MiddleListWrapper = styled.div`
@@ -377,6 +445,17 @@ export const MiddleListWrapper = styled.div`
     }
     .ant-empty{
         margin-top: 30%;
+    }
+    .reset-select{
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        overflow: hidden;
+        background:url(${select}) 100% 100% no-repeat;
+        background-size: cover;
+        margin: 20px 5px 0 5px;
+        float: left;
     }
 `;
 
@@ -509,12 +588,12 @@ export const CustomerInfo = styled.div`
         margin-left:20px;
     }
     p:nth-child(1){
-        margin: 15px 0 0 0;
+        margin: 18px 0 0 0;
     }
     p:nth-child(2){
         font-size:14px;
         color:#999;
-        margin: 15px 0 0 0;
+        margin: 12px 0 0 0;
         overflow:hidden;
         text-overflow:ellipsis;
         white-space:nowrap
@@ -555,6 +634,28 @@ export const EditItem = styled.div`
     p{
         margin-top:10px;
     }
+    
+    .reset-shanchu{
+        display: block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        overflow: hidden;
+        background:url(${shanchu}) 100% 100% no-repeat;
+        background-size: cover;
+        margin: 5px auto;
+    }
+    
+    .reset-yijiao{
+        display: block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        overflow: hidden;
+        background:url(${yijiao}) 100% 100% no-repeat;
+        background-size: cover;
+        margin: 5px auto;
+    }
 `;
 
 // RightWrapper details
@@ -574,6 +675,42 @@ export const RightHeaderWrapper = styled.div`
     padding-right:30px;
     .iconfont{
         margin-right:20px;
+    }
+    
+    .reset-shanchu{
+        display: block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        overflow: hidden;
+        background:url(${shanchu}) 100% 100% no-repeat;
+        background-size: cover;
+        margin: 25px 25px;
+        cursor:pointer;
+    }
+    
+    .reset-fangbj{
+        display: block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        overflow: hidden;
+        background:url(${fbj}) 100% 100% no-repeat;
+        background-size: cover;
+        margin: 25px 25px 0 0;
+        cursor:pointer;
+    }
+    
+    .reset-yijiao{
+        display: block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        overflow: hidden;
+        background:url(${yijiao}) 100% 100% no-repeat;
+        background-size: cover;
+        margin: 25px 25px 0 0;
+        cursor:pointer;
     }
 `;
 
@@ -779,6 +916,17 @@ export const TotransferItem = styled.div`
     &:hover{
         background:#fff;
     }
+    .moren-img{
+        display:block;
+        width:40px;
+        height:40px;
+        border-radius:50%;
+        float:left;
+        margin:0px 0px 0px 0px;
+        overflow:hidden;
+        background:url(${imgurl}) 100% 100% no-repeat;
+        background-size:cover;
+    }
 `;
 
 export const ToTraItem = styled.div`
@@ -798,7 +946,7 @@ export const ToTraItem = styled.div`
     }
     &.trans-item{
         display:inline-block;
-        margin-top:-3px;
+        margin-top:0px;
     }
     .trans-title{
         float:left;
@@ -808,9 +956,10 @@ export const ToTraItem = styled.div`
         overflow:hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        line-height:20px;
     }
     .trans-mobile{
-        line-height:25px;
+        line-height:20px;
         max-width:100px;
         overflow:hidden;
         text-overflow: ellipsis;
@@ -818,6 +967,7 @@ export const ToTraItem = styled.div`
     }
     .trans-idCard{
         padding-left:20px;
+        line-height: 25px;
     }
 `;
 
@@ -875,7 +1025,7 @@ export const SearchMoreCodition = styled.div`
 
 // 右边弹出
 export const RightBlock = styled.div`
-    position:absolute;
+    position:fixed;
     right:0;
     top:60px;
     width:0px;

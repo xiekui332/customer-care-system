@@ -23,7 +23,9 @@ const defaultState = fromJS({
     customerDetail:{},            // 客户详情
     showDetail:false,
     mineData:[],
-    cusEdit:false
+    cusEdit:false,
+    nofile:false,
+    trans:false
 })
 
 //  点击MiddleList数据
@@ -97,6 +99,16 @@ export default ((state = defaultState, action) => {
             cusEdit:fromJS(action.bool)
         });
         
+        case constants.CHANGE_ARR:
+        return state.merge({
+            nofile:fromJS(action.bool)
+        });
+        
+        case constants.CHANGE_TRANS:
+        return state.merge({
+            trans:fromJS(action.bool)
+        });
+        
 
         default:
         return state;
@@ -104,4 +116,4 @@ export default ((state = defaultState, action) => {
 })
 
 
-// CHANGE_ARR
+// CHANGE_TRANS

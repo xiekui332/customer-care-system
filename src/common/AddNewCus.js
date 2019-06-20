@@ -170,7 +170,7 @@ class AddNewCus extends Component{
             attachFile = this.state.attachFile
         }
         
-        // console.log(fileList)
+        
         // console.log(attachFile)
         // console.log(kindSelected)
         // console.log(isdemand)
@@ -644,6 +644,21 @@ class AddNewCus extends Component{
             </AddWrapper>
             
         )
+    }
+
+    componentDidUpdate() {
+        if(this.props.nofile){
+            this.setState({
+                fileList:[]
+            }, () => {
+                this.commonfun()
+                return
+            })
+        }
+    }
+
+    commonfun() {
+        this.props.dishandlenone(false)
     }
 
     componentDidMount() {
@@ -1258,6 +1273,11 @@ const mapDispatch = (dispatch) => ({
         let action = actionCreators.changeCusDetail(data)
         dispatch(action)
     },
+
+    dishandlenone(bool) {
+        let action = actionCreators.changenofileList(bool)
+        dispatch(action)
+    }
     
 })
 
@@ -1265,7 +1285,8 @@ const mapState = (state) => ({
     isAdd:state.getIn(['left', 'isAdd']),
     customerDetail:state.getIn(['left', 'customerDetail']).toJS(),
     cusEdit:state.getIn(['left', 'cusEdit']),
-    homeList:state.getIn(['left', 'homeList'])
+    homeList:state.getIn(['left', 'homeList']),
+    nofile:state.getIn(['left', 'nofile'])
 })
 
 export default connect(mapState, mapDispatch)(AddNewCus)

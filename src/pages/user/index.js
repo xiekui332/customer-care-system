@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import LeftCon from '../home/common/LeftWrapper'
 import { sessionGetItem, sessionSetItem, checkmobile, createUser, userList, userDetail, userDelete } from '../../api'
-import { Tooltip, Input, Select, message, Empty, Modal, Spin  } from 'antd';
+import { Tooltip, Input, Select, message, Empty, Modal  } from 'antd';
+import { baseUrl_down } from '../../config'
 
 import {
     UserWrapper,
@@ -58,7 +59,10 @@ class User extends Component {
             saveDetail:{},
             isLook:false,
             isbtn:false,
-            activeId:''
+            activeId:'',
+            // 新增
+            name:'',
+            orgNo:''
         }
 
         this.resetHeight = this.resetHeight.bind(this)
@@ -83,13 +87,16 @@ class User extends Component {
                                 <span>用户管理</span>
                                 <OperateWrapper>
                                     <Tooltip title="新建用户" onClick={() => {this.handleAddMustor(this.addmustorEl, this.searchEl)}}>
-                                        <span className="iconfont">&#xe64c;</span>
+                                        {/* <span className="iconfont">&#xe64c;</span> */}
+                                        <div className="reset-jia"></div>
                                     </Tooltip>
                                     <Tooltip title="搜索" onClick={() => {this.handleSearch(this.searchEl, this.addmustorEl)}}>
-                                        <span className="iconfont">&#xe7c0;</span>
+                                        {/* <span className="iconfont">&#xe7c0;</span> */}
+                                        <div className="reset-sousuo"></div>
                                     </Tooltip>
                                     <Tooltip title="编辑" onClick={() => {this.handleUserEdit(this.useroparateel, this.userlistwrapper)}}>
-                                        <span className="iconfont">&#xe693;</span>
+                                        {/* <span className="iconfont">&#xe693;</span> */}
+                                        <div className="reset-bianji"></div>
                                     </Tooltip>
                                 </OperateWrapper>
                             </MiddleHeader>
@@ -109,26 +116,35 @@ class User extends Component {
                                 >
                                     <SearchCondition>
                                         <span>柜员号</span>
-                                        <SearchInput placeholder="请输入柜员号" 
+                                        <SearchInput placeholder="请输入" 
                                             ref={(input) => {this.guiyuanEl = input}}
                                         ></SearchInput>
                                     </SearchCondition>
-                                    {/* <SearchCondition>
-                                        <span>用户名</span>
-                                        <SearchInput placeholder="请输入用户名" 
-                                            ref={(input) => {this.searchNameEl = input}}
-                                        ></SearchInput>
-                                    </SearchCondition> */}
+                                    
                                     <SearchCondition>
                                         <span>手机号</span>
-                                        <SearchInput placeholder="请输入手机号"
+                                        <SearchInput placeholder="请输入"
                                             ref={(input) => {this.searchMobileEl = input}}
+                                        ></SearchInput>
+                                    </SearchCondition>
+
+                                    {/* 用户管理员新增姓名， 机构号 */}
+                                    <SearchCondition>
+                                        <span>姓名</span>
+                                        <SearchInput placeholder="请输入" 
+                                            ref={(input) => {this.searchxingEl = input}}
+                                        ></SearchInput>
+                                    </SearchCondition>
+                                    <SearchCondition>
+                                        <span>机构号</span>
+                                        <SearchInput placeholder="请输入" 
+                                            ref={(input) => {this.searchjigouEl = input}}
                                         ></SearchInput>
                                     </SearchCondition>
 
                                     <AddButtonWrapper>
                                         <AddCusButton className="add-cancel" onClick={() => {this.handleCancel(this.searchEl)}}>取消</AddCusButton>
-                                        <AddCusButton className="add-save" onClick={() => {this.handleSave(this.guiyuanEl, this.searchNameEl, this.searchMobileEl, this.searchEl)}}>搜索</AddCusButton>
+                                        <AddCusButton className="add-save" onClick={() => {this.handleSave(this.guiyuanEl, this.searchNameEl, this.searchMobileEl, this.searchEl, this.searchxingEl, this.searchjigouEl)}}>搜索</AddCusButton>
                                     </AddButtonWrapper>
                                 </SearchWrapper> 
 
@@ -185,12 +201,13 @@ class User extends Component {
                                 <UserOprate 
                                     ref={(useroparateel) => {this.useroparateel = useroparateel}}    
                                 >
-                                    {/* <EditItem onClick={() => {this.usertransfer()}}>
+                                    {/* <EditItem onClick={() => {this.userbief()}}>
                                         <span className="iconfont">&#xe60c;</span>
-                                        <p>移交</p>
+                                        <p>备份</p>
                                     </EditItem> */}
                                     <EditItem onClick={() => {this.handleuserdelete(confirm)}}>
-                                        <span className="iconfont">&#xe619;</span>
+                                        {/* <span className="iconfont">&#xe619;</span> */}
+                                        <div className="reset-shanchu"></div>
                                         <p>删除</p>
                                     </EditItem>
                                 </UserOprate>
@@ -385,7 +402,9 @@ class User extends Component {
                 cabinetNo:this.state.cabinetNo,
                 mobilePhone:this.state.mobilePhone,
                 pageNum:this.state.pageNum,
-                pageSize:this.state.pageSize
+                pageSize:this.state.pageSize,
+                name:this.state.name,
+                orgNo:this.state.orgNo
             }
             this.setState({
                 load:false
@@ -525,9 +544,10 @@ class User extends Component {
     }
 
     // 确定
-    handleSave(guiyuanEl, searchNameEl, searchMobileEl, searchEl) {
+    handleSave(guiyuanEl, searchNameEl, searchMobileEl, searchEl, xingEl, jigouEl) {
         this.setState({
-            // userName:searchNameEl.value,
+            name:xingEl.value,
+            orgNo:jigouEl.value,
             cabinetNo:guiyuanEl.value,
             mobilePhone:searchMobileEl.value,
             pageNum:1,
@@ -590,8 +610,16 @@ class User extends Component {
 
             if(userId) {
                 // console.log(this.state.userType)
+                let type = this.state.userType
+                if(this.state.userType == '客户经理') {
+                    type = '2'
+                }else if(this.state.userType == '审核员') {
+                    type = '3'
+                }else if(this.state.userType == '业务管理员') {
+                    type = '4'
+                }
                 params.userId = userId
-                params.userType = this.state.userType
+                params.userType = type
                 
                 
             }else{
@@ -618,6 +646,21 @@ class User extends Component {
                         })
                    }else{
                         message.success('新建成功')
+                        let clearparams = {
+                            cabinetNo: "",
+                            createTime: "",
+                            mobilePhone: "",
+                            name: "",
+                            orgName: "",
+                            orgNo: "",
+                            remark: "",
+                            userId:'',
+                            userType: ''
+                        }
+                        this.setState({
+                            userDetail:clearparams,
+                            userType:undefined
+                        })
                    }
                     
                     nameel.input.value = ''
@@ -629,7 +672,10 @@ class User extends Component {
                         pageNum:1,
                         pageSize:10,
                         cabinetNo:'',
-                        mobilePhone:''
+                        mobilePhone:'',
+                        name:'',
+                        orgNo:''
+
                     }, () => {
                         this.getData() 
                     })
@@ -705,6 +751,20 @@ class User extends Component {
                 userList:userdata,
                 isLook:true,
                 isbtn:false
+            }, () => {
+                let arr = []
+                for(let i = 0; i < this.state.userList.length; i ++ ) {
+                    if(this.state.userList[i].active) {
+                        arr.push(this.state.userList[i])
+                    }
+                }
+                if(!arr.length) {
+                    this.setState({
+                        add:false,
+                        nodata:true
+                    })
+                }
+                // console.log(arr)
             })
             
         }
@@ -801,6 +861,24 @@ class User extends Component {
         
     }
 
+    // beifen
+    userbief() {
+        // let data = this.state.userList,
+        //     deleArr = [];
+        //     let that = this;
+        // data.map((item, index) => (
+        //     item.active?deleArr.push(item.userId):""
+        // ))
+        // let params = {
+        //     userIds:deleArr.join(',')
+        // }
+        // if(!deleArr.length) {
+        //     return
+        // }
+        window.open(baseUrl_down + '/sys/backup/db')
+        // console.log(params)
+    }
+
     // 删除用户
     handleuserdelete(confirm) {
         let data = this.state.userList,
@@ -832,12 +910,14 @@ class User extends Component {
                             add:false,
                             nodata:true,
                             cabinetNo:'',
-                            mobilePhone:''
+                            mobilePhone:'',
+                            name:'',
+                            orgNo:''
                         }, () => {
                             that.getData() 
                         })
                     }else{
-                        // message.error(data.msg)
+                        message.error(data.msg)
                     }
                 })
             },

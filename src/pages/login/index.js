@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { sendCode } from '../../api'
 import { Modal, message } from 'antd';
-import { login, sessionGetItem, sessionSetItem } from "../../api"
+import { login, sessionGetItem, sessionSetItem, findPws } from "../../api"
 
 import { 
     LoginWrapper ,
@@ -134,7 +134,7 @@ class Login extends PureComponent{
                             </LoginInputWrapper>
                             <LoginInputWrapper>
                                 <p>短信验证码</p>
-                                <MessageInput maxLength="6" placeholder="请输入短信验证码" ref={(input) => this.mesNumber = input} ></MessageInput>
+                                <MessageInput maxLength="6" placeholder="请输入验证码" ref={(input) => this.mesNumber = input} ></MessageInput>
                                 <MessageButton onClick={() => {this.getCaptchaCode(this.phoneNumber, this.idCard)}}>{this.state.captchaText}</MessageButton>
                             </LoginInputWrapper>
                             <LoginInputWrapper>
@@ -242,9 +242,23 @@ class Login extends PureComponent{
                 code:msgel.value,
                 password:newPwoel.value
             }
+
+            // console.log(params)
+            findPws(params).then((res) => {
+                let data = res.data;
+                // console.log(data)
+                if(data.code === 1 && data.msg === 'success') {
+                    message.success('找回密码成功');
+                }else{
+                    message.success('找回密码失败');
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
             
         }
-        console.log(params)
+        
     };
 
     // 返回登陆
@@ -259,11 +273,25 @@ class Login extends PureComponent{
         let count = 60;
         
         // 发送验证码校验电话号和身份证号码
-        if(telel.value && idel.value && /^1[34578]\d{9}$/.test(telel.value) && /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(idel.value)){
+        if(!idel.value) {
+            this.setState({
+                findmsg:"请输入柜员号"
+            })
+        }
+        else if(!telel.value) {
+            this.setState({
+                findmsg:"请输入电话号码"
+            })
+        }else if(!/^1[34578]\d{9}$/.test(telel.value)) {
+            this.setState({
+                findmsg:"请输入正确电话号码"
+            })
+        }else if(telel.value && idel.value && /^1[34578]\d{9}$/.test(telel.value)) {
             let params = {
                 mobilePhone:telel.value,
-                idcard:idel.value
+                cabinetNo:idel.value
             }
+            console.log(this.state.captchaCode)
             if(this.state.captchaCode) {
                 sendCode(params)
                 .then((res) => {
@@ -311,24 +339,6 @@ class Login extends PureComponent{
             this.setState({
                 findmsg:""
             })
-
-            
-        }
-        else if(!idel.value) {
-            this.setState({
-                findmsg:"请输入柜员号"
-            })
-        }
-        else if(!telel.value) {
-            this.setState({
-                findmsg:"请输入电话号码"
-            })
-        }else if(!/^1[34578]\d{9}$/.test(telel.value)) {
-            this.setState({
-                findmsg:"请输入正确电话号码"
-            })
-        }else {
-            // 短信验证
         }
         
         // else if(!/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(idel.value)) {

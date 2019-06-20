@@ -99,7 +99,9 @@ class MiddleWrapper extends PureComponent{
             className="detailWrapper"
             >
                 {/* 添加客户内容 */}
-                <AddNewCus></AddNewCus>
+                <AddNewCus>
+                    
+                </AddNewCus>
 
                 {/* 客户详情内容 */}
                 <div className={showDetail?"isShow newheight":"isHide newheight"}>
@@ -109,11 +111,13 @@ class MiddleWrapper extends PureComponent{
                             <Fragment>
                                 {/* 删除 */}
                                 <Tooltip title="" onClick={() => {this.handleTipDel(customerDetail, confirm, homeList)}}>
-                                    <span className="iconfont">&#xe619;</span>
+                                    {/* <span className="iconfont">&#xe619;</span> */}
+                                    <div className="reset-shanchu"></div>
                                 </Tooltip>
                                 {/* 编辑 */}
                                 <Tooltip title="" onClick={() => {this.handleTipEdit(customerDetail, confirm, homeList)}}>
-                                    <span className="iconfont">&#xe6fc;</span>
+                                    {/* <span className="iconfont">&#xe6fc;</span> */}
+                                    <div className="reset-fangbj"></div>
                                 </Tooltip>
                                 {/* 会话 */}
                                 {/* <Tooltip title="" onClick={() => {this.handleTipChat(customerDetail, confirm, homeList, chatStatus)}}>
@@ -121,7 +125,8 @@ class MiddleWrapper extends PureComponent{
                                 </Tooltip> */}
                                 {/* 移交 */}
                                 <Tooltip title="" onClick={() => {this.handleTipTran(customerDetail, confirm, homeList, transStatus)}}>
-                                    <span className="iconfont">&#xe60c;</span>
+                                    {/* <span className="iconfont">&#xe60c;</span> */}
+                                    <div className="reset-yijiao"></div>
                                 </Tooltip>
                             </Fragment>
                             :""
@@ -331,7 +336,9 @@ class MiddleWrapper extends PureComponent{
                                             onClick={() => {this.handleTransfer(item, totransfer, customerDetail, transStatus)}}
                                         >
                                             {
-                                                item.photo?<img src={item.photo} alt="" />:<span className="iconfont no-avetor">&#xe633;</span>
+                                                item.photo?<img src={item.photo} alt="" />:
+                                                <div className="moren-img"></div>
+                                                // <span className="iconfont no-avetor">&#xe633;</span>
                                             }
                                             <ToTraItem className="trans-item">
                                                 <div>
@@ -523,6 +530,12 @@ class MiddleWrapper extends PureComponent{
             let data = res.data
             if(data.code === 1 && data.msg === 'success') {
                 message.success('移交成功')
+                let params = {
+                    isAdd:false
+                }
+                this.props.isAddAction(params)
+                this.props.disShowDetail(false)
+                this.props.handleChangeTrans(true)
                 this.setState({
                     transStatus:!transStatus
                 })
@@ -639,6 +652,12 @@ const mapDispatch = (dispatch) => ({
         let action = actionCreators.changeAddStatus(bool)
         dispatch(action)
     },
+
+    //  改变移交后的状态
+    handleChangeTrans(bool) {
+        let action = actionCreators.changeTransStatus(bool)
+        dispatch(action)
+    }
 })
 
 const mapState = (state) => ({

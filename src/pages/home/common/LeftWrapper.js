@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
 import customer from '../../../statics/images/nav_icon_guanli.png'
 import message from '../../../statics/images/nav_icon_duanxi.png'
 import mine from '../../../statics/images/nav_icon_wo.png'
 import { actionCreators } from '../store'
-import { todoList } from '../../../api'
+import { todoList, ziliaoDownload, fujianDownload } from '../../../api'
+import { baseUrl_down } from '../../../config'
+
 import {
     LeftWrapper,
     LeftTop,
@@ -23,6 +25,8 @@ class LeftCon extends Component {
             userId:JSON.parse(sessionStorage.getItem("user")).userId,
             msg:false
         }
+
+        this.loadFile = this.loadFile.bind(this)
     }
 
     render () {
@@ -144,9 +148,15 @@ class LeftCon extends Component {
                                 <img src={mine} alt="" />  
                                 <span>
                                     我的
-                                    {
-                                        msg?
-                                        <i></i>
+                                    {   
+                                        user.userType === 2?
+                                        <Fragment>
+                                            {
+                                                msg?
+                                                <i></i>
+                                                :''
+                                            }
+                                        </Fragment>
                                         :''
                                     }
                                     
@@ -159,14 +169,23 @@ class LeftCon extends Component {
                 <LeftButton>
                     <div onClick={() => {this.handleLogout()}}>
                         <Link to="/login">
-                            <span className="iconfont">&#xe673;</span>
+                            {/* <span className="iconfont">&#xe673;</span> */}
+                            <div className="reset-tuichu">
+
+                            </div>
                             <span>退出</span>
                         </Link>
                     </div>
-                    {/* <div>
-                        <span className="iconfont">&#xe60a;</span>
-                        <span>资料备份</span>
-                    </div> */}
+                    {
+                        user.userType === 1?
+                        <div onClick={() => {this.beifen()}}>
+                            {/* <span className="iconfont">&#xe60a;</span> */}
+                            <div className="reset-beifen"></div>
+                            <span>备份管理 </span>
+                        </div>
+                        :''
+                    }
+                    
                 </LeftButton>
             </LeftWrapper>
         )
@@ -213,6 +232,40 @@ class LeftCon extends Component {
     handleLogout() {
         sessionStorage.clear()
         
+    }
+
+    beifen() {
+        ziliaoDownload().then((res) => {
+            var fileName = res.headers['content-disposition'].split(";")[1].split("filename=")[1];
+            this.loadFile(fileName, res.data)
+        })
+
+        fujianDownload().then((res) => {
+            let data = res.data
+            if(data.code === 1 && data.msg === 'success') {
+                let url = data.data.url
+                var aLink = document.createElement('a');
+                aLink.target = '_blank'
+                aLink.href = url;
+                aLink.click();
+            }else{
+
+            }
+            console.log(data)
+
+        })
+    }
+
+
+    loadFile(fileName, content){
+        var aLink = document.createElement('a');
+        var blob = new Blob([content], {
+            type: 'text/plain'
+         });
+        aLink.download = fileName;
+        aLink.href = URL.createObjectURL(blob);
+        aLink.click();
+        URL.revokeObjectURL(blob);
     }
 
 

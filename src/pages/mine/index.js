@@ -31,7 +31,8 @@ class Mine extends PureComponent {
             login:sessionGetItem('token'),
             panelType:1,
             data:[],
-            mineData:[]
+            mineData:[],
+            user:JSON.parse(sessionStorage.getItem("user"))
         }
         this.handleUptodo = this.handleUptodo.bind(this)
     }
@@ -40,7 +41,7 @@ class Mine extends PureComponent {
         const TabPane = Tabs.TabPane;
         const { changeOldPwd, changeNewTel } = this.props;
         const { login, panelType } = this.state;
-        const user = JSON.parse(sessionStorage.getItem("user"))
+        const user = this.state.user
         let part = '';
         if(user) {
             if(user.userType === 1) {
@@ -82,9 +83,11 @@ class Mine extends PureComponent {
                                 part === '客户经理'?
                                 <Fragment>
                                     <ToDealt>待办事项</ToDealt>
-
+                                    {
+                                        // console.log(mineData)
+                                    }
                                     {   
-                                        mineData && mineData.length?
+                                        mineData?
                                         mineData.map((item, index) => {
                                             return (
                                                 <ToDealtItem key={item.todoId}>
@@ -169,6 +172,17 @@ class Mine extends PureComponent {
         this.handleUptodo()
     }
 
+    componentDidUpdate() {
+        if(this.props.minetel) {
+            this.setState({
+                user:sessionGetItem('user')
+            }, () => {
+                this.props.handleMinetel(false)
+                return
+            })
+        }
+    }
+
 
     handelChange(type, el) {
         this.props.dishandleMbile(type, el.input.value)
@@ -218,9 +232,9 @@ class Mine extends PureComponent {
                     })
                     
                 }else{
-                    // this.setState({
-                    //     msg:false
-                    // })
+                    this.setState({
+                        mineData:data.data
+                    })
                 }
             }
         })
@@ -233,7 +247,8 @@ class Mine extends PureComponent {
 const mapState = (state) => ({
     // mineData:state.getIn(['left', 'mineData']).toJS(),
     changeOldPwd:state.getIn(['mine', 'changeOldPwd']),
-    changeNewTel:state.getIn(['mine', 'changeNewTel'])
+    changeNewTel:state.getIn(['mine', 'changeNewTel']),
+    minetel:state.getIn(['mine', 'minetel'])
 })
 
 const mapDispatch = (dispatch) => ({
@@ -334,6 +349,12 @@ const mapDispatch = (dispatch) => ({
                 let data = res.data
                 if(data.code === 1 && data.msg === 'success') {
                     message.success('修改成功')
+                    let newUser = sessionGetItem('user')
+                    newUser.mobilePhone = changeNewTel.input.value
+                    sessionSetItem('user', newUser)
+                    const action_thr = actionCreators.changeMinetel(true)
+                    dispatch(action_thr)
+                    // console.log(sessionGetItem('user'))
                     changeOldPwd.input.value = ''
                     changeNewTel.input.value = ''
                     let action = actionCreators.changeMobile(1, '')
@@ -357,7 +378,14 @@ const mapDispatch = (dispatch) => ({
     handleMineStatus(bool) {
         const action = actionCreators.changeMineStatus(bool)
         dispatch(action)
+    },
+    
+    handleMinetel(bool) {
+        const action = actionCreators.changeMinetel(bool)
+        dispatch(action)
     }
+
+
 })
 
 export default connect(mapState, mapDispatch)(Mine)

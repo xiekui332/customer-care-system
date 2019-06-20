@@ -100,6 +100,28 @@ export const changeCusEdit = (bool) => {
     }
 } 
 
+// none
+export const changenofileList = (bool) => {
+    return (dispatch) => {
+        let action = {
+            type:constants.CHANGE_ARR,
+            bool
+        }
+        dispatch(action)
+    }
+}
+
+// trans
+export const changeTransStatus = (bool) => {
+    return (dispatch) => {
+        let action = {
+            type:constants.CHANGE_TRANS,
+            bool
+        }
+        dispatch(action)
+    }
+}
 
 
-// changefileList
+
+// changenofileList

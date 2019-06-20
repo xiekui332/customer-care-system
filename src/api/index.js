@@ -29,6 +29,19 @@ export const sendCode = (params) => {
     })
 }
 
+// 登录页找回密码
+export const findPws = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post(baseUrl + '/user/updatepwd', QS.stringify(params))
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
+
 
 // 获取session数据
 export const sessionGetItem = (params) => {
@@ -355,3 +368,36 @@ export const changeattachDownload = (params) => {
         })
     })
 }
+
+
+// 备份
+export const ziliaoDownload = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post(baseUrl + '/sys/backup/db', QS.stringify(params))
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
+
+
+// 附件备份
+export const fujianDownload = (params) => {
+    return new Promise((resolve, reject) => {
+        service.post(baseUrl + '/sys/backup/attach', QS.stringify(params))
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
+
+
+
+
+// /sys/backup/attach

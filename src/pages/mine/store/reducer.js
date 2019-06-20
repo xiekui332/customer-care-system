@@ -6,7 +6,8 @@ const defaultState = fromJS({
     changepwd: sessionGetItem('changepwd'),
     changeOldPwd:'',
     changeNewTel:'',
-    newMineStatus:false
+    newMineStatus:false,
+    minetel:false
 })
 
 export default ((state = defaultState, action) => {
@@ -27,6 +28,11 @@ export default ((state = defaultState, action) => {
         case constants.CHANGE_MINE_INDEX:
         return state.merge({
             newMineStatus:fromJS(action.bool)
+        })
+        
+        case constants.CHANGE_MINE_TEL:
+        return state.merge({
+            minetel:fromJS(action.bool)
         })
 
         default:

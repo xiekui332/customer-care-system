@@ -11,7 +11,8 @@ export const CHANGE_SPIN = 'CHANGE_SPIN';
 export const CHANGE_MINE_STATUS = 'CHANGE_MINE_STATUS';
 export const CHANGE_EDIT_STATUS = 'CHANGE_EDIT_STATUS';
 export const CHANGE_ARR = 'CHANGE_ARR';
+export const CHANGE_TRANS = 'CHANGE_TRANS';
 
 
 
-// CHANGE_ARR
+// CHANGE_NO

@@ -11,8 +11,8 @@ import {
     MessageMiddle,
     MessageTitle,
     MessageLargeBtn,
-    // MessageItem,
-    // MessageContent,
+    MessageItem,
+    MessageContent,
     MessageRightDetail,
     MegRightTitle,
     MegRightBtn,
@@ -41,7 +41,7 @@ class Message extends PureComponent {
 
         this.handleTimeSelect = this.handleTimeSelect.bind(this)
         this.handleTimeSelectLi = this.handleTimeSelectLi.bind(this)
-        // this.handleMessageItem = this.handleMessageItem.bind(this)
+        this.handleMessageItem = this.handleMessageItem.bind(this)
     }
 
     render() {
@@ -55,7 +55,8 @@ class Message extends PureComponent {
                         <MessageMiddle className="editSrollBar">
                             <MessageTitle>短信管理</MessageTitle>
                             <MessageLargeBtn onClick={() => {this.handleMessageItem(true)}}>{isclickTxt}</MessageLargeBtn>
-                            {/* <MessageItem onClick={() => {this.handleMessageItem(false)}}>
+                            {/* <MessageItem onClick={() => {this.handleMessageItem(false)}}> */}
+                            {/* <MessageItem>
                                 <p>端午节祝福</p>
                                 <MessageContent>
                                     客户姓名 你好，今天是端午节，祝您端午 节快乐祝您端午节快乐
@@ -65,7 +66,7 @@ class Message extends PureComponent {
                                     <span>2019-05-23</span>
                                 </div>
                             </MessageItem> */}
-                            <Empty size='' description='暂无' />
+                            {/* <Empty size='' description='暂无' /> */}
                         </MessageMiddle>
                         
                         {
@@ -239,6 +240,8 @@ class Message extends PureComponent {
                 }else{
                     message.error(data.msg)
                 }
+            }).catch((err) => {
+                message.error(err.msg)
             })
         }else{
             message.info('请填写完整活动信息');
