@@ -1,4 +1,4 @@
-import 'babel-polyfill';
+import 'babel-polyfill';    //  兼容ie 11
 import React, {Fragment } from 'react';
 import { Provider } from 'react-redux'
 import store from './store'
