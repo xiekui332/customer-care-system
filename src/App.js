@@ -1,13 +1,14 @@
 import 'babel-polyfill';    //  兼容ie 11
 import React, {Fragment } from 'react';
 import { Provider } from 'react-redux'
+import "antd/dist/antd.css";
 import store from './store'
 import { Route, HashRouter  } from 'react-router-dom'
-import Home from './pages/home'
-import Message from './pages/message'
-import Mine from './pages/mine'
+import Home from './pages/home/loadable'
+import Message from './pages/message/loadable'
+import Mine from './pages/mine/loadable'
 import Login from './pages/login'
-import UserManage from './pages/user'
+import UserManage from './pages/user/loadable'
 import { Globalstyle } from './style'
 
 

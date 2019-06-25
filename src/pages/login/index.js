@@ -52,12 +52,13 @@ class Login extends PureComponent{
         else if(login && pwd){
             return <Redirect to="/home"></Redirect>
         }
-        else if(login && !pwd){
-            return (
-                this.pageData()
-            )
+        // 登陆之后之前密码是空，目前逻辑是密码不为空，所以注释
+        // else if(login && !pwd){
+        //     return (
+        //         this.pageData()
+        //     )
             
-        }
+        // }
         
     }
 
@@ -85,6 +86,7 @@ class Login extends PureComponent{
         }else if(login && pwd === false) {
             
             history.push({pathname :"/home"})
+            // return <Redirect to="/home"></Redirect>
         }
     }
 

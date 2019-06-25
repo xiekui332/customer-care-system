@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Upload, Icon, Modal, Radio, Select, message, Button, Input } from 'antd';
-import "antd/dist/antd.css";
 import { actionCreators } from '../pages/home/store'
 import { handleUpload, getsystemData, addCustom, checkidCard, checkmobile, editCustom, changeattachDel } from '../api'
 import {

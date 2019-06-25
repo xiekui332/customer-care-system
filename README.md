@@ -66,3 +66,13 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+
+
+
+
+### 避免每次提交输入git 账号和密码
+    执行git config --global credential.helper store命令
+    然后执行：git push origin
+    会让你输入用户名和密码，这时你输入就好了，然后下次再git push /pull 的时候就不用密码了~
+    检验方式：C:\Users\你的电脑名;   这个文件夹下面是否能找到.git-credentials文件，如果文件的内容是有关你的git的设置，格式为：http://{用户名}:{密码}@{git 网址}

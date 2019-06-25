@@ -1,7 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Upload, Tooltip, Empty, Spin, Modal, message, Input } from 'antd';
-import "antd/dist/antd.css";
 import AddNewCus from '../../../common/AddNewCus'
 import { handlecustomDelete, toTransfer, sureToTransfer, changeCarefull } from '../../../api'
 import { actionCreators } from '../store'

@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { actionCreators } from '../store'
 import { Tooltip, Modal, message, Select, Empty  } from 'antd';
-import "antd/dist/antd.css";
 import { handlecustomDelete, getCustomerList, getCustomerDetail, toTransfer, sureToTransfer } from '../../../api'
 import { 
     Customer,
