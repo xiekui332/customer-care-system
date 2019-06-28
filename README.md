@@ -83,4 +83,4 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 
 ### 执行 npm run build 进行打包
 
-### 配置文件在config/index,打包时查看即可
+### 配置文件在config/index,打包时查看即可 
