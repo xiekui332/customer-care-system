@@ -76,3 +76,11 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
     然后执行：git push origin
     会让你输入用户名和密码，这时你输入就好了，然后下次再git push /pull 的时候就不用密码了~
     检验方式：C:\Users\你的电脑名;   这个文件夹下面是否能找到.git-credentials文件，如果文件的内容是有关你的git的设置，格式为：http://{用户名}:{密码}@{git 网址}
+
+### git 克隆下来项目首先 npm i进行安装项目依赖
+
+### 执行 npm start 启动项目
+
+### 执行 npm run build 进行打包
+
+### 配置文件在config/index,打包时查看即可
