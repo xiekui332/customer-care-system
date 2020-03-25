@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import backlogo from '../../statics/images/login-logo.png'
+import backlogo from '../../statics/images/login-logo.jpg'
 
 export const LoginWrapper = styled.div`
     width:100%;
