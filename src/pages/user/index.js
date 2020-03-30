@@ -41,7 +41,7 @@ class User extends Component {
         this.state = {
             login:sessionGetItem('token'),
             userList:[],
-            userType:'',
+            userType:[],
             userInfo:sessionGetItem('user'),
             pageNum:1,
             pageSize:10,
@@ -285,7 +285,7 @@ class User extends Component {
                                         <AddItem>
                                             <AddTitle><span>*</span>用户类别</AddTitle>
                                             <Select
-                                                showSearch
+                                                mode="multiple"
                                                 style={{ width: 400 }}
                                                 placeholder="请选择用户类别"
                                                 optionFilterProp="children"
@@ -384,7 +384,8 @@ class User extends Component {
 
     componentWillUnmount() {
         let el = this.listWrapper;
-        el.onscroll = ''
+        // el.onscroll = ''
+        el.removeEventListener('scroll')
     }
 
     componentDidUpdate() {
@@ -488,7 +489,7 @@ class User extends Component {
             orgNo: "",
             remark: "",
             userId:'',
-            userType: ''
+            userType: []
         }
         this.setState({
             add:true,
@@ -496,7 +497,7 @@ class User extends Component {
             userId:"",
             nodata:false,
             userDetail:params,
-            userType:undefined,
+            userType:[],
             isLook:false,
             activeId:''
         },() => {
@@ -574,7 +575,8 @@ class User extends Component {
                 name:'',
                 cabinetNo:'',
                 mobilePhone:'',
-                userType:'',
+                // userType:'',
+                userTypes:[],
                 remark:'',
                 // relationship:'',
                 orgNo:'',
@@ -585,13 +587,15 @@ class User extends Component {
                 name:'',
                 cabinetNo:'',
                 mobilePhone:'',
-                userType:'',
+                // userType:'',
+                userTypes:[],
                 remark:'',
                 // relationship:'',
                 orgNo:'',
                 orgName:''
             }
         }
+        
 
         if(!idCardel.input.value) {
             message.error('请填写正确柜员号')
@@ -599,7 +603,7 @@ class User extends Component {
             message.error('请填写用户名')
         }else if(!mobileel.input.value || !checkmobile.test(mobileel.input.value)) {
             message.error('请填写正确手机号码')
-        }else if(!this.state.userType) {
+        }else if(!this.state.userType.length) {
             message.error('请选择用户类别')
         }else if(!organNum.input.value) {
             message.error('请填写机构号')
@@ -619,12 +623,12 @@ class User extends Component {
                     type = '4'
                 }
                 params.userId = userId
-                params.userType = type
+                params.userTypes = type
                 
                 
             }else{
                 
-                params.userType = this.state.userType
+                params.userTypes = this.state.userType.join(',')
             }
             params.name = nameel.input.value
             params.cabinetNo = idCardel.input.value
@@ -634,7 +638,7 @@ class User extends Component {
             // params.relationship = ''
             params.orgNo = organNum.input.value
             params.orgName = organName.input.value
-            
+            // console.log(params)
             createUser(params)
             .then((res) => {
                 let data = res.data;
@@ -780,6 +784,8 @@ class User extends Component {
             
             if(data.code === 1 && data.msg === 'success') {
                 if(data.data) {
+                    console.log(data.data)
+                    return
                     this.userkind(data.data.userType.toString(), 1)
                     let part = '';
                     if(data.data.userType === 1) {
@@ -816,16 +822,33 @@ class User extends Component {
 
     // 用户类型
     userkind(value, type) {
+        // console.log(value)
         if(type === 2){
             this.setState({
                 isbtn:true
             })
         }
-        this.setState({
-            userType:value
-        }, () => {
-            // console.log(value)
-        })
+        // 新增功能 用户类别可以多选 但不可和客户经理一起选 2020-3-30
+        if(value.length > 1) {
+            for(let i = 0; i < value.length; i ++) {
+                if(value[i] == "2") {
+                    message.error("客户经理不可以和其他角色一起选")
+                    value.splice((value.length-1), 1)
+                    // console.log(value)
+                }
+                this.setState({
+                    userType:value
+                }, () => {
+                    // console.log(value)
+                })
+            }
+        }else{
+            this.setState({
+                userType:value
+            }, () => {
+                // console.log(value)
+            })
+        }
     }
 
 
