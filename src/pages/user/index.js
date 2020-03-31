@@ -385,7 +385,7 @@ class User extends Component {
     componentWillUnmount() {
         let el = this.listWrapper;
         // el.onscroll = ''
-        el.removeEventListener('scroll')
+        el.removeEventListener('scroll', undefined, false)
     }
 
     componentDidUpdate() {
@@ -613,18 +613,16 @@ class User extends Component {
         else {
 
             if(userId) {
-                // console.log(this.state.userType)
                 let type = this.state.userType
-                if(this.state.userType == '客户经理') {
-                    type = '2'
-                }else if(this.state.userType == '审核员') {
-                    type = '3'
-                }else if(this.state.userType == '业务管理员') {
-                    type = '4'
-                }
+                // if(this.state.userType == '客户经理') {
+                //     type = '2'
+                // }else if(this.state.userType == '审核员') {
+                //     type = '3'
+                // }else if(this.state.userType == '业务管理员') {
+                //     type = '4'
+                // }
                 params.userId = userId
-                params.userTypes = type
-                
+                params.userTypes = type.join(',')
                 
             }else{
                 
@@ -784,19 +782,23 @@ class User extends Component {
             
             if(data.code === 1 && data.msg === 'success') {
                 if(data.data) {
-                    console.log(data.data)
-                    return
-                    this.userkind(data.data.userType.toString(), 1)
-                    let part = '';
-                    if(data.data.userType === 1) {
-                        part = "用户管理员"
-                    }else if(data.data.userType === 2) {
-                        part = "客户经理"
-                    }else if(data.data.userType === 3) {
-                        part = "审核员"
-                    }else if(data.data.userType === 4) {
-                        part = "业务管理员"
+                    // console.log(data.data.userTypes.split(','))
+                    // this.userkind(data.data.userType.toString(), 1)
+                    let part = data.data.userTypes.split(',')
+                    for(let i = 0; i < part.length; i ++) {
+                        part[i] = part[i].trim()
                     }
+                    this.userkind(part, 1)
+                    // let part = '';
+                    // if(data.data.userType === 1) {
+                    //     part = "用户管理员"
+                    // }else if(data.data.userType === 2) {
+                    //     part = "客户经理"
+                    // }else if(data.data.userType === 3) {
+                    //     part = "审核员"
+                    // }else if(data.data.userType === 4) {
+                    //     part = "业务管理员"
+                    // }
                     sessionSetItem('saveDetail',data.data )
                     this.setState({
                         add:true,
@@ -827,28 +829,32 @@ class User extends Component {
             this.setState({
                 isbtn:true
             })
-        }
-        // 新增功能 用户类别可以多选 但不可和客户经理一起选 2020-3-30
-        if(value.length > 1) {
-            for(let i = 0; i < value.length; i ++) {
-                if(value[i] == "2") {
-                    message.error("客户经理不可以和其他角色一起选")
-                    value.splice((value.length-1), 1)
-                    // console.log(value)
+
+            // 新增功能 用户类别可以多选 但不可和客户经理一起选 2020-3-30
+            if(value.length > 1) {
+                for(let i = 0; i < value.length; i ++) {
+                    if(value[i] == "2") {
+                        message.error("客户经理不可以和其他角色一起选")
+                        value.splice((value.length-1), 1)
+                        // console.log(value)
+                    }
+                    this.setState({
+                        userType:value
+                    })
                 }
+            }else{
                 this.setState({
                     userType:value
                 }, () => {
                     // console.log(value)
                 })
             }
-        }else{
-            this.setState({
-                userType:value
-            }, () => {
-                // console.log(value)
-            })
         }
+
+        this.setState({
+            userType:value
+        })
+        
     }
 
 

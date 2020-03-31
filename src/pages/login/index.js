@@ -33,7 +33,8 @@ class Login extends PureComponent{
             loginCondition:true,     // 登录和找回密码切换
             captchaCode:true,         // 验证码
             captchaText:'获取验证码',
-            findmsg:''
+            findmsg:'',
+            visible:false
         }
 
         this.getCaptchaCode = this.getCaptchaCode.bind(this)
@@ -47,11 +48,13 @@ class Login extends PureComponent{
         if(!login) {
             return (
                 this.pageData()
+                // this.chooseTypes()
             )
         }
         else if(login && pwd){
             return <Redirect to="/home"></Redirect>
         }
+        
         // 登陆之后之前密码是空，目前逻辑是密码不为空，所以注释
         // else if(login && !pwd){
         //     return (
@@ -153,6 +156,18 @@ class Login extends PureComponent{
                 </RightWrapper>
             </LoginWrapper>
         )
+    }
+
+    // 新增 如果用户角色有多个需要选择
+    chooseTypes = () => {
+        return (
+            <Modal
+                title="请选择用户类别"
+                visible={true}
+            >
+            </Modal>
+        )
+        
     }
     
     // 登陆校验
