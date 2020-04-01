@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { sendCode } from '../../api'
-import { Modal, message } from 'antd';
+import { Modal, message, Button, Radio  } from 'antd';
 import { login, sessionGetItem, sessionSetItem, findPws } from "../../api"
 
 import { 
@@ -34,12 +34,17 @@ class Login extends PureComponent{
             captchaCode:true,         // 验证码
             captchaText:'获取验证码',
             findmsg:'',
-            visible:false
+            visible:false,
+            value:'',
+            userTypes:[],
+            token:'',
+            user:{}
         }
 
         this.getCaptchaCode = this.getCaptchaCode.bind(this)
         this.pageStatus = this.pageStatus.bind(this)
-        
+        this.handleComfireType = this.handleComfireType.bind(this)
+        this.handleUserInfo = this.handleUserInfo.bind(this)
         
     }
 
@@ -48,7 +53,6 @@ class Login extends PureComponent{
         if(!login) {
             return (
                 this.pageData()
-                // this.chooseTypes()
             )
         }
         else if(login && pwd){
@@ -154,6 +158,10 @@ class Login extends PureComponent{
                         </FindWrapper>
                     </LoginCondition>
                 </RightWrapper>
+            
+                {
+                    this.chooseTypes()
+                }
             </LoginWrapper>
         )
     }
@@ -163,11 +171,60 @@ class Login extends PureComponent{
         return (
             <Modal
                 title="请选择用户类别"
-                visible={true}
+                visible={this.state.visible}
+                closable={false}
+                footer={[
+                    <Button type="primary" onClick={this.handleComfireType}>确定</Button>
+                ]}
             >
+                <Radio.Group onChange={this.onChange} value={this.state.value}>
+                    {
+                        this.state.userTypes.map((item, index) => {
+                            if(item == 1) {
+                                return <Radio value={item} key={item}>用户管理员</Radio>
+                            }else if(item == 2) {
+                                return <Radio value={item} key={item}>客户经理</Radio>
+                            }else if(item == 3) {
+                                return <Radio value={item} key={item}>审核员</Radio>
+                            }else if(item == 4) {
+                                return <Radio value={item} key={item}>业务管理员</Radio>
+                            }
+                        })
+                    }
+                </Radio.Group>
+
             </Modal>
         )
         
+    }
+
+    // 单选 选择角色
+    onChange = e => {
+        this.setState({
+          value: e.target.value,
+        });
+    };
+
+    // 选择用户角色确定
+    handleComfireType() {
+        // console.log(this.state.value)
+        if(this.state.value) {
+            this.handleUserInfo()
+        }
+        
+    }
+
+    // 登陆成功后存储用户信息
+    handleUserInfo() {
+        let token = this.state.token
+        let user = this.state.user
+        sessionSetItem('token', token);
+        sessionStorage.setItem(
+            "time", new Date().getTime()
+        );
+        sessionStorage.setItem(
+            "user", JSON.stringify(user)
+        );
     }
     
     // 登陆校验
@@ -193,27 +250,35 @@ class Login extends PureComponent{
                 cabinetNo:'',
                 password:''
             }
-            params.cabinetNo = userName.value
-            params.password = passWord.value
+            params.cabinetNo = userName.value.trim()
+            params.password = passWord.value.trim()
             login(params).then((res) => {
                 let data = res.data;
                 let token = null;
                 if(data.code === 1 && data.msg === "success") {
                     token = data.data.token;
-                    sessionSetItem('token', token);
-                    sessionStorage.setItem(
-                        "time", new Date().getTime()
-                    );
-                    sessionStorage.setItem(
-                        "user", JSON.stringify(data.data.user)
-                    );
+                    // sessionSetItem('token', token);
+                    // sessionStorage.setItem(
+                    //     "time", new Date().getTime()
+                    // );
+                    // sessionStorage.setItem(
+                    //     "user", JSON.stringify(data.data.user)
+                    // );
                     if(!passWord.value) {
                         sessionSetItem('changepwd', true);
                     }else{
                         sessionSetItem('changepwd', false);
                     }
+
+                    //test
+                    // data.data.userTypes = [1, 2]
+
                     this.setState({
-                        login:true
+                        login:true,
+                        userTypes:data.data.userTypes,
+                        visible:true,
+                        token:token,
+                        user:data.data.user
                     })
                     
                 }else{
