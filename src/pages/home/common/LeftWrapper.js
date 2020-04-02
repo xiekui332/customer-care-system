@@ -33,18 +33,20 @@ class LeftCon extends Component {
         const { changepwd } = this.props;
         const { msg } = this.state;
         const user = JSON.parse(sessionStorage.getItem("user"))
-
+        const userType = JSON.parse(sessionStorage.getItem("userType"))
+        console.log(user)
+        console.log(userType)
         let part = '';
-        if(user.userType === 1) {
+        if(userType === 1) {
             part = "用户管理员"
-        }else if(user.userType === 2) {
+        }else if(userType === 2) {
             part = "客户经理"
-        }else if(user.userType === 3) {
+        }else if(userType === 3) {
             part = "审核员"
-        }else if(user.userType === 4) {
+        }else if(userType === 4) {
             part = "业务管理员"
         }
-        // console.log(user)
+
         return (
             <LeftWrapper>
                 <LeftTop>
@@ -59,7 +61,7 @@ class LeftCon extends Component {
                         :
                         <img src={user.logo} alt="" />
                     }
-                    <p>{user.name } /{ part}</p>
+                    <p>{user.name} {user.name?"/":""} {part}</p>
                 </LeftCustomer>
 
                 <LeftItemUl

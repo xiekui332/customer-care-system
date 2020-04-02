@@ -168,33 +168,38 @@ class Login extends PureComponent{
 
     // 新增 如果用户角色有多个需要选择
     chooseTypes = () => {
-        return (
-            <Modal
-                title="请选择用户类别"
-                visible={this.state.visible}
-                closable={false}
-                footer={[
-                    <Button type="primary" onClick={this.handleComfireType}>确定</Button>
-                ]}
-            >
-                <Radio.Group onChange={this.onChange} value={this.state.value}>
-                    {
-                        this.state.userTypes.map((item, index) => {
-                            if(item == 1) {
-                                return <Radio value={item} key={item}>用户管理员</Radio>
-                            }else if(item == 2) {
-                                return <Radio value={item} key={item}>客户经理</Radio>
-                            }else if(item == 3) {
-                                return <Radio value={item} key={item}>审核员</Radio>
-                            }else if(item == 4) {
-                                return <Radio value={item} key={item}>业务管理员</Radio>
-                            }
-                        })
-                    }
-                </Radio.Group>
-
-            </Modal>
-        )
+        if(this.state.userTypes.length == 1) {
+            this.handleUserInfo(this.state.userTypes)
+        }else{
+            return (
+                <Modal
+                    title="请选择用户类别"
+                    visible={this.state.visible}
+                    closable={false}
+                    footer={[
+                        <Button type="primary" onClick={this.handleComfireType} key={1}>确定</Button>
+                    ]}
+                >
+                    <Radio.Group onChange={this.onChange} value={this.state.value}>
+                        {
+                            this.state.userTypes.map((item, index) => {
+                                if(item == 1) {
+                                    return <Radio value={item} key={index}>用户管理员</Radio>
+                                }else if(item == 2) {
+                                    return <Radio value={item} key={index}>客户经理</Radio>
+                                }else if(item == 3) {
+                                    return <Radio value={item} key={index}>审核员</Radio>
+                                }else if(item == 4) {
+                                    return <Radio value={item} key={index}>业务管理员</Radio>
+                                }
+                            })
+                        }
+                    </Radio.Group>
+    
+                </Modal>
+            )
+        }
+        
         
     }
 
@@ -209,15 +214,22 @@ class Login extends PureComponent{
     handleComfireType() {
         // console.log(this.state.value)
         if(this.state.value) {
-            this.handleUserInfo()
+            this.handleUserInfo(this.state.value)
         }
         
     }
 
     // 登陆成功后存储用户信息
-    handleUserInfo() {
+    handleUserInfo(val) {
         let token = this.state.token
         let user = this.state.user
+        let userType = 0
+        if(val.length) {
+            userType = val[0]
+        }else{
+            userType = val
+        }
+
         sessionSetItem('token', token);
         sessionStorage.setItem(
             "time", new Date().getTime()
@@ -225,6 +237,11 @@ class Login extends PureComponent{
         sessionStorage.setItem(
             "user", JSON.stringify(user)
         );
+        sessionStorage.setItem(
+            "userType", userType
+        );
+        
+        this.props.history.push('/home')
     }
     
     // 登陆校验
