@@ -230,6 +230,9 @@ class Login extends PureComponent{
             userType = val
         }
 
+        // 重新存储一下 userType
+        user.userType = userType
+
         sessionSetItem('token', token);
         sessionStorage.setItem(
             "time", new Date().getTime()

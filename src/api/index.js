@@ -147,11 +147,11 @@ export const todoList = (params) => {
 // 获取客户列表数据
 export const getCustomerList = (params, urlType) => {
     let url = ''
-    if(urlType === 2) {
+    if(urlType == 2) {
         url = '/customer/list'
-    }else if(urlType === 3) {
+    }else if(urlType == 3) {
         url = '/customer/auditlist'
-    }else if(urlType === 4) {
+    }else if(urlType == 4) {
         url = '/customer/alllist'
     }
     

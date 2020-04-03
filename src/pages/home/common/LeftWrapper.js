@@ -34,8 +34,11 @@ class LeftCon extends Component {
         const { msg } = this.state;
         const user = JSON.parse(sessionStorage.getItem("user"))
         const userType = JSON.parse(sessionStorage.getItem("userType"))
-        console.log(user)
-        console.log(userType)
+        // console.log(user)
+        // console.log(userType)
+        // 修改usertype
+        user.userType = userType
+
         let part = '';
         if(userType === 1) {
             part = "用户管理员"

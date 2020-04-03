@@ -75,7 +75,7 @@ class MiddleWrapper extends Component{
             <Customer className="customer" ref={(middleWrapper) => {this.modalWrapper = middleWrapper}}>
                 <MiddleHeader>
                     {
-                        user.userType === 3?
+                        user.userType == 3?
                         <Fragment>
                             <span>客户审核</span>
                             <OperateWrapper>
@@ -89,7 +89,7 @@ class MiddleWrapper extends Component{
                             <span>客户管理</span>
                             <OperateWrapper>
                                 {
-                                    user.userType === 4?
+                                    user.userType == 4?
                                     <Tooltip title="搜索" onClick={() => {this.handleSearchCustomer(search)}}>
                                         {/* <span className="iconfont">&#xe7c0;</span> */}
                                         <div className="reset-sousuo"></div>
@@ -258,7 +258,7 @@ class MiddleWrapper extends Component{
                     {/* 审核员搜索 */}
                     <SearchWrapper className={search?"searchWrapper":''}>
                         {
-                            user.userType === 3?
+                            user.userType == 3?
                             <Fragment>
                                 <SearchCondition>
                                     <div className="condition-select">
@@ -349,7 +349,7 @@ class MiddleWrapper extends Component{
                 {/* 底部批量操做部分 */}
                 <EditWrapper ref={(editWrapper) => {this.editWrapperEl = editWrapper}}>
                     {
-                        user.userType === 2?
+                        user.userType == 2?
                         <EditItem onClick={() => {this.handleToTransfer(this.transferWrapEl, homeList)}}>
                             {/* <span className="iconfont">&#xe60c;</span> */}
                             <div className="reset-yijiao"></div>
@@ -586,7 +586,7 @@ class MiddleWrapper extends Component{
             let urlType = data.userType
             
             let params = {}
-            if(urlType === 2) {
+            if(urlType == 2) {
                 // 客户经理
                 params = {
                     name:name,
@@ -603,7 +603,7 @@ class MiddleWrapper extends Component{
                     pageNum:pageNum,
                     pageSize:pageSize
                 }
-            }else if(urlType === 3) {
+            }else if(urlType == 3) {
                 // 审核员
                 params = {
                     name:name,
@@ -613,7 +613,7 @@ class MiddleWrapper extends Component{
                     pageSize:pageSize
                     
                 }
-            }else if(urlType === 4) {
+            }else if(urlType == 4) {
                 // 业务管理员
                 params = {
                     name:name,
