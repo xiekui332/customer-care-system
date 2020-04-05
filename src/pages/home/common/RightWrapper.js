@@ -288,7 +288,7 @@ class MiddleWrapper extends PureComponent{
                                 {
                                     attachFile && attachFile.length? 
                                     attachFile.map((item, index) => (
-                                        <FileItem key={item.customerId}
+                                        <FileItem key={item}
                                             onClick={() => {this.handleAttachDownload(item, attachFile)}}
                                         >
                                             <span className="iconfont">&#xe600;</span>
