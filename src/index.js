@@ -1,4 +1,6 @@
 
+import 'babel-polyfill';    //  兼容ie 11
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
